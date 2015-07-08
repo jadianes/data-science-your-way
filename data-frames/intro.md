@@ -52,12 +52,12 @@ be able to move from one to the other easily in the future.
 
 The [Gapminder website](http://www.gapminder.org/) presents itself as *a fact-based worldview*. It is
 a comprehensive resource for data regarding different countries and terrotiries indicators. Its
-[Data section](http://www.gapminder.org/data/) contains a list of datasets that can be downloaded in
-Microsoft Excel file format. Each indicator dataset is tagged with a *Data provider*, a *Category*, and
-a *Subcategory*.  
+[Data section](http://www.gapminder.org/data/) contains a list of datasets that can be accessed as
+Google Spreadsheet pages (add `&output=csv` to download as CSV). Each indicator dataset is tagged 
+with a *Data provider*, a *Category*, and a *Subcategory*.  
 
 For this tutorial, we will use the 
-[Infectious TB, number of new cases - estimated](http://spreadsheets.google.com/pub?key=rOPfJcbTTIyS-vxDWbkfNLA&output=xls)
+[Infectious TB, number of existing cases - estimated](https://docs.google.com/spreadsheets/d/1X0TiNTjXGLssQBi3eZOJnD_eJ4uUqruwFnti4R9Sozk/pub?gid=0&output=csv)
 dataset. First thing we need to do is to download the file for later use within our R and Python environments.
 There is a description of the dataset if we click in its title in the [list of datasets](http://www.gapminder.org/data/).
 When performing any data analysis task, it is esential to understand our data as much as possible, so go
