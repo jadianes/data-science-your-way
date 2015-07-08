@@ -64,3 +64,5 @@ When performing any data analysis task, it is esential to understand our data as
 there and have a read. Basically each cell in the dataset contains the estimated number of new Tuberculosis cases (infectious) 
 during the given year (column) for each country or region (row).      
 
+We will use this dataset to better understand the TB incidence in different regions in time.  
+
