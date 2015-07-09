@@ -1,5 +1,5 @@
 # Data Science your way - R vs Python
-# Episode I: Data Frames  
+# Episode I: Data Frames & Exploratory Data Analysis    
 
 ## Motivation  
 
@@ -23,7 +23,10 @@ and unsupervised learning.
 As usual, we will use real-world datasets. This will help us to quickly transfer what we 
 learn here to actual data analysis situations.  
 
-The first tutorial in our series will deal the an important abstraction, that of a Data Frame.  
+The first tutorial in our series will deal the an important abstraction, that of a Data Frame.
+We will also introduce one of the first tasks we face when we have our data loaded, that of
+the Exploratory Data Analysis. This task can be performed using data frames and basic plots 
+as we will show here for both, Python and R.    
 
 
 ## What is a DataFrame?  
@@ -56,13 +59,27 @@ a comprehensive resource for data regarding different countries and terrotiries 
 Google Spreadsheet pages (add `&output=csv` to download as CSV). Each indicator dataset is tagged 
 with a *Data provider*, a *Category*, and a *Subcategory*.  
 
-For this tutorial, we will use the 
-[Infectious TB, number of existing cases - estimated](https://docs.google.com/spreadsheets/d/1X0TiNTjXGLssQBi3eZOJnD_eJ4uUqruwFnti4R9Sozk/pub?gid=0&output=csv)
-dataset. First thing we need to do is to download the file for later use within our R and Python environments.
-There is a description of the dataset if we click in its title in the [list of datasets](http://www.gapminder.org/data/).
+For this tutorial, we will use different datasets related to Infectious Tuberculosis:  
+
+- All TB deaths per 100K: https://docs.google.com/spreadsheets/d/12uWVH_IlmzJX_75bJ3IH5E-Gqx6-zfbDKNvZqYjUuso/pub?gid=0    
+- TB estimated prevalence (existing cases) per 100K: https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0  
+- TB estimated incidence (new cases) per 100K: https://docs.google.com/spreadsheets/d/1Pl51PcEGlO9Hp4Uh0x2_QM0xVb53p2UDBMPwcnSjFTk/pub?gid=0  
+
+First thing we need to do is to download the files for later use within our R and Python environments.
+There is a description of each dataset if we click in its title in the [list of datasets](http://www.gapminder.org/data/).
 When performing any data analysis task, it is esential to understand our data as much as possible, so go
-there and have a read. Basically each cell in the dataset contains the estimated number of new Tuberculosis cases (infectious) 
-during the given year (column) for each country or region (row).      
+there and have a read. Basically each cell in the dataset contains the data related to the number of 
+Tuberculosis cases per 100K people during the given year (column) for each country or region (row).      
 
-We will use this dataset to better understand the TB incidence in different regions in time.  
+We will use these datasets to better understand the TB incidence in different regions in time.  
 
+## Questions we want to answer  
+
+In any data analysis process, there is one or more questions we want to answer. That is the most
+basic and important step in the whole process, to define these questions. Since we are going to perform
+some Exploratory Data Analysis in our TB dataset, these are the questions we want to answer:  
+
+- Which are the countries with the highest and lowest infectious TB incidence?  
+- What is the general world tendency in the period from 1990 to 2007?  
+- What countries don't follow that tendency?  
+- What events might have defined that world tendency and why do we have countries out of tendency?  
