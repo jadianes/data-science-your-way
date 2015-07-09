@@ -79,7 +79,7 @@ In any data analysis process, there is one or more questions we want to answer. 
 basic and important step in the whole process, to define these questions. Since we are going to perform
 some Exploratory Data Analysis in our TB dataset, these are the questions we want to answer:  
 
-- Which are the countries with the highest and lowest infectious TB incidence?  
+- Which are the countries with the highest and infectious TB incidence?  
 - What is the general world tendency in the period from 1990 to 2007?  
 - What countries don't follow that tendency?  
 - What events might have defined that world tendency and why do we have countries out of tendency?  
