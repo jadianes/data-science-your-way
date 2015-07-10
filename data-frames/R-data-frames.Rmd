@@ -1,0 +1,46 @@
+---
+title: "Data Frames and Exploratory Data Analysis"
+author: "Jose A. Dianes"
+date: "10 July 2015"
+output: html_document
+---
+
+## Downloading files and reading CSV  
+
+In R, you use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it.  
+
+```{r}
+library(RCurl)
+existing_cases_file <- getURL("https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0&output=csv")
+existing_df <- read.csv(text = existing_cases_file, row.names=1)
+```
+
+Our dataset is a bit tricky. If we have a look at what we got into the data frame with `head`  
+
+```{r}
+head(existing_df,3)
+```
+
+and `nrow` and `ncol`
+
+```{r}
+nrow(existing_df)
+ncol(existing_df)
+```
+
+we see that we have a data frame with 207 observations, one for each country, and 19 variables or features, one for each year. This doesn't seem the most natural shape for this dataset. It is very unlikely that we will add new countries (observations or rows in this case) to the dataset, while is quite possible to add additional years (variables or columns in this case). If we keep it like it is, we will end up with a dataset that grows in features and not in observations, and that seems counterintuitive (and unpractical depending of the analysis we will want to do).  
+
+We won't need to do this preprocessing all the time, but there we go. Thankfully, R as a function `t()` similar to the method `T` in Pandas, that allows us to traspose a `data.frame` variable. The result is given as a `matrix`, so we need to convert it to a data frame again by using `as.data.frame`.    
+
+```{r}
+# we will save the "trasposed" original verison for later use if needed
+existing_df_t <- existing_df 
+existing_df <- as.data.frame(t(existing_df))
+head(existing_df,3)
+```
+
+No we see we have weird names for the rows. Every year is prefixed with an X. This is so because they started as column names. From the definition of a `data.frame` in R, we know that each column is a vector with a variable name. A name in R cannot start with a digit, so R automatically prefixes numbers with the letter X. Right know we will leave it like it is since it doesn't really stop us from doing our analysis.  
+
+
+
+
