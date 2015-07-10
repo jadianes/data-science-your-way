@@ -73,164 +73,283 @@ img {
 <p>In R, you use <code>read.csv</code> to read CSV files into <code>data.frame</code> variables. Although the R function <code>read.csv</code> can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it.</p>
 <pre class="r"><code>library(RCurl)</code></pre>
 <pre><code>## Loading required package: bitops</code></pre>
-<pre class="r"><code>deaths_file &lt;- getURL(&quot;https://docs.google.com/spreadsheets/d/12uWVH_IlmzJX_75bJ3IH5E-Gqx6-zfbDKNvZqYjUuso/pub?gid=0&amp;output=CSV&quot;)
-deaths_df &lt;- read.csv(text = deaths_file, row.names=1)</code></pre>
+<pre class="r"><code>existing_cases_file &lt;- getURL(&quot;https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0&amp;output=csv&quot;)
+existing_df &lt;- read.csv(text = existing_cases_file, row.names=1)</code></pre>
 <p>Our dataset is a bit tricky. If we have a look at what we got into the data frame with <code>head</code></p>
-<pre class="r"><code>head(deaths_df,3)</code></pre>
+<pre class="r"><code>head(existing_df,3)</code></pre>
 <pre><code>##             X1990 X1991 X1992 X1993 X1994 X1995 X1996 X1997 X1998 X1999
-## Afghanistan    50    49    48    47    47    46    46    45    43    43
-## Albania         4     4     4     4     4     5     5     5     5     5
-## Algeria         2     2     2     2     2     2     2     2     2     2
+## Afghanistan   436   429   422   415   407   397   397   387   374   373
+## Albania        42    40    41    42    42    43    42    44    43    42
+## Algeria        45    44    44    43    43    42    43    44    45    46
 ##             X2000 X2001 X2002 X2003 X2004 X2005 X2006 X2007
-## Afghanistan    41    39    36    37    34    33    31    30
-## Albania         4     4     4     4     4     4     3     3
-## Algeria         2     2     2     2     2     2     2     2</code></pre>
+## Afghanistan   346   326   304   308   283   267   251   238
+## Albania        40    34    32    32    29    29    26    22
+## Algeria        48    49    50    51    52    53    55    56</code></pre>
 <p>and <code>nrow</code> and <code>ncol</code></p>
-<pre class="r"><code>nrow(deaths_df)</code></pre>
+<pre class="r"><code>nrow(existing_df)</code></pre>
 <pre><code>## [1] 207</code></pre>
-<pre class="r"><code>ncol(deaths_df)</code></pre>
+<pre class="r"><code>ncol(existing_df)</code></pre>
 <pre><code>## [1] 18</code></pre>
 <p>we see that we have a data frame with 207 observations, one for each country, and 19 variables or features, one for each year. This doesn’t seem the most natural shape for this dataset. It is very unlikely that we will add new countries (observations or rows in this case) to the dataset, while is quite possible to add additional years (variables or columns in this case). If we keep it like it is, we will end up with a dataset that grows in features and not in observations, and that seems counterintuitive (and unpractical depending of the analysis we will want to do).</p>
 <p>We won’t need to do this preprocessing all the time, but there we go. Thankfully, R as a function <code>t()</code> similar to the method <code>T</code> in Pandas, that allows us to traspose a <code>data.frame</code> variable. The result is given as a <code>matrix</code>, so we need to convert it to a data frame again by using <code>as.data.frame</code>.</p>
-<pre class="r"><code>deaths_df &lt;- as.data.frame(t(deaths_df))
-head(deaths_df,3)</code></pre>
+<pre class="r"><code># we will save the &quot;trasposed&quot; original verison for later use if needed
+existing_df_t &lt;- existing_df 
+existing_df &lt;- as.data.frame(t(existing_df))
+head(existing_df,3)</code></pre>
 <pre><code>##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
-## X1990          50       4       2              5       4     60        4
-## X1991          49       4       2              2       4     60        4
-## X1992          48       4       2              0       4     61        4
+## X1990         436      42      45             42      39    514       38
+## X1991         429      40      44             14      37    514       38
+## X1992         422      41      44              4      35    513       37
 ##       Antigua and Barbuda Argentina Armenia Australia Austria Azerbaijan
-## X1990                   2         8       5         1       2          5
-## X1991                   2         8       5         1       2          5
-## X1992                   2         7       5         1       2          5
+## X1990                  16        96      52         7      18         58
+## X1991                  15        91      49         7      17         55
+## X1992                  15        86      51         7      16         57
 ##       Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin
-## X1990      11       9         77        1       5       2      8    15
-## X1991      11       8         75        1       4       2      9    15
-## X1992      11       8         72        1       5       2      9    15
+## X1990      54     120        639        8      62      16     65   140
+## X1991      53     113        623        8      54      15     64   138
+## X1992      52     108        608        7      59      15     62   135
 ##       Bermuda Bhutan Bolivia Bosnia and Herzegovina Botswana Brazil
-## X1990       1    101      45                     15       46      7
-## X1991       1     95      43                     15       51      7
-## X1992       1     90      42                     15       55      7
+## X1990      10    924     377                    160      344    124
+## X1991      10    862     362                    156      355    119
+## X1992       9    804     347                    154      351    114
 ##       British Virgin Islands Brunei Darussalam Bulgaria Burkina Faso
-## X1990                      4                10        4           32
-## X1991                      3                10        4           35
-## X1992                      3                10        5           37
+## X1990                     32                91       43          179
+## X1991                     30                91       48          196
+## X1992                     28                91       54          208
 ##       Burundi Cambodia Cameroon Canada Cape Verde Cayman Islands
-## X1990      43      119       24      1         50              1
-## X1991      49      119       28      1         48              1
-## X1992      56      120       31      1         47              1
+## X1990     288      928      188      7        449             10
+## X1991     302      905      199      7        438             10
+## X1992     292      881      200      7        428              9
 ##       Central African Republic Chad Chile China Colombia Comoros
-## X1990                       47   31     4    25        9      15
-## X1991                       53   34     4    24        9      14
-## X1992                       58   37     4    24        9      13
+## X1990                      318  251    45   327       88     188
+## X1991                      336  272    41   321       85     177
+## X1992                      342  282    38   315       82     167
 ##       Congo, Rep. Cook Islands Costa Rica Croatia Cuba Cyprus
-## X1990          44            0          3      12    3      1
-## X1991          49            2          3      12    3      1
-## X1992          52           10          3      12    3      1
+## X1990         209            0         30     126   32     14
+## X1991         222           10         28     123   29     13
+## X1992         231           57         27     121   26     13
 ##       Czech Republic Cote d'Ivoire Korea, Dem. Rep. Congo, Dem. Rep.
-## X1990              2            48              113               35
-## X1991              2            56              113               39
-## X1992              2            61              112               41
+## X1990             22           292              841              275
+## X1991             22           304              828              306
+## X1992             22           306              815              327
 ##       Denmark Djibouti Dominica Dominican Republic Ecuador Egypt
-## X1990       2      126        3                 27      41     4
-## X1991       1      127        3                 27      40     4
-## X1992       1      129        3                 26      38     4
+## X1990      12    1,485       24                183     282    48
+## X1991      12    1,477       24                173     271    47
+## X1992      11    1,463       24                164     259    47
 ##       El Salvador Equatorial Guinea Eritrea Estonia Ethiopia Fiji Finland
-## X1990          15                19      20       4       40    9       2
-## X1991          14                22      20       4       45    8       2
-## X1992          14                23      21       5       50    8       1
+## X1990         133               169     245      50      312   68      14
+## X1991         126               181     245      50      337   65      12
+## X1992         119               187     242      56      351   62      11
 ##       France French Polynesia Gabon Gambia Georgia Germany Ghana Greece
-## X1990      3                7    46     38       7       2    59      4
-## X1991      3                6    45     38       6       2    58      4
-## X1992      2                9    46     38       7       2    58      4
+## X1990     21               67   359    350      51      15   533     30
+## X1991     20               55   340    350      48      15   519     29
+## X1992     19               91   325    349      50      14   502     27
 ##       Grenada Guam Guatemala Guinea Guinea-Bissau Guyana Haiti Honduras
-## X1990       1   11        13     28            40      6    81       17
-## X1991       1   10        13     29            40      7    82       16
-## X1992       1   10        13     30            41      6    83       16
+## X1990       7  103       113    241           404     39   479      141
+## X1991       7  101       111    248           403     43   464      133
+## X1992       7   96       108    255           402     34   453      128
 ##       Hungary Iceland India Indonesia Iran Iraq Ireland Israel Italy
-## X1990       6       1    42        92    4   12       2      1     2
-## X1991       6       1    42        89    4   12       2      1     1
-## X1992       6       0    42        85    5   12       2      1     1
+## X1990      67       5   586       443   50   88      19     11    11
+## X1991      68       4   577       430   51   88      18     10    10
+## X1992      70       4   566       417   56   88      18     10    10
 ##       Jamaica Japan Jordan Kazakhstan Kenya Kiribati Kuwait Kyrgyzstan
-## X1990       1     6      1          8    25      116      5          8
-## X1991       1     6      1          7    27      111      5          8
-## X1992       1     5      1          7    33      107      5          8
+## X1990      10    62     19         95   125    1,026     89         90
+## X1991      10    60     18         87   120    1,006     84         93
+## X1992      10    58     17         85   134      986     80         93
 ##       Laos Latvia Lebanon Lesotho Liberia Libyan Arab Jamahiriya Lithuania
-## X1990   38      4       5      28      57                      5         4
-## X1991   37      5       5      31      59                      5         5
-## X1992   36      5       5      34      61                      5         5
+## X1990  428     56      64     225     476                     46        64
+## X1991  424     57      64     231     473                     45        66
+## X1992  420     59      63     229     469                     45        71
 ##       Luxembourg Madagascar Malawi Malaysia Maldives Mali Malta Mauritania
-## X1990          2         38     62       21        7   74     1         63
-## X1991          2         38     73       21        7   74     1         63
-## X1992          2         38     85       20        6   74     1         63
+## X1990         19        367    380      159      143  640    10        585
+## X1991         18        368    376      158      130  631     9        587
+## X1992         17        369    365      156      118  621     9        590
 ##       Mauritius Mexico Micronesia, Fed. Sts. Monaco Mongolia Montserrat
-## X1990         5     11                    33      0       48          2
-## X1991         5     10                    31      0       47          2
-## X1992         4     10                    29      0       47          2
+## X1990        53    101                   263      3      477         14
+## X1991        51     93                   253      3      477         14
+## X1992        50     86                   244      3      477         14
 ##       Morocco Mozambique Myanmar Namibia Nauru Nepal Netherlands
-## X1990      13         37      52      84    19    51           1
-## X1991      13         42      53      96    32    49           1
-## X1992      13         46      53     107    30    48           1
+## X1990     134        287     411     650   170   629          11
+## X1991     130        313     400     685   285   607          10
+## X1992     127        328     389     687   280   585          10
 ##       Netherlands Antilles New Caledonia New Zealand Nicaragua Niger
-## X1990                    3            10           1        18    36
-## X1991                    3            10           1        17    36
-## X1992                    2            10           1        16    36
+## X1990                   28           112          10       145   317
+## X1991                   27           107          10       137   318
+## X1992                   25           104           9       129   319
 ##       Nigeria Niue Northern Mariana Islands Norway Oman Pakistan Palau
-## X1990      35   13                       13      1    2       49    12
-## X1991      40   13                       17      1    2       49     8
-## X1992      43   12                       26      1    2       49     5
+## X1990     282  118                      142      8   40      430    96
+## X1991     307  115                      201      8   36      428    66
+## X1992     321  113                      301      8   29      427    43
 ##       Panama Papua New Guinea Paraguay Peru Philippines Poland Portugal
-## X1990      7               68       12   34          87      8        7
-## X1991      7               67       12   32          86      8        6
-## X1992      7               66       12   31          84      8        6
+## X1990     74              498       95  394         799     88       51
+## X1991     73              498       93  368         783     87       49
+## X1992     71              497       92  343         766     86       47
 ##       Puerto Rico Qatar Korea, Rep. Moldova Romania Russian Federation
-## X1990           2     6          19       9       8                  7
-## X1991           2     6          16       8       9                  7
-## X1992           2     6          15       9      10                  7
+## X1990          17    71         223     105     118                 69
+## X1991          15    69         196      99     125                 64
+## X1992          17    69         174     103     134                 70
 ##       Rwanda Saint Kitts and Nevis Saint Lucia
-## X1990     67                     2           3
-## X1991     73                     2           3
-## X1992     76                     2           3
+## X1990    190                    17          26
+## X1991    211                    17          26
+## X1992    226                    16          25
 ##       Saint Vincent and the Grenadines Samoa San Marino
-## X1990                                5     5          1
-## X1991                                5     4          1
-## X1992                                5     4          1
+## X1990                               45    36          9
+## X1991                               45    35          9
+## X1992                               44    34          8
 ##       Sao Tome and Principe Saudi Arabia Senegal Seychelles Sierra Leone
-## X1990                    38            5      42          9           53
-## X1991                    37            4      42          8           57
-## X1992                    36            4      42          8           60
+## X1990                   346           68     380        113          465
+## X1991                   335           60     379        110          479
+## X1992                   325           59     379        106          492
 ##       Singapore Slovakia Slovenia Solomon Islands Somalia South Africa
-## X1990         6        7        5              70      86           78
-## X1991         6        7        5              66      85           78
-## X1992         6        7        5              61      84           82
+## X1990        52       55       66             625     597          769
+## X1991        52       56       62             593     587          726
+## X1992        53       59       59             563     577          676
 ##       Spain Sri Lanka Sudan Suriname Swaziland Sweden Switzerland
-## X1990     6        10    62       14        79      1           2
-## X1991     6        10    63       13        83      1           2
-## X1992     5        10    64       10        86      1           2
+## X1990    44       109   409      109       629      5          14
+## X1991    42       106   404      100       590      5          13
+## X1992    40       104   402       79       527      6          12
 ##       Syrian Arab Republic Tajikistan Thailand Macedonia, FYR Timor-Leste
-## X1990                    6         20       30             11          73
-## X1991                    5         17       31             11          72
-## X1992                    5         12       31             11          72
+## X1990                   94        193      336             92         706
+## X1991                   89        162      319             90         694
+## X1992                   84        112      307             89         681
 ##       Togo Tokelau Tonga Trinidad and Tobago Tunisia Turkey Turkmenistan
-## X1990   88      33     6                   2       3      8            9
-## X1991   91      33     6                   2       3      8            9
-## X1992   94      33     6                   2       3      8            9
+## X1990  702     139    45                  17      49     83          105
+## X1991  687     140    44                  17      46     79           99
+## X1992  668     143    43                  17      49     77          101
 ##       Turks and Caicos Islands Tuvalu Uganda Ukraine United Arab Emirates
-## X1990                        5     62     69       6                    3
-## X1991                        5     59    106       5                    3
-## X1992                        4     56    115       6                    3
+## X1990                       42    593    206      67                   47
+## X1991                       40    573    313      64                   44
+## X1992                       37    554    342      67                   42
 ##       United Kingdom Tanzania Virgin Islands (U.S.)
-## X1990              1       42                     3
-## X1991              1       48                     3
-## X1992              1       53                     3
+## X1990              9      215                    30
+## X1991              9      228                    28
+## X1992             10      240                    27
 ##       United States of America Uruguay Uzbekistan Vanuatu Venezuela
-## X1990                        1       3         10      31         5
-## X1991                        1       3          9      30         5
-## X1992                        1       3          9      28         5
+## X1990                        7      35        114     278        46
+## X1991                        7      34        105     268        45
+## X1992                        7      33        102     259        44
 ##       Viet Nam Wallis et Futuna West Bank and Gaza Yemen Zambia Zimbabwe
-## X1990       33               15                  6    18    126      140
-## X1991       33               40                  5    17    153      161
-## X1992       32                7                  5    18    182      176</code></pre>
-<p>No we see we have weird names for the rows. Every year is prefixed with an X. This is so because they started as column names. From the definition of a <code>data.frame</code> in R, we know that each column is a vector with a variable name. A name in R cannot start with a digit, so R automatically prefixes numbers with the letter X. Right know we will leave it like it is since it doesn’t really stop us from doing our analysis.</p>
+## X1990      365              126                 55   265    436      409
+## X1991      361              352                 54   261    456      417
+## X1992      358               64                 54   263    494      415</code></pre>
+<p>Row names are sort of what in Pandas we get when we use the attribute <code>.index</code> in a data frame.</p>
+<pre class="r"><code>rownames(existing_df)</code></pre>
+<pre><code>##  [1] &quot;X1990&quot; &quot;X1991&quot; &quot;X1992&quot; &quot;X1993&quot; &quot;X1994&quot; &quot;X1995&quot; &quot;X1996&quot; &quot;X1997&quot;
+##  [9] &quot;X1998&quot; &quot;X1999&quot; &quot;X2000&quot; &quot;X2001&quot; &quot;X2002&quot; &quot;X2003&quot; &quot;X2004&quot; &quot;X2005&quot;
+## [17] &quot;X2006&quot; &quot;X2007&quot;</code></pre>
+<p>In our data frame we see we have weird names for them. Every year is prefixed with an X. This is so because they started as column names. From the definition of a <code>data.frame</code> in R, we know that each column is a vector with a variable name. A name in R cannot start with a digit, so R automatically prefixes numbers with the letter X. Right know we will leave it like it is since it doesn’t really stop us from doing our analysis.</p>
+<p>In the case of column names, they pretty much correspond to Pandas <code>.columns</code> attribute in a data frame.</p>
+<pre class="r"><code>colnames(existing_df)</code></pre>
+<pre><code>##   [1] &quot;Afghanistan&quot;                      &quot;Albania&quot;                         
+##   [3] &quot;Algeria&quot;                          &quot;American Samoa&quot;                  
+##   [5] &quot;Andorra&quot;                          &quot;Angola&quot;                          
+##   [7] &quot;Anguilla&quot;                         &quot;Antigua and Barbuda&quot;             
+##   [9] &quot;Argentina&quot;                        &quot;Armenia&quot;                         
+##  [11] &quot;Australia&quot;                        &quot;Austria&quot;                         
+##  [13] &quot;Azerbaijan&quot;                       &quot;Bahamas&quot;                         
+##  [15] &quot;Bahrain&quot;                          &quot;Bangladesh&quot;                      
+##  [17] &quot;Barbados&quot;                         &quot;Belarus&quot;                         
+##  [19] &quot;Belgium&quot;                          &quot;Belize&quot;                          
+##  [21] &quot;Benin&quot;                            &quot;Bermuda&quot;                         
+##  [23] &quot;Bhutan&quot;                           &quot;Bolivia&quot;                         
+##  [25] &quot;Bosnia and Herzegovina&quot;           &quot;Botswana&quot;                        
+##  [27] &quot;Brazil&quot;                           &quot;British Virgin Islands&quot;          
+##  [29] &quot;Brunei Darussalam&quot;                &quot;Bulgaria&quot;                        
+##  [31] &quot;Burkina Faso&quot;                     &quot;Burundi&quot;                         
+##  [33] &quot;Cambodia&quot;                         &quot;Cameroon&quot;                        
+##  [35] &quot;Canada&quot;                           &quot;Cape Verde&quot;                      
+##  [37] &quot;Cayman Islands&quot;                   &quot;Central African Republic&quot;        
+##  [39] &quot;Chad&quot;                             &quot;Chile&quot;                           
+##  [41] &quot;China&quot;                            &quot;Colombia&quot;                        
+##  [43] &quot;Comoros&quot;                          &quot;Congo, Rep.&quot;                     
+##  [45] &quot;Cook Islands&quot;                     &quot;Costa Rica&quot;                      
+##  [47] &quot;Croatia&quot;                          &quot;Cuba&quot;                            
+##  [49] &quot;Cyprus&quot;                           &quot;Czech Republic&quot;                  
+##  [51] &quot;Cote d'Ivoire&quot;                    &quot;Korea, Dem. Rep.&quot;                
+##  [53] &quot;Congo, Dem. Rep.&quot;                 &quot;Denmark&quot;                         
+##  [55] &quot;Djibouti&quot;                         &quot;Dominica&quot;                        
+##  [57] &quot;Dominican Republic&quot;               &quot;Ecuador&quot;                         
+##  [59] &quot;Egypt&quot;                            &quot;El Salvador&quot;                     
+##  [61] &quot;Equatorial Guinea&quot;                &quot;Eritrea&quot;                         
+##  [63] &quot;Estonia&quot;                          &quot;Ethiopia&quot;                        
+##  [65] &quot;Fiji&quot;                             &quot;Finland&quot;                         
+##  [67] &quot;France&quot;                           &quot;French Polynesia&quot;                
+##  [69] &quot;Gabon&quot;                            &quot;Gambia&quot;                          
+##  [71] &quot;Georgia&quot;                          &quot;Germany&quot;                         
+##  [73] &quot;Ghana&quot;                            &quot;Greece&quot;                          
+##  [75] &quot;Grenada&quot;                          &quot;Guam&quot;                            
+##  [77] &quot;Guatemala&quot;                        &quot;Guinea&quot;                          
+##  [79] &quot;Guinea-Bissau&quot;                    &quot;Guyana&quot;                          
+##  [81] &quot;Haiti&quot;                            &quot;Honduras&quot;                        
+##  [83] &quot;Hungary&quot;                          &quot;Iceland&quot;                         
+##  [85] &quot;India&quot;                            &quot;Indonesia&quot;                       
+##  [87] &quot;Iran&quot;                             &quot;Iraq&quot;                            
+##  [89] &quot;Ireland&quot;                          &quot;Israel&quot;                          
+##  [91] &quot;Italy&quot;                            &quot;Jamaica&quot;                         
+##  [93] &quot;Japan&quot;                            &quot;Jordan&quot;                          
+##  [95] &quot;Kazakhstan&quot;                       &quot;Kenya&quot;                           
+##  [97] &quot;Kiribati&quot;                         &quot;Kuwait&quot;                          
+##  [99] &quot;Kyrgyzstan&quot;                       &quot;Laos&quot;                            
+## [101] &quot;Latvia&quot;                           &quot;Lebanon&quot;                         
+## [103] &quot;Lesotho&quot;                          &quot;Liberia&quot;                         
+## [105] &quot;Libyan Arab Jamahiriya&quot;           &quot;Lithuania&quot;                       
+## [107] &quot;Luxembourg&quot;                       &quot;Madagascar&quot;                      
+## [109] &quot;Malawi&quot;                           &quot;Malaysia&quot;                        
+## [111] &quot;Maldives&quot;                         &quot;Mali&quot;                            
+## [113] &quot;Malta&quot;                            &quot;Mauritania&quot;                      
+## [115] &quot;Mauritius&quot;                        &quot;Mexico&quot;                          
+## [117] &quot;Micronesia, Fed. Sts.&quot;            &quot;Monaco&quot;                          
+## [119] &quot;Mongolia&quot;                         &quot;Montserrat&quot;                      
+## [121] &quot;Morocco&quot;                          &quot;Mozambique&quot;                      
+## [123] &quot;Myanmar&quot;                          &quot;Namibia&quot;                         
+## [125] &quot;Nauru&quot;                            &quot;Nepal&quot;                           
+## [127] &quot;Netherlands&quot;                      &quot;Netherlands Antilles&quot;            
+## [129] &quot;New Caledonia&quot;                    &quot;New Zealand&quot;                     
+## [131] &quot;Nicaragua&quot;                        &quot;Niger&quot;                           
+## [133] &quot;Nigeria&quot;                          &quot;Niue&quot;                            
+## [135] &quot;Northern Mariana Islands&quot;         &quot;Norway&quot;                          
+## [137] &quot;Oman&quot;                             &quot;Pakistan&quot;                        
+## [139] &quot;Palau&quot;                            &quot;Panama&quot;                          
+## [141] &quot;Papua New Guinea&quot;                 &quot;Paraguay&quot;                        
+## [143] &quot;Peru&quot;                             &quot;Philippines&quot;                     
+## [145] &quot;Poland&quot;                           &quot;Portugal&quot;                        
+## [147] &quot;Puerto Rico&quot;                      &quot;Qatar&quot;                           
+## [149] &quot;Korea, Rep.&quot;                      &quot;Moldova&quot;                         
+## [151] &quot;Romania&quot;                          &quot;Russian Federation&quot;              
+## [153] &quot;Rwanda&quot;                           &quot;Saint Kitts and Nevis&quot;           
+## [155] &quot;Saint Lucia&quot;                      &quot;Saint Vincent and the Grenadines&quot;
+## [157] &quot;Samoa&quot;                            &quot;San Marino&quot;                      
+## [159] &quot;Sao Tome and Principe&quot;            &quot;Saudi Arabia&quot;                    
+## [161] &quot;Senegal&quot;                          &quot;Seychelles&quot;                      
+## [163] &quot;Sierra Leone&quot;                     &quot;Singapore&quot;                       
+## [165] &quot;Slovakia&quot;                         &quot;Slovenia&quot;                        
+## [167] &quot;Solomon Islands&quot;                  &quot;Somalia&quot;                         
+## [169] &quot;South Africa&quot;                     &quot;Spain&quot;                           
+## [171] &quot;Sri Lanka&quot;                        &quot;Sudan&quot;                           
+## [173] &quot;Suriname&quot;                         &quot;Swaziland&quot;                       
+## [175] &quot;Sweden&quot;                           &quot;Switzerland&quot;                     
+## [177] &quot;Syrian Arab Republic&quot;             &quot;Tajikistan&quot;                      
+## [179] &quot;Thailand&quot;                         &quot;Macedonia, FYR&quot;                  
+## [181] &quot;Timor-Leste&quot;                      &quot;Togo&quot;                            
+## [183] &quot;Tokelau&quot;                          &quot;Tonga&quot;                           
+## [185] &quot;Trinidad and Tobago&quot;              &quot;Tunisia&quot;                         
+## [187] &quot;Turkey&quot;                           &quot;Turkmenistan&quot;                    
+## [189] &quot;Turks and Caicos Islands&quot;         &quot;Tuvalu&quot;                          
+## [191] &quot;Uganda&quot;                           &quot;Ukraine&quot;                         
+## [193] &quot;United Arab Emirates&quot;             &quot;United Kingdom&quot;                  
+## [195] &quot;Tanzania&quot;                         &quot;Virgin Islands (U.S.)&quot;           
+## [197] &quot;United States of America&quot;         &quot;Uruguay&quot;                         
+## [199] &quot;Uzbekistan&quot;                       &quot;Vanuatu&quot;                         
+## [201] &quot;Venezuela&quot;                        &quot;Viet Nam&quot;                        
+## [203] &quot;Wallis et Futuna&quot;                 &quot;West Bank and Gaza&quot;              
+## [205] &quot;Yemen&quot;                            &quot;Zambia&quot;                          
+## [207] &quot;Zimbabwe&quot;</code></pre>
+<p>These two functions show a common idiom in R, where we use the same function to get a value and to assign it. For example, if we want to change row names we will do something like:</p>
+<p><code>colnames(existing_df) &lt;- new_col_names</code></p>
+<p>But as we said we will leave them as they are by now.</p>
+</div>
+<div id="data-indexing" class="section level2">
+<h2>Data indexing</h2>
 </div>
 
 
