@@ -2,7 +2,9 @@
 title: "Data Frames and Exploratory Data Analysis"
 author: "Jose A. Dianes"
 date: "10 July 2015"
-output: html_document
+output:
+  html_document:
+    keep_md: yes
 ---
 
 ## Downloading files and reading CSV  
@@ -39,8 +41,27 @@ existing_df <- as.data.frame(t(existing_df))
 head(existing_df,3)
 ```
 
-No we see we have weird names for the rows. Every year is prefixed with an X. This is so because they started as column names. From the definition of a `data.frame` in R, we know that each column is a vector with a variable name. A name in R cannot start with a digit, so R automatically prefixes numbers with the letter X. Right know we will leave it like it is since it doesn't really stop us from doing our analysis.  
+Row names are sort of what in Pandas we get when we use the attribute `.index` in a data frame.
 
+```{r}
+rownames(existing_df)
+```
+
+In our data frame we see we have weird names for them. Every year is prefixed with an X. This is so because they started as column names. From the definition of a `data.frame` in R, we know that each column is a vector with a variable name. A name in R cannot start with a digit, so R automatically prefixes numbers with the letter X. Right know we will leave it like it is since it doesn't really stop us from doing our analysis.  
+
+In the case of column names, they pretty much correspond to Pandas `.columns` attribute in a data frame.  
+
+```{r}
+colnames(existing_df)
+```
+
+These two functions show a common idiom in R, where we use the same function to get a value and to assign it. For example, if we want to change row names we will do something like:
+
+`colnames(existing_df) <- new_col_names`  
+
+But as we said we will leave them as they are by now.  
+
+## Data indexing  
 
 
 
