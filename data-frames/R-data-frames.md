@@ -4,7 +4,7 @@ Jose A. Dianes
 
 ## Downloading files and reading CSV  
 
-In R, you use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it.  
+In R we use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it.  
 
 
 ```r
