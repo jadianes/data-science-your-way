@@ -1,622 +1,149 @@
-# Data Frames and Exploratory Data Analysis
-Jose A. Dianes  
-10 July 2015  
+We continue here our [tutorial on data frames with python and R](). The first part introduced the concepts of Data Frame and explained how to create them and index them in Python and R. This part will concentrate on data selection and function mapping.  
 
-## Downloading files and reading CSV  
+## Data Selection   
 
-In R, you use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it.  
+In this section we will show how to select data from data frames based on their values, by using logical expressions.
 
+### Python  
 
-```r
-library(RCurl)
+With Pandas, we can use logical expression to select just data that satisfy certain conditions. So first, let's see what happens when we use logical operators with data frames or series objects.  
+
+```python
+existing_df>10
 ```
 
-```
-## Loading required package: bitops
-```
 
-```r
-existing_cases_file <- getURL("https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0&output=csv")
-existing_df <- read.csv(text = existing_cases_file, row.names=1, stringsAsFactor=F)
-str(existing_df)
-```
+| country | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
+|---------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
+| year    |             |         |         |                |         |        |          |                     |           |         |     |         |            |         |           |          |                  |                    |       |        |          |
+| 1990    | True        | True    | True    | True           | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1991    | True        | True    | True    | True           | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1992    | True        | True    | True    | False          | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1993    | True        | True    | True    | True           | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1994    | True        | True    | True    | True           | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1995    | True        | True    | True    | True           | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1996    | True        | True    | True    | False          | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1997    | True        | True    | True    | True           | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1998    | True        | True    | True    | True           | True    | True   | True     | True                | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 1999    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2000    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2001    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2002    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2003    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2004    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2005    | True        | True    | True    | True           | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2006    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
+| 2007    | True        | True    | True    | False          | True    | True   | True     | False               | True      | True    | ... | True    | True       | True    | True      | True     | True             | True               | True  | True   | True     |
 
-```
-## 'data.frame':	207 obs. of  18 variables:
-##  $ X1990: chr  "436" "42" "45" "42" ...
-##  $ X1991: chr  "429" "40" "44" "14" ...
-##  $ X1992: chr  "422" "41" "44" "4" ...
-##  $ X1993: chr  "415" "42" "43" "18" ...
-##  $ X1994: chr  "407" "42" "43" "17" ...
-##  $ X1995: chr  "397" "43" "42" "22" ...
-##  $ X1996: int  397 42 43 0 28 512 35 12 71 74 ...
-##  $ X1997: int  387 44 44 25 23 363 36 11 67 75 ...
-##  $ X1998: int  374 43 45 12 24 414 36 11 63 74 ...
-##  $ X1999: int  373 42 46 8 22 384 36 9 58 86 ...
-##  $ X2000: int  346 40 48 8 20 530 35 8 52 94 ...
-##  $ X2001: int  326 34 49 6 20 335 35 9 51 99 ...
-##  $ X2002: int  304 32 50 5 21 307 35 7 42 97 ...
-##  $ X2003: int  308 32 51 6 18 281 35 9 41 91 ...
-##  $ X2004: chr  "283" "29" "52" "9" ...
-##  $ X2005: chr  "267" "29" "53" "11" ...
-##  $ X2006: chr  "251" "26" "55" "9" ...
-##  $ X2007: chr  "238" "22" "56" "5" ...
-```
-
-The `str()` function in R gives us information about a variable type. In this case
-we can see that, due to the `,` thousands separator,
-some of the columns hasn't been parsed as numbers but as character.
-If we want to properly work with our dataset we need to convert them to numbers.
-Once we know a bit more about indexing and mapping functions, I promise you will be 
-able to understand the following piece of code. By know let's say that we convert 
-a column and assign it again to its reference in the data frame.    
+######18 rows × 207 columns  
 
 
-```r
-existing_df[c(1,2,3,4,5,6,15,16,17,18)] <- 
-    lapply( existing_df[c(1,2,3,4,5,6,15,16,17,18)], 
-            function(x) { as.integer(gsub(',', '', x) )})
-str(existing_df)
+And if applied to individual series.
+
+```python
+existing_df['United Kingdom'] > 10
 ```
 
-```
-## 'data.frame':	207 obs. of  18 variables:
-##  $ X1990: int  436 42 45 42 39 514 38 16 96 52 ...
-##  $ X1991: int  429 40 44 14 37 514 38 15 91 49 ...
-##  $ X1992: int  422 41 44 4 35 513 37 15 86 51 ...
-##  $ X1993: int  415 42 43 18 33 512 37 14 82 55 ...
-##  $ X1994: int  407 42 43 17 32 510 36 13 78 60 ...
-##  $ X1995: int  397 43 42 22 30 508 35 12 74 68 ...
-##  $ X1996: int  397 42 43 0 28 512 35 12 71 74 ...
-##  $ X1997: int  387 44 44 25 23 363 36 11 67 75 ...
-##  $ X1998: int  374 43 45 12 24 414 36 11 63 74 ...
-##  $ X1999: int  373 42 46 8 22 384 36 9 58 86 ...
-##  $ X2000: int  346 40 48 8 20 530 35 8 52 94 ...
-##  $ X2001: int  326 34 49 6 20 335 35 9 51 99 ...
-##  $ X2002: int  304 32 50 5 21 307 35 7 42 97 ...
-##  $ X2003: int  308 32 51 6 18 281 35 9 41 91 ...
-##  $ X2004: int  283 29 52 9 19 318 35 8 39 85 ...
-##  $ X2005: int  267 29 53 11 18 331 34 8 39 79 ...
-##  $ X2006: int  251 26 55 9 17 302 34 9 37 79 ...
-##  $ X2007: int  238 22 56 5 19 294 34 9 35 81 ...
-```
-
-Everything looks fine now. But still our dataset is a bit tricky. If we have a 
-look at what we got into the data frame with `head`  
-
-
-```r
-head(existing_df,3)
+```python
+    year
+    1990    False
+    1991    False
+    1992    False
+    1993    False
+    1994    False
+    1995    False
+    1996    False
+    1997    False
+    1998    False
+    1999    False
+    2000    False
+    2001    False
+    2002    False
+    2003    False
+    2004    False
+    2005     True
+    2006     True
+    2007     True
+    Name: United Kingdom, dtype: bool
 ```
 
-```
-##             X1990 X1991 X1992 X1993 X1994 X1995 X1996 X1997 X1998 X1999
-## Afghanistan   436   429   422   415   407   397   397   387   374   373
-## Albania        42    40    41    42    42    43    42    44    43    42
-## Algeria        45    44    44    43    43    42    43    44    45    46
-##             X2000 X2001 X2002 X2003 X2004 X2005 X2006 X2007
-## Afghanistan   346   326   304   308   283   267   251   238
-## Albania        40    34    32    32    29    29    26    22
-## Algeria        48    49    50    51    52    53    55    56
+The result of these expressions can be used as a indexing vector (with `[]` or `.iloc') as follows.
+
+```python
+existing_df.Spain[existing_df['United Kingdom'] > 10]
 ```
 
-and `nrow` and `ncol`
-
-
-```r
-nrow(existing_df)
+```python
+    year
+    2005    24
+    2006    24
+    2007    23
+    Name: Spain, dtype: int64
 ```
 
-```
-## [1] 207
-```
 
-```r
-ncol(existing_df)
-```
+An interesting case happens when indexing several series and some of them happen to have `False` as index and other `True` at the same position. For example:
 
-```
-## [1] 18
+```python
+existing_df[ existing_df > 10 ]
 ```
 
-we see that we have a data frame with 207 observations, one for each country, and 19 variables or features, one for each year. This doesn't seem the most natural shape for this dataset. It is very unlikely that we will add new countries (observations or rows in this case) to the dataset, while is quite possible to add additional years (variables or columns in this case). If we keep it like it is, we will end up with a dataset that grows in features and not in observations, and that seems counterintuitive (and unpractical depending of the analysis we will want to do).  
+| country | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
+|---------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
+| year    |             |         |         |                |         |        |          |                     |           |         |     |         |            |         |           |          |                  |                    |       |        |          |
+| 1990    | 436         | 42      | 45      | 42             | 39      | 514    | 38       | 16                  | 96        | 52      | ... | 35      | 114        | 278     | 46        | 365      | 126              | 55                 | 265   | 436    | 409      |
+| 1991    | 429         | 40      | 44      | 14             | 37      | 514    | 38       | 15                  | 91        | 49      | ... | 34      | 105        | 268     | 45        | 361      | 352              | 54                 | 261   | 456    | 417      |
+| 1992    | 422         | 41      | 44      | NaN            | 35      | 513    | 37       | 15                  | 86        | 51      | ... | 33      | 102        | 259     | 44        | 358      | 64               | 54                 | 263   | 494    | 415      |
+| 1993    | 415         | 42      | 43      | 18             | 33      | 512    | 37       | 14                  | 82        | 55      | ... | 32      | 118        | 250     | 43        | 354      | 174              | 52                 | 253   | 526    | 419      |
+| 1994    | 407         | 42      | 43      | 17             | 32      | 510    | 36       | 13                  | 78        | 60      | ... | 31      | 116        | 242     | 42        | 350      | 172              | 52                 | 250   | 556    | 426      |
+| 1995    | 397         | 43      | 42      | 22             | 30      | 508    | 35       | 12                  | 74        | 68      | ... | 30      | 119        | 234     | 42        | 346      | 93               | 50                 | 244   | 585    | 439      |
+| 1996    | 397         | 42      | 43      | NaN            | 28      | 512    | 35       | 12                  | 71        | 74      | ... | 28      | 111        | 226     | 41        | 312      | 123              | 49                 | 233   | 602    | 453      |
+| 1997    | 387         | 44      | 44      | 25             | 23      | 363    | 36       | 11                  | 67        | 75      | ... | 27      | 122        | 218     | 41        | 273      | 213              | 46                 | 207   | 626    | 481      |
+| 1998    | 374         | 43      | 45      | 12             | 24      | 414    | 36       | 11                  | 63        | 74      | ... | 28      | 129        | 211     | 40        | 261      | 107              | 44                 | 194   | 634    | 392      |
+| 1999    | 373         | 42      | 46      | NaN            | 22      | 384    | 36       | NaN                 | 58        | 86      | ... | 28      | 134        | 159     | 39        | 253      | 105              | 42                 | 175   | 657    | 430      |
+| 2000    | 346         | 40      | 48      | NaN            | 20      | 530    | 35       | NaN                 | 52        | 94      | ... | 27      | 139        | 143     | 39        | 248      | 103              | 40                 | 164   | 658    | 479      |
+| 2001    | 326         | 34      | 49      | NaN            | 20      | 335    | 35       | NaN                 | 51        | 99      | ... | 25      | 148        | 128     | 41        | 243      | 13               | 39                 | 154   | 680    | 523      |
+| 2002    | 304         | 32      | 50      | NaN            | 21      | 307    | 35       | NaN                 | 42        | 97      | ... | 27      | 144        | 149     | 41        | 235      | 275              | 37                 | 149   | 517    | 571      |
+| 2003    | 308         | 32      | 51      | NaN            | 18      | 281    | 35       | NaN                 | 41        | 91      | ... | 25      | 152        | 128     | 39        | 234      | 147              | 36                 | 146   | 478    | 632      |
+| 2004    | 283         | 29      | 52      | NaN            | 19      | 318    | 35       | NaN                 | 39        | 85      | ... | 23      | 149        | 118     | 38        | 226      | 63               | 35                 | 138   | 468    | 652      |
+| 2005    | 267         | 29      | 53      | 11             | 18      | 331    | 34       | NaN                 | 39        | 79      | ... | 24      | 144        | 131     | 38        | 227      | 57               | 33                 | 137   | 453    | 680      |
+| 2006    | 251         | 26      | 55      | NaN            | 17      | 302    | 34       | NaN                 | 37        | 79      | ... | 25      | 134        | 104     | 38        | 222      | 60               | 32                 | 135   | 422    | 699      |
+| 2007    | 238         | 22      | 56      | NaN            | 19      | 294    | 34       | NaN                 | 35        | 81      | ... | 23      | 140        | 102     | 39        | 220      | 25               | 31                 | 130   | 387    | 714      |
 
-We won't need to do this preprocessing all the time, but there we go. Thankfully, R as a function `t()` similar to the method `T` in Pandas, that allows us to traspose a `data.frame` variable. The result is given as a `matrix`, so we need to convert it to a data frame again by using `as.data.frame`.    
+######18 rows × 207 columns  
 
 
-```r
-# we will save the "trasposed" original verison for later use if needed
-existing_df_t <- existing_df 
-existing_df <- as.data.frame(t(existing_df))
-head(existing_df,3)
+Those cells where `existing_df` doesn't happen to have more than 10 cases per 100K give `False` for indexing. The resulting data frame have a `NaN` value for those cells. A way of solving that (if we need to) is by using the `where()` method that, apart from providing a more expressive way of reading data selection, acceps a second argument that we can use to impute the `NaN` values. For example, if we want to have 0 as a value.
+
+```python
+existing_df.where(existing_df > 10, 0)
 ```
 
-```
-##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
-## X1990         436      42      45             42      39    514       38
-## X1991         429      40      44             14      37    514       38
-## X1992         422      41      44              4      35    513       37
-##       Antigua and Barbuda Argentina Armenia Australia Austria Azerbaijan
-## X1990                  16        96      52         7      18         58
-## X1991                  15        91      49         7      17         55
-## X1992                  15        86      51         7      16         57
-##       Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin
-## X1990      54     120        639        8      62      16     65   140
-## X1991      53     113        623        8      54      15     64   138
-## X1992      52     108        608        7      59      15     62   135
-##       Bermuda Bhutan Bolivia Bosnia and Herzegovina Botswana Brazil
-## X1990      10    924     377                    160      344    124
-## X1991      10    862     362                    156      355    119
-## X1992       9    804     347                    154      351    114
-##       British Virgin Islands Brunei Darussalam Bulgaria Burkina Faso
-## X1990                     32                91       43          179
-## X1991                     30                91       48          196
-## X1992                     28                91       54          208
-##       Burundi Cambodia Cameroon Canada Cape Verde Cayman Islands
-## X1990     288      928      188      7        449             10
-## X1991     302      905      199      7        438             10
-## X1992     292      881      200      7        428              9
-##       Central African Republic Chad Chile China Colombia Comoros
-## X1990                      318  251    45   327       88     188
-## X1991                      336  272    41   321       85     177
-## X1992                      342  282    38   315       82     167
-##       Congo, Rep. Cook Islands Costa Rica Croatia Cuba Cyprus
-## X1990         209            0         30     126   32     14
-## X1991         222           10         28     123   29     13
-## X1992         231           57         27     121   26     13
-##       Czech Republic Cote d'Ivoire Korea, Dem. Rep. Congo, Dem. Rep.
-## X1990             22           292              841              275
-## X1991             22           304              828              306
-## X1992             22           306              815              327
-##       Denmark Djibouti Dominica Dominican Republic Ecuador Egypt
-## X1990      12     1485       24                183     282    48
-## X1991      12     1477       24                173     271    47
-## X1992      11     1463       24                164     259    47
-##       El Salvador Equatorial Guinea Eritrea Estonia Ethiopia Fiji Finland
-## X1990         133               169     245      50      312   68      14
-## X1991         126               181     245      50      337   65      12
-## X1992         119               187     242      56      351   62      11
-##       France French Polynesia Gabon Gambia Georgia Germany Ghana Greece
-## X1990     21               67   359    350      51      15   533     30
-## X1991     20               55   340    350      48      15   519     29
-## X1992     19               91   325    349      50      14   502     27
-##       Grenada Guam Guatemala Guinea Guinea-Bissau Guyana Haiti Honduras
-## X1990       7  103       113    241           404     39   479      141
-## X1991       7  101       111    248           403     43   464      133
-## X1992       7   96       108    255           402     34   453      128
-##       Hungary Iceland India Indonesia Iran Iraq Ireland Israel Italy
-## X1990      67       5   586       443   50   88      19     11    11
-## X1991      68       4   577       430   51   88      18     10    10
-## X1992      70       4   566       417   56   88      18     10    10
-##       Jamaica Japan Jordan Kazakhstan Kenya Kiribati Kuwait Kyrgyzstan
-## X1990      10    62     19         95   125     1026     89         90
-## X1991      10    60     18         87   120     1006     84         93
-## X1992      10    58     17         85   134      986     80         93
-##       Laos Latvia Lebanon Lesotho Liberia Libyan Arab Jamahiriya Lithuania
-## X1990  428     56      64     225     476                     46        64
-## X1991  424     57      64     231     473                     45        66
-## X1992  420     59      63     229     469                     45        71
-##       Luxembourg Madagascar Malawi Malaysia Maldives Mali Malta Mauritania
-## X1990         19        367    380      159      143  640    10        585
-## X1991         18        368    376      158      130  631     9        587
-## X1992         17        369    365      156      118  621     9        590
-##       Mauritius Mexico Micronesia, Fed. Sts. Monaco Mongolia Montserrat
-## X1990        53    101                   263      3      477         14
-## X1991        51     93                   253      3      477         14
-## X1992        50     86                   244      3      477         14
-##       Morocco Mozambique Myanmar Namibia Nauru Nepal Netherlands
-## X1990     134        287     411     650   170   629          11
-## X1991     130        313     400     685   285   607          10
-## X1992     127        328     389     687   280   585          10
-##       Netherlands Antilles New Caledonia New Zealand Nicaragua Niger
-## X1990                   28           112          10       145   317
-## X1991                   27           107          10       137   318
-## X1992                   25           104           9       129   319
-##       Nigeria Niue Northern Mariana Islands Norway Oman Pakistan Palau
-## X1990     282  118                      142      8   40      430    96
-## X1991     307  115                      201      8   36      428    66
-## X1992     321  113                      301      8   29      427    43
-##       Panama Papua New Guinea Paraguay Peru Philippines Poland Portugal
-## X1990     74              498       95  394         799     88       51
-## X1991     73              498       93  368         783     87       49
-## X1992     71              497       92  343         766     86       47
-##       Puerto Rico Qatar Korea, Rep. Moldova Romania Russian Federation
-## X1990          17    71         223     105     118                 69
-## X1991          15    69         196      99     125                 64
-## X1992          17    69         174     103     134                 70
-##       Rwanda Saint Kitts and Nevis Saint Lucia
-## X1990    190                    17          26
-## X1991    211                    17          26
-## X1992    226                    16          25
-##       Saint Vincent and the Grenadines Samoa San Marino
-## X1990                               45    36          9
-## X1991                               45    35          9
-## X1992                               44    34          8
-##       Sao Tome and Principe Saudi Arabia Senegal Seychelles Sierra Leone
-## X1990                   346           68     380        113          465
-## X1991                   335           60     379        110          479
-## X1992                   325           59     379        106          492
-##       Singapore Slovakia Slovenia Solomon Islands Somalia South Africa
-## X1990        52       55       66             625     597          769
-## X1991        52       56       62             593     587          726
-## X1992        53       59       59             563     577          676
-##       Spain Sri Lanka Sudan Suriname Swaziland Sweden Switzerland
-## X1990    44       109   409      109       629      5          14
-## X1991    42       106   404      100       590      5          13
-## X1992    40       104   402       79       527      6          12
-##       Syrian Arab Republic Tajikistan Thailand Macedonia, FYR Timor-Leste
-## X1990                   94        193      336             92         706
-## X1991                   89        162      319             90         694
-## X1992                   84        112      307             89         681
-##       Togo Tokelau Tonga Trinidad and Tobago Tunisia Turkey Turkmenistan
-## X1990  702     139    45                  17      49     83          105
-## X1991  687     140    44                  17      46     79           99
-## X1992  668     143    43                  17      49     77          101
-##       Turks and Caicos Islands Tuvalu Uganda Ukraine United Arab Emirates
-## X1990                       42    593    206      67                   47
-## X1991                       40    573    313      64                   44
-## X1992                       37    554    342      67                   42
-##       United Kingdom Tanzania Virgin Islands (U.S.)
-## X1990              9      215                    30
-## X1991              9      228                    28
-## X1992             10      240                    27
-##       United States of America Uruguay Uzbekistan Vanuatu Venezuela
-## X1990                        7      35        114     278        46
-## X1991                        7      34        105     268        45
-## X1992                        7      33        102     259        44
-##       Viet Nam Wallis et Futuna West Bank and Gaza Yemen Zambia Zimbabwe
-## X1990      365              126                 55   265    436      409
-## X1991      361              352                 54   261    456      417
-## X1992      358               64                 54   263    494      415
-```
+| country | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
+|---------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
+| year    |             |         |         |                |         |        |          |                     |           |         |     |         |            |         |           |          |                  |                    |       |        |          |
+| 1990    | 436         | 42      | 45      | 42             | 39      | 514    | 38       | 16                  | 96        | 52      | ... | 35      | 114        | 278     | 46        | 365      | 126              | 55                 | 265   | 436    | 409      |
+| 1991    | 429         | 40      | 44      | 14             | 37      | 514    | 38       | 15                  | 91        | 49      | ... | 34      | 105        | 268     | 45        | 361      | 352              | 54                 | 261   | 456    | 417      |
+| 1992    | 422         | 41      | 44      | 0              | 35      | 513    | 37       | 15                  | 86        | 51      | ... | 33      | 102        | 259     | 44        | 358      | 64               | 54                 | 263   | 494    | 415      |
+| 1993    | 415         | 42      | 43      | 18             | 33      | 512    | 37       | 14                  | 82        | 55      | ... | 32      | 118        | 250     | 43        | 354      | 174              | 52                 | 253   | 526    | 419      |
+| 1994    | 407         | 42      | 43      | 17             | 32      | 510    | 36       | 13                  | 78        | 60      | ... | 31      | 116        | 242     | 42        | 350      | 172              | 52                 | 250   | 556    | 426      |
+| 1995    | 397         | 43      | 42      | 22             | 30      | 508    | 35       | 12                  | 74        | 68      | ... | 30      | 119        | 234     | 42        | 346      | 93               | 50                 | 244   | 585    | 439      |
+| 1996    | 397         | 42      | 43      | 0              | 28      | 512    | 35       | 12                  | 71        | 74      | ... | 28      | 111        | 226     | 41        | 312      | 123              | 49                 | 233   | 602    | 453      |
+| 1997    | 387         | 44      | 44      | 25             | 23      | 363    | 36       | 11                  | 67        | 75      | ... | 27      | 122        | 218     | 41        | 273      | 213              | 46                 | 207   | 626    | 481      |
+| 1998    | 374         | 43      | 45      | 12             | 24      | 414    | 36       | 11                  | 63        | 74      | ... | 28      | 129        | 211     | 40        | 261      | 107              | 44                 | 194   | 634    | 392      |
+| 1999    | 373         | 42      | 46      | 0              | 22      | 384    | 36       | 0                   | 58        | 86      | ... | 28      | 134        | 159     | 39        | 253      | 105              | 42                 | 175   | 657    | 430      |
+| 2000    | 346         | 40      | 48      | 0              | 20      | 530    | 35       | 0                   | 52        | 94      | ... | 27      | 139        | 143     | 39        | 248      | 103              | 40                 | 164   | 658    | 479      |
+| 2001    | 326         | 34      | 49      | 0              | 20      | 335    | 35       | 0                   | 51        | 99      | ... | 25      | 148        | 128     | 41        | 243      | 13               | 39                 | 154   | 680    | 523      |
+| 2002    | 304         | 32      | 50      | 0              | 21      | 307    | 35       | 0                   | 42        | 97      | ... | 27      | 144        | 149     | 41        | 235      | 275              | 37                 | 149   | 517    | 571      |
+| 2003    | 308         | 32      | 51      | 0              | 18      | 281    | 35       | 0                   | 41        | 91      | ... | 25      | 152        | 128     | 39        | 234      | 147              | 36                 | 146   | 478    | 632      |
+| 2004    | 283         | 29      | 52      | 0              | 19      | 318    | 35       | 0                   | 39        | 85      | ... | 23      | 149        | 118     | 38        | 226      | 63               | 35                 | 138   | 468    | 652      |
+| 2005    | 267         | 29      | 53      | 11             | 18      | 331    | 34       | 0                   | 39        | 79      | ... | 24      | 144        | 131     | 38        | 227      | 57               | 33                 | 137   | 453    | 680      |
+| 2006    | 251         | 26      | 55      | 0              | 17      | 302    | 34       | 0                   | 37        | 79      | ... | 25      | 134        | 104     | 38        | 222      | 60               | 32                 | 135   | 422    | 699      |
+| 2007    | 238         | 22      | 56      | 0              | 19      | 294    | 34       | 0                   | 35        | 81      | ... | 23      | 140        | 102     | 39        | 220      | 25               | 31                 | 130   | 387    | 714      |
 
-Row names are sort of what in Pandas we get when we use the attribute `.index` in a data frame.
+######18 rows × 207 columns  
 
-
-```r
-rownames(existing_df)
-```
-
-```
-##  [1] "X1990" "X1991" "X1992" "X1993" "X1994" "X1995" "X1996" "X1997"
-##  [9] "X1998" "X1999" "X2000" "X2001" "X2002" "X2003" "X2004" "X2005"
-## [17] "X2006" "X2007"
-```
-
-In our data frame we see we have weird names for them. Every year is prefixed with an X. This is so because they started as column names. From the definition of a `data.frame` in R, we know that each column is a vector with a variable name. A name in R cannot start with a digit, so R automatically prefixes numbers with the letter X. Right know we will leave it like it is since it doesn't really stop us from doing our analysis.  
-
-In the case of column names, they pretty much correspond to Pandas `.columns` attribute in a data frame.  
-
-
-```r
-colnames(existing_df)
-```
-
-```
-##   [1] "Afghanistan"                      "Albania"                         
-##   [3] "Algeria"                          "American Samoa"                  
-##   [5] "Andorra"                          "Angola"                          
-##   [7] "Anguilla"                         "Antigua and Barbuda"             
-##   [9] "Argentina"                        "Armenia"                         
-##  [11] "Australia"                        "Austria"                         
-##  [13] "Azerbaijan"                       "Bahamas"                         
-##  [15] "Bahrain"                          "Bangladesh"                      
-##  [17] "Barbados"                         "Belarus"                         
-##  [19] "Belgium"                          "Belize"                          
-##  [21] "Benin"                            "Bermuda"                         
-##  [23] "Bhutan"                           "Bolivia"                         
-##  [25] "Bosnia and Herzegovina"           "Botswana"                        
-##  [27] "Brazil"                           "British Virgin Islands"          
-##  [29] "Brunei Darussalam"                "Bulgaria"                        
-##  [31] "Burkina Faso"                     "Burundi"                         
-##  [33] "Cambodia"                         "Cameroon"                        
-##  [35] "Canada"                           "Cape Verde"                      
-##  [37] "Cayman Islands"                   "Central African Republic"        
-##  [39] "Chad"                             "Chile"                           
-##  [41] "China"                            "Colombia"                        
-##  [43] "Comoros"                          "Congo, Rep."                     
-##  [45] "Cook Islands"                     "Costa Rica"                      
-##  [47] "Croatia"                          "Cuba"                            
-##  [49] "Cyprus"                           "Czech Republic"                  
-##  [51] "Cote d'Ivoire"                    "Korea, Dem. Rep."                
-##  [53] "Congo, Dem. Rep."                 "Denmark"                         
-##  [55] "Djibouti"                         "Dominica"                        
-##  [57] "Dominican Republic"               "Ecuador"                         
-##  [59] "Egypt"                            "El Salvador"                     
-##  [61] "Equatorial Guinea"                "Eritrea"                         
-##  [63] "Estonia"                          "Ethiopia"                        
-##  [65] "Fiji"                             "Finland"                         
-##  [67] "France"                           "French Polynesia"                
-##  [69] "Gabon"                            "Gambia"                          
-##  [71] "Georgia"                          "Germany"                         
-##  [73] "Ghana"                            "Greece"                          
-##  [75] "Grenada"                          "Guam"                            
-##  [77] "Guatemala"                        "Guinea"                          
-##  [79] "Guinea-Bissau"                    "Guyana"                          
-##  [81] "Haiti"                            "Honduras"                        
-##  [83] "Hungary"                          "Iceland"                         
-##  [85] "India"                            "Indonesia"                       
-##  [87] "Iran"                             "Iraq"                            
-##  [89] "Ireland"                          "Israel"                          
-##  [91] "Italy"                            "Jamaica"                         
-##  [93] "Japan"                            "Jordan"                          
-##  [95] "Kazakhstan"                       "Kenya"                           
-##  [97] "Kiribati"                         "Kuwait"                          
-##  [99] "Kyrgyzstan"                       "Laos"                            
-## [101] "Latvia"                           "Lebanon"                         
-## [103] "Lesotho"                          "Liberia"                         
-## [105] "Libyan Arab Jamahiriya"           "Lithuania"                       
-## [107] "Luxembourg"                       "Madagascar"                      
-## [109] "Malawi"                           "Malaysia"                        
-## [111] "Maldives"                         "Mali"                            
-## [113] "Malta"                            "Mauritania"                      
-## [115] "Mauritius"                        "Mexico"                          
-## [117] "Micronesia, Fed. Sts."            "Monaco"                          
-## [119] "Mongolia"                         "Montserrat"                      
-## [121] "Morocco"                          "Mozambique"                      
-## [123] "Myanmar"                          "Namibia"                         
-## [125] "Nauru"                            "Nepal"                           
-## [127] "Netherlands"                      "Netherlands Antilles"            
-## [129] "New Caledonia"                    "New Zealand"                     
-## [131] "Nicaragua"                        "Niger"                           
-## [133] "Nigeria"                          "Niue"                            
-## [135] "Northern Mariana Islands"         "Norway"                          
-## [137] "Oman"                             "Pakistan"                        
-## [139] "Palau"                            "Panama"                          
-## [141] "Papua New Guinea"                 "Paraguay"                        
-## [143] "Peru"                             "Philippines"                     
-## [145] "Poland"                           "Portugal"                        
-## [147] "Puerto Rico"                      "Qatar"                           
-## [149] "Korea, Rep."                      "Moldova"                         
-## [151] "Romania"                          "Russian Federation"              
-## [153] "Rwanda"                           "Saint Kitts and Nevis"           
-## [155] "Saint Lucia"                      "Saint Vincent and the Grenadines"
-## [157] "Samoa"                            "San Marino"                      
-## [159] "Sao Tome and Principe"            "Saudi Arabia"                    
-## [161] "Senegal"                          "Seychelles"                      
-## [163] "Sierra Leone"                     "Singapore"                       
-## [165] "Slovakia"                         "Slovenia"                        
-## [167] "Solomon Islands"                  "Somalia"                         
-## [169] "South Africa"                     "Spain"                           
-## [171] "Sri Lanka"                        "Sudan"                           
-## [173] "Suriname"                         "Swaziland"                       
-## [175] "Sweden"                           "Switzerland"                     
-## [177] "Syrian Arab Republic"             "Tajikistan"                      
-## [179] "Thailand"                         "Macedonia, FYR"                  
-## [181] "Timor-Leste"                      "Togo"                            
-## [183] "Tokelau"                          "Tonga"                           
-## [185] "Trinidad and Tobago"              "Tunisia"                         
-## [187] "Turkey"                           "Turkmenistan"                    
-## [189] "Turks and Caicos Islands"         "Tuvalu"                          
-## [191] "Uganda"                           "Ukraine"                         
-## [193] "United Arab Emirates"             "United Kingdom"                  
-## [195] "Tanzania"                         "Virgin Islands (U.S.)"           
-## [197] "United States of America"         "Uruguay"                         
-## [199] "Uzbekistan"                       "Vanuatu"                         
-## [201] "Venezuela"                        "Viet Nam"                        
-## [203] "Wallis et Futuna"                 "West Bank and Gaza"              
-## [205] "Yemen"                            "Zambia"                          
-## [207] "Zimbabwe"
-```
-
-These two functions show a common idiom in R, where we use the same function to get a value and to assign it. For example, if we want to change row names we will do something like:
-
-`colnames(existing_df) <- new_col_names`  
-
-But as we said we will leave them as they are by now.  
-
-## Data indexing  
-
-Similarly to what we do in Pandas (actually Pandas is inspired in R), we can
-access a `data.frame` column by its position.  
-
-
-```r
-existing_df[,1]
-```
-
-```
-##  [1] 436 429 422 415 407 397 397 387 374 373 346 326 304 308 283 267 251
-## [18] 238
-```
-
-The position-based indexing in `R` uses the first element for the row number and
-the second one for the column one. If left blank, we are telling R to get all
-the row/columns. In the previous example we retrieved all the rows for the first
-column (Afghanistan) in the `data.frame`. And yes, R has a **1-based** indexing 
-schema.  
-
-Like in Pandas, we can use column names to access columns (series in Pandas).
-However R `data.frame` variables aren't exactly object and we don't use the `.`
-operator but the `$` that allows accessing labels within a list.  
-
-
-```r
-existing_df$Afghanistan
-```
-
-```
-##  [1] 436 429 422 415 407 397 397 387 374 373 346 326 304 308 283 267 251
-## [18] 238
-```
-
-An finally, since a `data.frame` is a list of elements (its columns), we can access
-columns as list elements using the list indexing operator `[[]]`.  
-
-
-```r
-existing_df[[1]]
-```
-
-```
-##  [1] 436 429 422 415 407 397 397 387 374 373 346 326 304 308 283 267 251
-## [18] 238
-```
-
-At this point you should have realised that in R there are multiple ways of doing
-the same thing, and that this seems to happen more because of the language itself
-than because somebody wanted to provide different ways of doing things. This strongly
-contrasts with Python's philosophy of having one clear way of doing things (the 
-Pythonic way).  
-
-For row indexing we have the positional approach.  
-
-
-```r
-existing_df[1,]
-```
-
-```
-##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
-## X1990         436      42      45             42      39    514       38
-##       Antigua and Barbuda Argentina Armenia Australia Austria Azerbaijan
-## X1990                  16        96      52         7      18         58
-##       Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin
-## X1990      54     120        639        8      62      16     65   140
-##       Bermuda Bhutan Bolivia Bosnia and Herzegovina Botswana Brazil
-## X1990      10    924     377                    160      344    124
-##       British Virgin Islands Brunei Darussalam Bulgaria Burkina Faso
-## X1990                     32                91       43          179
-##       Burundi Cambodia Cameroon Canada Cape Verde Cayman Islands
-## X1990     288      928      188      7        449             10
-##       Central African Republic Chad Chile China Colombia Comoros
-## X1990                      318  251    45   327       88     188
-##       Congo, Rep. Cook Islands Costa Rica Croatia Cuba Cyprus
-## X1990         209            0         30     126   32     14
-##       Czech Republic Cote d'Ivoire Korea, Dem. Rep. Congo, Dem. Rep.
-## X1990             22           292              841              275
-##       Denmark Djibouti Dominica Dominican Republic Ecuador Egypt
-## X1990      12     1485       24                183     282    48
-##       El Salvador Equatorial Guinea Eritrea Estonia Ethiopia Fiji Finland
-## X1990         133               169     245      50      312   68      14
-##       France French Polynesia Gabon Gambia Georgia Germany Ghana Greece
-## X1990     21               67   359    350      51      15   533     30
-##       Grenada Guam Guatemala Guinea Guinea-Bissau Guyana Haiti Honduras
-## X1990       7  103       113    241           404     39   479      141
-##       Hungary Iceland India Indonesia Iran Iraq Ireland Israel Italy
-## X1990      67       5   586       443   50   88      19     11    11
-##       Jamaica Japan Jordan Kazakhstan Kenya Kiribati Kuwait Kyrgyzstan
-## X1990      10    62     19         95   125     1026     89         90
-##       Laos Latvia Lebanon Lesotho Liberia Libyan Arab Jamahiriya Lithuania
-## X1990  428     56      64     225     476                     46        64
-##       Luxembourg Madagascar Malawi Malaysia Maldives Mali Malta Mauritania
-## X1990         19        367    380      159      143  640    10        585
-##       Mauritius Mexico Micronesia, Fed. Sts. Monaco Mongolia Montserrat
-## X1990        53    101                   263      3      477         14
-##       Morocco Mozambique Myanmar Namibia Nauru Nepal Netherlands
-## X1990     134        287     411     650   170   629          11
-##       Netherlands Antilles New Caledonia New Zealand Nicaragua Niger
-## X1990                   28           112          10       145   317
-##       Nigeria Niue Northern Mariana Islands Norway Oman Pakistan Palau
-## X1990     282  118                      142      8   40      430    96
-##       Panama Papua New Guinea Paraguay Peru Philippines Poland Portugal
-## X1990     74              498       95  394         799     88       51
-##       Puerto Rico Qatar Korea, Rep. Moldova Romania Russian Federation
-## X1990          17    71         223     105     118                 69
-##       Rwanda Saint Kitts and Nevis Saint Lucia
-## X1990    190                    17          26
-##       Saint Vincent and the Grenadines Samoa San Marino
-## X1990                               45    36          9
-##       Sao Tome and Principe Saudi Arabia Senegal Seychelles Sierra Leone
-## X1990                   346           68     380        113          465
-##       Singapore Slovakia Slovenia Solomon Islands Somalia South Africa
-## X1990        52       55       66             625     597          769
-##       Spain Sri Lanka Sudan Suriname Swaziland Sweden Switzerland
-## X1990    44       109   409      109       629      5          14
-##       Syrian Arab Republic Tajikistan Thailand Macedonia, FYR Timor-Leste
-## X1990                   94        193      336             92         706
-##       Togo Tokelau Tonga Trinidad and Tobago Tunisia Turkey Turkmenistan
-## X1990  702     139    45                  17      49     83          105
-##       Turks and Caicos Islands Tuvalu Uganda Ukraine United Arab Emirates
-## X1990                       42    593    206      67                   47
-##       United Kingdom Tanzania Virgin Islands (U.S.)
-## X1990              9      215                    30
-##       United States of America Uruguay Uzbekistan Vanuatu Venezuela
-## X1990                        7      35        114     278        46
-##       Viet Nam Wallis et Futuna West Bank and Gaza Yemen Zambia Zimbabwe
-## X1990      365              126                 55   265    436      409
-```
-
-There we retrieved data for every country in 1990. We can combine this with a
-column number.  
-
-
-```r
-existing_df[1,1]
-```
-
-```
-## [1] 436
-```
-
-Or its name.  
-
-
-```r
-existing_df$Afghanistan[1]
-```
-
-```
-## [1] 436
-```
-
-What did just do before? Basically we retrieved a column, that is a vector, and
-accessed that vector first element. That way we got the value for Afghanistan for
-the year 1990. We can do the same thing using the `[[]]` operator instead of the
-list element label.  
-
-
-```r
-existing_df[[1]][1]
-```
-
-```
-## [1] 436
-```
-
-We can also select multiple columns and/or rows by passing R vectors.  
-
-
-```r
-existing_df[c(3,9,16),c(170,194)]
-```
-
-```
-##       Spain United Kingdom
-## X1992    40             10
-## X1998    30              9
-## X2005    24             11
-```
-
-Finally, using names is also possible when using positional indexing.  
-
-
-```r
-existing_df["X1992","Spain"]
-```
-
-```
-## [1] 40
-```
-
-That we can combine with vectors.  
-
-
-```r
-existing_df[c("X1992", "X1998", "X2005"), c("Spain", "United Kingdom")]
-```
-
-```
-##       Spain United Kingdom
-## X1992    40             10
-## X1998    30              9
-## X2005    24             11
-```
-
-So enough about indexing. In the next section we will see how to perform more 
-complex data accessing using conditional selection.  
-
-## Data Selection  
+### R  
 
 As we did with Pandas, let's check the result of using a `data.frame` in a logical
 or boolean expression.  
@@ -627,7 +154,7 @@ existing_df_gt10 <- existing_df>10
 existing_df_gt10
 ```
 
-```
+```r
 ##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
 ## X1990        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
 ## X1991        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
@@ -1284,7 +811,7 @@ individual columns.
 existing_df['United Kingdom'] > 10
 ```
 
-```
+```r
 ##       United Kingdom
 ## X1990          FALSE
 ## X1991          FALSE
@@ -1314,7 +841,7 @@ indexing as follows.
 existing_df$Spain[existing_df['United Kingdom'] > 10]
 ```
 
-```
+```r
 ## [1] 24 24 23
 ```
 
@@ -1325,7 +852,7 @@ As we did in Python/Pandas, let's use the whole boolean matrix we got before.
 existing_df[ existing_df_gt10 ]
 ```
 
-```
+```r
 ##    [1]  436  429  422  415  407  397  397  387  374  373  346  326  304
 ##   [14]  308  283  267  251  238   42   40   41   42   42   43   42   44
 ##   [27]   43   42   40   34   32   32   29   29   26   22   45   44   44
@@ -1594,7 +1121,7 @@ existing_df_2[ existing_df_gt10 ] <- -1
 head(existing_df_2)
 ```
 
-```
+```r
 ##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
 ## X1990          -1      -1      -1             -1      -1     -1       -1
 ## X1991          -1      -1      -1             -1      -1     -1       -1
@@ -1854,7 +1381,7 @@ rows for three countries (UK, Spain, and Colombia) we will use:
 subset(existing_df,  `United Kingdom`>10, c('United Kingdom', 'Spain','Colombia'))
 ```
 
-```
+```r
 ##       United Kingdom Spain Colombia
 ## X2005             11    24       53
 ## X2006             11    24       44
@@ -1868,14 +1395,165 @@ We can do the same thing using `[ ]` as follows.
 existing_df[existing_df["United Kingdom"]>10, c('United Kingdom', 'Spain','Colombia')]
 ```
 
-```
+```r
 ##       United Kingdom Spain Colombia
 ## X2005             11    24       53
 ## X2006             11    24       44
 ## X2007             12    23       43
 ```
 
-## Function mapping and grouping  
+## Function mapping and data grouping   
+
+### Python  
+
+The `pandas.DataFrame` class defines several [ways of applying functions](http://pandas.pydata.org/pandas-docs/stable/api.html#id5) both, index-wise and element-wise. Some of them are already predefined, and are part of the descriptive statistics methods we will talk about when performing exploratory data analysis.
+
+```python
+existing_df.sum()
+```
+
+```python
+    country
+    Afghanistan            6360
+    Albania                 665
+    Algeria                 853
+    American Samoa          221
+    Andorra                 455
+    Angola                 7442
+    Anguilla                641
+    Antigua and Barbuda     195
+    Argentina              1102
+    Armenia                1349
+    Australia               116
+    Austria                 228
+    Azerbaijan             1541
+    Bahamas                 920
+    Bahrain                1375
+    ...
+    United Arab Emirates         577
+    United Kingdom               173
+    Tanzania                    5713
+    Virgin Islands (U.S.)        367
+    United States of America      88
+    Uruguay                      505
+    Uzbekistan                  2320
+    Vanuatu                     3348
+    Venezuela                    736
+    Viet Nam                    5088
+    Wallis et Futuna            2272
+    West Bank and Gaza           781
+    Yemen                       3498
+    Zambia                      9635
+    Zimbabwe                    9231
+    Length: 207, dtype: int64
+```
+
+
+We have just calculated the total number of TB cases from 1990 to 2007 for each country. We can do the same by year if we pass `axis=1` to use `columns` instead of `index` as axis.  
+
+```python
+existing_df.sum(axis=1)
+```
+
+
+```python
+    year
+    1990    40772
+    1991    40669
+    1992    39912
+    1993    39573
+    1994    39066
+    1995    38904
+    1996    37032
+    1997    37462
+    1998    36871
+    1999    37358
+    2000    36747
+    2001    36804
+    2002    37160
+    2003    36516
+    2004    36002
+    2005    35435
+    2006    34987
+    2007    34622
+    dtype: int64
+```
+
+
+It looks like there is a descent in the existing number of TB cases per 100K across the world. 
+
+Pandas also provides methods to apply other functions to data frames. They are three: `apply`, `applymap`, and `groupby`.  
+
+#### apply and applymap
+
+By using [`apply()`](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.apply.html#pandas.DataFrame.apply) we can apply a function along an input axis of a `DataFrame`. Objects passed to the functions we apply are `Series` objects having as index either the DataFrame’s **index** (axis=0) or the **columns** (axis=1). Return type depends on whether passed function aggregates, or the reduce argument if the DataFrame is empty. For example, if we want to obtain the number of existing cases per million (instead of 100K) we can use the following.    
+
+```python
+from __future__ import division # we need this to have float division without using a cast
+existing_df.apply(lambda x: x/10)
+```
+
+| country | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
+|---------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
+| year    |             |         |         |                |         |        |          |                     |           |         |     |         |            |         |           |          |                  |                    |       |        |          |
+| 1990    | 43.6        | 4.2     | 4.5     | 4.2            | 3.9     | 51.4   | 3.8      | 1.6                 | 9.6       | 5.2     | ... | 3.5     | 11.4       | 27.8    | 4.6       | 36.5     | 12.6             | 5.5                | 26.5  | 43.6   | 40.9     |
+| 1991    | 42.9        | 4.0     | 4.4     | 1.4            | 3.7     | 51.4   | 3.8      | 1.5                 | 9.1       | 4.9     | ... | 3.4     | 10.5       | 26.8    | 4.5       | 36.1     | 35.2             | 5.4                | 26.1  | 45.6   | 41.7     |
+| 1992    | 42.2        | 4.1     | 4.4     | 0.4            | 3.5     | 51.3   | 3.7      | 1.5                 | 8.6       | 5.1     | ... | 3.3     | 10.2       | 25.9    | 4.4       | 35.8     | 6.4              | 5.4                | 26.3  | 49.4   | 41.5     |
+| 1993    | 41.5        | 4.2     | 4.3     | 1.8            | 3.3     | 51.2   | 3.7      | 1.4                 | 8.2       | 5.5     | ... | 3.2     | 11.8       | 25.0    | 4.3       | 35.4     | 17.4             | 5.2                | 25.3  | 52.6   | 41.9     |
+| 1994    | 40.7        | 4.2     | 4.3     | 1.7            | 3.2     | 51.0   | 3.6      | 1.3                 | 7.8       | 6.0     | ... | 3.1     | 11.6       | 24.2    | 4.2       | 35.0     | 17.2             | 5.2                | 25.0  | 55.6   | 42.6     |
+| 1995    | 39.7        | 4.3     | 4.2     | 2.2            | 3.0     | 50.8   | 3.5      | 1.2                 | 7.4       | 6.8     | ... | 3.0     | 11.9       | 23.4    | 4.2       | 34.6     | 9.3              | 5.0                | 24.4  | 58.5   | 43.9     |
+| 1996    | 39.7        | 4.2     | 4.3     | 0.0            | 2.8     | 51.2   | 3.5      | 1.2                 | 7.1       | 7.4     | ... | 2.8     | 11.1       | 22.6    | 4.1       | 31.2     | 12.3             | 4.9                | 23.3  | 60.2   | 45.3     |
+| 1997    | 38.7        | 4.4     | 4.4     | 2.5            | 2.3     | 36.3   | 3.6      | 1.1                 | 6.7       | 7.5     | ... | 2.7     | 12.2       | 21.8    | 4.1       | 27.3     | 21.3             | 4.6                | 20.7  | 62.6   | 48.1     |
+| 1998    | 37.4        | 4.3     | 4.5     | 1.2            | 2.4     | 41.4   | 3.6      | 1.1                 | 6.3       | 7.4     | ... | 2.8     | 12.9       | 21.1    | 4.0       | 26.1     | 10.7             | 4.4                | 19.4  | 63.4   | 39.2     |
+| 1999    | 37.3        | 4.2     | 4.6     | 0.8            | 2.2     | 38.4   | 3.6      | 0.9                 | 5.8       | 8.6     | ... | 2.8     | 13.4       | 15.9    | 3.9       | 25.3     | 10.5             | 4.2                | 17.5  | 65.7   | 43.0     |
+| 2000    | 34.6        | 4.0     | 4.8     | 0.8            | 2.0     | 53.0   | 3.5      | 0.8                 | 5.2       | 9.4     | ... | 2.7     | 13.9       | 14.3    | 3.9       | 24.8     | 10.3             | 4.0                | 16.4  | 65.8   | 47.9     |
+| 2001    | 32.6        | 3.4     | 4.9     | 0.6            | 2.0     | 33.5   | 3.5      | 0.9                 | 5.1       | 9.9     | ... | 2.5     | 14.8       | 12.8    | 4.1       | 24.3     | 1.3              | 3.9                | 15.4  | 68.0   | 52.3     |
+| 2002    | 30.4        | 3.2     | 5.0     | 0.5            | 2.1     | 30.7   | 3.5      | 0.7                 | 4.2       | 9.7     | ... | 2.7     | 14.4       | 14.9    | 4.1       | 23.5     | 27.5             | 3.7                | 14.9  | 51.7   | 57.1     |
+| 2003    | 30.8        | 3.2     | 5.1     | 0.6            | 1.8     | 28.1   | 3.5      | 0.9                 | 4.1       | 9.1     | ... | 2.5     | 15.2       | 12.8    | 3.9       | 23.4     | 14.7             | 3.6                | 14.6  | 47.8   | 63.2     |
+| 2004    | 28.3        | 2.9     | 5.2     | 0.9            | 1.9     | 31.8   | 3.5      | 0.8                 | 3.9       | 8.5     | ... | 2.3     | 14.9       | 11.8    | 3.8       | 22.6     | 6.3              | 3.5                | 13.8  | 46.8   | 65.2     |
+| 2005    | 26.7        | 2.9     | 5.3     | 1.1            | 1.8     | 33.1   | 3.4      | 0.8                 | 3.9       | 7.9     | ... | 2.4     | 14.4       | 13.1    | 3.8       | 22.7     | 5.7              | 3.3                | 13.7  | 45.3   | 68.0     |
+| 2006    | 25.1        | 2.6     | 5.5     | 0.9            | 1.7     | 30.2   | 3.4      | 0.9                 | 3.7       | 7.9     | ... | 2.5     | 13.4       | 10.4    | 3.8       | 22.2     | 6.0              | 3.2                | 13.5  | 42.2   | 69.9     |
+| 2007    | 23.8        | 2.2     | 5.6     | 0.5            | 1.9     | 29.4   | 3.4      | 0.9                 | 3.5       | 8.1     | ... | 2.3     | 14.0       | 10.2    | 3.9       | 22.0     | 2.5              | 3.1                | 13.0  | 38.7   | 71.4     |
+
+######18 rows × 207 columns  
+
+
+We have seen how `apply` works element-wise. If the function we pass is applicable to single elements (e.g. division) pandas will broadcast that to every single element and we will get again a Series with the function applied to each element and hence, a data frame as a result in our case. However, the function intended to be used for element-wise maps is `applymap`.
+
+#### groupby
+
+Grouping is a powerful an important data frame operation in Exploratory Data Analysis. In Pandas we can do this easily. For example, imagine we want the mean number of existing cases per year in two different periods, before and after the year 2000. We can do the following.
+
+```python
+mean_cases_by_period = existing_df.groupby(lambda x: int(x)>1999).mean()
+mean_cases_by_period.index = ['1990-1999', '2000-2007']
+mean_cases_by_period
+```
+
+
+| country   | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen   | Zambia  | Zimbabwe |
+|-----------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|---------|---------|----------|
+| 1990-1999 | 403.700     | 42.1    | 43.90   | 16.200         | 30.3    | 474.40 | 36.400   | 12.800              | 76.6      | 64.400  | ... | 30.600  | 117.00     | 234.500 | 42.300    | 323.300  | 152.900          | 49.800             | 234.500 | 557.200 | 428.10   |
+| 2000-2007 | 290.375     | 30.5    | 51.75   | 7.375          | 19.0    | 337.25 | 34.625   | 8.375               | 42.0      | 88.125  | ... | 24.875  | 143.75     | 125.375 | 39.125    | 231.875  | 92.875           | 35.375             | 144.125 | 507.875 | 618.75   |
+
+######2 rows × 207 columns  
+
+
+The `groupby` method accepts different types of grouping, including a mapping function as we passed, a dictionary, a Series, or a tuple / list of column names. The mapping function for example will be called on each element of the object `.index` (the year string in our case) to determine the groups. If a `dict` or `Series` is passed, the `Series` or `dict` values are used to determine the groups (e.g. we can pass a column that contains categorical values). 
+
+We can index the resulting data frame as usual.
+
+```python
+ mean_cases_by_period[['United Kingdom', 'Spain', 'Colombia']]
+```
+
+| country   | United Kingdom | Spain  | Colombia |
+|-----------|----------------|--------|----------|
+| 1990-1999 | 9.200          | 35.300 | 75.10    |
+| 2000-2007 | 10.125         | 24.875 | 53.25    |
+
+
+### R  
 
 ### `lapply`  
 
@@ -1893,7 +1571,7 @@ existing_df_sum_years <- as.data.frame(existing_df_sum_years)
 existing_df_sum_years
 ```
 
-```
+```r
 ##   Afghanistan Albania Algeria American.Samoa Andorra Angola Anguilla
 ## 1        6360     665     853            221     455   7442      641
 ##   Antigua.and.Barbuda Argentina Armenia Australia Austria Azerbaijan
@@ -1974,7 +1652,7 @@ existing_df_sum_countries <- as.data.frame(existing_df_sum_countries)
 existing_df_sum_countries
 ```
 
-```
+```r
 ##   X1990 X1991 X1992 X1993 X1994 X1995 X1996 X1997 X1998 X1999 X2000 X2001
 ## 1 40772 40669 39912 39573 39066 38904 37032 37462 36871 37358 36747 36804
 ##   X2002 X2003 X2004 X2005 X2006 X2007
@@ -1999,7 +1677,7 @@ before_2000 <- c('1990-99','1990-99','1990-99','1990-99','1990-99',
 before_2000
 ```
 
-```
+```r
 ##  [1] "1990-99" "1990-99" "1990-99" "1990-99" "1990-99" "1990-99" "1990-99"
 ##  [8] "1990-99" "1990-99" "1990-99" "2000-07" "2000-07" "2000-07" "2000-07"
 ## [15] "2000-07" "2000-07" "2000-07" "2000-07"
@@ -2013,7 +1691,7 @@ mean_cases_by_period <- aggregate(existing_df, list(Period = before_2000), mean)
 mean_cases_by_period
 ```
 
-```
+```r
 ##    Period Afghanistan Albania Algeria American Samoa Andorra Angola
 ## 1 1990-99     403.700    42.1   43.90         16.200    30.3 474.40
 ## 2 2000-07     290.375    30.5   51.75          7.375    19.0 337.25
@@ -2125,8 +1803,12 @@ that we can index as usual.
 mean_cases_by_period[,c('United Kingdom','Spain','Colombia')]
 ```
 
-```
+```r
 ##   United Kingdom  Spain Colombia
 ## 1          9.200 35.300    75.10
 ## 2         10.125 24.875    53.25
 ```
+
+## Conclusions   
+
+This two-part tutorial has introduced the concept of **data frame**, together with how to use them in the two most popular Data Science ecosystems nowadays, R and Python. Together, we have introduced a few datasets from Gapminder World related with Infectious Tuberculosis, a very serious epidemic disease sometimes forgotten in developed countries but that nowadays is the second cause of death of its kind just after HIV (and many times associated to HIV). In the next tutorial in the series, we will use these datasets in order to perform some Exploratory Analysis in both, Python and R, to better understand the world situation regarding the disease.

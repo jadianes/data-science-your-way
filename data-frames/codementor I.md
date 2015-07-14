@@ -48,15 +48,6 @@ First thing we need to do is to download the files for later use within our R an
 
 We will use these datasets to better understand the TB incidence in different regions in time.  
 
-## Questions we want to answer  
-
-In any data analysis process, there is one or more questions we want to answer. That is the most basic and important step in the whole process, to define these questions. Since we are going to perform some Exploratory Data Analysis in our TB dataset, these are the questions we want to answer:  
-
-- Which are the countries with the highest and infectious TB incidence?  
-- What is the general world tendency in the period from 1990 to 2007?  
-- What countries don't follow that tendency?  
-- What events might have defined that world tendency and why do we have countries out of tendency?  
-
 ## Downloading files and reading CSV  
 
 ### Python  
@@ -175,23 +166,84 @@ In R we use `read.csv` to read CSV files into `data.frame` variables. Although t
 library(RCurl)
 ```
 
-```
+```r
 ## Loading required package: bitops
 ```
 
 ```r
 existing_cases_file <- getURL("https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0&output=csv")
-existing_df <- read.csv(text = existing_cases_file, row.names=1)
+existing_df <- read.csv(text = existing_cases_file, row.names=1, stringsAsFactor=F)
+str(existing_df)
 ```
 
-Our dataset is a bit tricky. If we have a look at what we got into the data frame with `head`  
+```r
+## 'data.frame':	207 obs. of  18 variables:
+##  $ X1990: chr  "436" "42" "45" "42" ...
+##  $ X1991: chr  "429" "40" "44" "14" ...
+##  $ X1992: chr  "422" "41" "44" "4" ...
+##  $ X1993: chr  "415" "42" "43" "18" ...
+##  $ X1994: chr  "407" "42" "43" "17" ...
+##  $ X1995: chr  "397" "43" "42" "22" ...
+##  $ X1996: int  397 42 43 0 28 512 35 12 71 74 ...
+##  $ X1997: int  387 44 44 25 23 363 36 11 67 75 ...
+##  $ X1998: int  374 43 45 12 24 414 36 11 63 74 ...
+##  $ X1999: int  373 42 46 8 22 384 36 9 58 86 ...
+##  $ X2000: int  346 40 48 8 20 530 35 8 52 94 ...
+##  $ X2001: int  326 34 49 6 20 335 35 9 51 99 ...
+##  $ X2002: int  304 32 50 5 21 307 35 7 42 97 ...
+##  $ X2003: int  308 32 51 6 18 281 35 9 41 91 ...
+##  $ X2004: chr  "283" "29" "52" "9" ...
+##  $ X2005: chr  "267" "29" "53" "11" ...
+##  $ X2006: chr  "251" "26" "55" "9" ...
+##  $ X2007: chr  "238" "22" "56" "5" ...
+```
 
+The `str()` function in R gives us information about a variable type. In this case
+we can see that, due to the `,` thousands separator,
+some of the columns hasn't been parsed as numbers but as character.
+If we want to properly work with our dataset we need to convert them to numbers.
+Once we know a bit more about indexing and mapping functions, I promise you will be 
+able to understand the following piece of code. By know let's say that we convert 
+a column and assign it again to its reference in the data frame.    
+
+
+```r
+existing_df[c(1,2,3,4,5,6,15,16,17,18)] <- 
+    lapply( existing_df[c(1,2,3,4,5,6,15,16,17,18)], 
+            function(x) { as.integer(gsub(',', '', x) )})
+str(existing_df)
+```
+
+```r
+## 'data.frame':	207 obs. of  18 variables:
+##  $ X1990: int  436 42 45 42 39 514 38 16 96 52 ...
+##  $ X1991: int  429 40 44 14 37 514 38 15 91 49 ...
+##  $ X1992: int  422 41 44 4 35 513 37 15 86 51 ...
+##  $ X1993: int  415 42 43 18 33 512 37 14 82 55 ...
+##  $ X1994: int  407 42 43 17 32 510 36 13 78 60 ...
+##  $ X1995: int  397 43 42 22 30 508 35 12 74 68 ...
+##  $ X1996: int  397 42 43 0 28 512 35 12 71 74 ...
+##  $ X1997: int  387 44 44 25 23 363 36 11 67 75 ...
+##  $ X1998: int  374 43 45 12 24 414 36 11 63 74 ...
+##  $ X1999: int  373 42 46 8 22 384 36 9 58 86 ...
+##  $ X2000: int  346 40 48 8 20 530 35 8 52 94 ...
+##  $ X2001: int  326 34 49 6 20 335 35 9 51 99 ...
+##  $ X2002: int  304 32 50 5 21 307 35 7 42 97 ...
+##  $ X2003: int  308 32 51 6 18 281 35 9 41 91 ...
+##  $ X2004: int  283 29 52 9 19 318 35 8 39 85 ...
+##  $ X2005: int  267 29 53 11 18 331 34 8 39 79 ...
+##  $ X2006: int  251 26 55 9 17 302 34 9 37 79 ...
+##  $ X2007: int  238 22 56 5 19 294 34 9 35 81 ...
+```
+
+Everything looks fine now. But still our dataset is a bit tricky. If we have a 
+look at what we got into the data frame with `head`  
 
 ```r
 head(existing_df,3)
 ```
 
-```
+```r
 ##             X1990 X1991 X1992 X1993 X1994 X1995 X1996 X1997 X1998 X1999
 ## Afghanistan   436   429   422   415   407   397   397   387   374   373
 ## Albania        42    40    41    42    42    43    42    44    43    42
@@ -209,7 +261,7 @@ and `nrow` and `ncol`
 nrow(existing_df)
 ```
 
-```
+```r
 ## [1] 207
 ```
 
@@ -217,7 +269,7 @@ nrow(existing_df)
 ncol(existing_df)
 ```
 
-```
+```r
 ## [1] 18
 ```
 
@@ -233,7 +285,7 @@ existing_df <- as.data.frame(t(existing_df))
 head(existing_df,3)
 ```
 
-```
+```r
 ##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
 ## X1990         436      42      45             42      39    514       38
 ## X1991         429      40      44             14      37    514       38
@@ -379,7 +431,7 @@ Row names are sort of what in Pandas we get when we use the attribute `.index` i
 rownames(existing_df)
 ```
 
-```
+```r
 ##  [1] "X1990" "X1991" "X1992" "X1993" "X1994" "X1995" "X1996" "X1997"
 ##  [9] "X1998" "X1999" "X2000" "X2001" "X2002" "X2003" "X2004" "X2005"
 ## [17] "X2006" "X2007"
@@ -394,7 +446,7 @@ In the case of column names, they pretty much correspond to Pandas `.columns` at
 colnames(existing_df)
 ```
 
-```
+```r
 ##   [1] "Afghanistan"                      "Albania"                         
 ##   [3] "Algeria"                          "American Samoa"                  
 ##   [5] "Andorra"                          "Angola"                          
@@ -511,14 +563,422 @@ But as we said we will leave them as they are by now.
 
 ### Python  
 
+There is a [whole section](http://pandas.pydata.org/pandas-docs/stable/indexing.html) devoted to indexing and selecting data in `DataFrames` in the oficial documentation. Let's apply them to our Tuberculosis cases dataframe.
+
+We can acces each data frame `Series` object by using its column name, as with a Python dictionary. In our case we can access each country series by its name.  
+
+```python
+existing_df['United Kingdom']
+```
+
+```python
+    year
+    1990     9
+    1991     9
+    1992    10
+    1993    10
+    1994     9
+    1995     9
+    1996     9
+    1997     9
+    1998     9
+    1999     9
+    2000     9
+    2001     9
+    2002     9
+    2003    10
+    2004    10
+    2005    11
+    2006    11
+    2007    12
+    Name: United Kingdom, dtype: int64
+```
+
+
+Or just using the key value as an attribute.  
+
+```python
+ existing_df.Spain
+```
+
+```python
+    year
+    1990    44
+    1991    42
+    1992    40
+    1993    37
+    1994    35
+    1995    34
+    1996    33
+    1997    30
+    1998    30
+    1999    28
+    2000    27
+    2001    26
+    2002    26
+    2003    25
+    2004    24
+    2005    24
+    2006    24
+    2007    23
+    Name: Spain, dtype: int64
+```
+
+
+Or we can access multiple series passing their column names as a Python list.
+
+```python
+existing_df[['Spain', 'United Kingdom']]
+```
+
+| ountry | Spain | United Kingdom |
+|--------|-------|----------------|
+| year   |       |                |
+| 1990   | 44    | 9              |
+| 1991   | 42    | 9              |
+| 1992   | 40    | 10             |
+| 1993   | 37    | 10             |
+| 1994   | 35    | 9              |
+| 1995   | 34    | 9              |
+| 1996   | 33    | 9              |
+| 1997   | 30    | 9              |
+| 1998   | 30    | 9              |
+| 1999   | 28    | 9              |
+| 2000   | 27    | 9              |
+| 2001   | 26    | 9              |
+| 2002   | 26    | 9              |
+| 2003   | 25    | 10             |
+| 2004   | 24    | 10             |
+| 2005   | 24    | 11             |
+| 2006   | 24    | 11             |
+| 2007   | 23    | 12             |
+
+
+We can also access individual cells as follows.
+
+```python
+existing_df.Spain['1990']
+```
+
+````python
+    44
+```
+
+
+Or using any Python list indexing for slicing the series.
+
+```python
+existing_df[['Spain', 'United Kingdom']][0:5]
+```
+
+| country | Spain | United Kingdom |
+|---------|-------|----------------|
+| year    |       |                |
+| 1990    | 44    | 9              |
+| 1991    | 42    | 9              |
+| 1992    | 40    | 10             |
+| 1993    | 37    | 10             |
+| 1994    | 35    | 9              |
+
+
+With the whole DataFrame, slicing inside of [] slices the rows. This is provided largely as a convenience since it is such a common operation.
+
+```python
+existing_df[0:5]
+```
+
+| country | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
+|---------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
+| year    |             |         |         |                |         |        |          |                     |           |         |     |         |            |         |           |          |                  |                    |       |        |          |
+| 1990    | 436         | 42      | 45      | 42             | 39      | 514    | 38       | 16                  | 96        | 52      | ... | 35      | 114        | 278     | 46        | 365      | 126              | 55                 | 265   | 436    | 409      |
+| 1991    | 429         | 40      | 44      | 14             | 37      | 514    | 38       | 15                  | 91        | 49      | ... | 34      | 105        | 268     | 45        | 361      | 352              | 54                 | 261   | 456    | 417      |
+| 1992    | 422         | 41      | 44      | 4              | 35      | 513    | 37       | 15                  | 86        | 51      | ... | 33      | 102        | 259     | 44        | 358      | 64               | 54                 | 263   | 494    | 415      |
+| 1993    | 415         | 42      | 43      | 18             | 33      | 512    | 37       | 14                  | 82        | 55      | ... | 32      | 118        | 250     | 43        | 354      | 174              | 52                 | 253   | 526    | 419      |
+| 1994    | 407         | 42      | 43      | 17             | 32      | 510    | 36       | 13                  | 78        | 60      | ... | 31      | 116        | 242     | 42        | 350      | 172              | 52                 | 250   | 556    | 426      |
+
+######5 rows × 207 columns
+
+
+### Indexing in production Python code
+
+As stated in the official documentation, the Python and NumPy indexing operators [] and attribute operator . provide quick and easy access to pandas data structures across a wide range of use cases. This makes interactive work intuitive, as there’s little new to learn if you already know how to deal with Python dictionaries and NumPy arrays. However, since the type of the data to be accessed isn’t known in advance, directly using standard operators has some optimization limits. For production code, it is recommended that you take advantage of the optimized pandas data access methods exposed in this section.
+
+For example, the `.iloc` method can be used for **positional** index access.
+
+```python
+existing_df.iloc[0:2]
+```
+
+| country | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
+|---------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
+| year    |             |         |         |                |         |        |          |                     |           |         |     |         |            |         |           |          |                  |                    |       |        |          |
+| 1990    | 436         | 42      | 45      | 42             | 39      | 514    | 38       | 16                  | 96        | 52      | ... | 35      | 114        | 278     | 46        | 365      | 126              | 55                 | 265   | 436    | 409      |
+| 1991    | 429         | 40      | 44      | 14             | 37      | 514    | 38       | 15                  | 91        | 49      | ... | 34      | 105        | 268     | 45        | 361      | 352              | 54                 | 261   | 456    | 417      |
+
+######2 rows × 207 columns
+
+
+While `.loc` is used for **label** access.
+
+```python
+existing_df.loc['1992':'2005']
+```
+
+| country | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
+|---------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
+| year    |             |         |         |                |         |        |          |                     |           |         |     |         |            |         |           |          |                  |                    |       |        |          |
+| 1992    | 422         | 41      | 44      | 4              | 35      | 513    | 37       | 15                  | 86        | 51      | ... | 33      | 102        | 259     | 44        | 358      | 64               | 54                 | 263   | 494    | 415      |
+| 1993    | 415         | 42      | 43      | 18             | 33      | 512    | 37       | 14                  | 82        | 55      | ... | 32      | 118        | 250     | 43        | 354      | 174              | 52                 | 253   | 526    | 419      |
+| 1994    | 407         | 42      | 43      | 17             | 32      | 510    | 36       | 13                  | 78        | 60      | ... | 31      | 116        | 242     | 42        | 350      | 172              | 52                 | 250   | 556    | 426      |
+| 1995    | 397         | 43      | 42      | 22             | 30      | 508    | 35       | 12                  | 74        | 68      | ... | 30      | 119        | 234     | 42        | 346      | 93               | 50                 | 244   | 585    | 439      |
+| 1996    | 397         | 42      | 43      | 0              | 28      | 512    | 35       | 12                  | 71        | 74      | ... | 28      | 111        | 226     | 41        | 312      | 123              | 49                 | 233   | 602    | 453      |
+| 1997    | 387         | 44      | 44      | 25             | 23      | 363    | 36       | 11                  | 67        | 75      | ... | 27      | 122        | 218     | 41        | 273      | 213              | 46                 | 207   | 626    | 481      |
+| 1998    | 374         | 43      | 45      | 12             | 24      | 414    | 36       | 11                  | 63        | 74      | ... | 28      | 129        | 211     | 40        | 261      | 107              | 44                 | 194   | 634    | 392      |
+| 1999    | 373         | 42      | 46      | 8              | 22      | 384    | 36       | 9                   | 58        | 86      | ... | 28      | 134        | 159     | 39        | 253      | 105              | 42                 | 175   | 657    | 430      |
+| 2000    | 346         | 40      | 48      | 8              | 20      | 530    | 35       | 8                   | 52        | 94      | ... | 27      | 139        | 143     | 39        | 248      | 103              | 40                 | 164   | 658    | 479      |
+| 2001    | 326         | 34      | 49      | 6              | 20      | 335    | 35       | 9                   | 51        | 99      | ... | 25      | 148        | 128     | 41        | 243      | 13               | 39                 | 154   | 680    | 523      |
+| 2002    | 304         | 32      | 50      | 5              | 21      | 307    | 35       | 7                   | 42        | 97      | ... | 27      | 144        | 149     | 41        | 235      | 275              | 37                 | 149   | 517    | 571      |
+| 2003    | 308         | 32      | 51      | 6              | 18      | 281    | 35       | 9                   | 41        | 91      | ... | 25      | 152        | 128     | 39        | 234      | 147              | 36                 | 146   | 478    | 632      |
+| 2004    | 283         | 29      | 52      | 9              | 19      | 318    | 35       | 8                   | 39        | 85      | ... | 23      | 149        | 118     | 38        | 226      | 63               | 35                 | 138   | 468    | 652      |
+| 2005    | 267         | 29      | 53      | 11             | 18      | 331    | 34       | 8                   | 39        | 79      | ... | 24      | 144        | 131     | 38        | 227      | 57               | 33                 | 137   | 453    | 680      |
+
+######14 rows × 207 columns
+
+
+And we can combine that with series indexing by column.
+
+```python
+existing_df[['Spain','United Kingdom']].loc[['1992','1998','2005']]
+```
+
+| country | Spain | United Kingdom |
+|---------|-------|----------------|
+| 1992    | 40    | 10             |
+| 1998    | 30    | 9              |
+| 2005    | 24    | 11             |
+
+
 ### R  
 
-## Data Selection   
+Similarly to what we do in Pandas (actually Pandas is inspired in R), we can
+access a `data.frame` column by its position.  
 
-### Python  
+```r
+existing_df[,1]
+```
 
-### R  
+```r
+## X1990 X1991 X1992 X1993 X1994 X1995 X1996 X1997 X1998 X1999 X2000 X2001 
+##   436   429   422   415   407   397   397   387   374   373   346   326 
+## X2002 X2003 X2004 X2005 X2006 X2007 
+##   304   308   283   267   251   238 
+## 17 Levels: 238 251 267 283 304 308 326 346 373 374 387 397 407 415 ... 436
+```
 
-## Conclusions   
+The position-based indexing in `R` uses the first element for the row number and
+the second one for the column one. If left blank, we are telling R to get all
+the row/columns. In the previous example we retrieved all the rows for the first
+column (Afghanistan) in the `data.frame`. And yes, R has a **1-based** indexing 
+schema.  
 
-This tutorial has introduced the concept of data frame, together with how to use them in the two most popular Data Science ecosystems nowadays, R and Python. Together, we have introduced a few datasets from Gapminder World related with Infectious Tuberculosis, a very serious epidemic disease sometimes forgotten in developed countries but that nowadays is the second cause of death of its kind just after HIV (and many times associated to HIV). In the next tutorial in the series, we will use these datasets in order to perform some Exploratory Analysis, better understand the world situation regarding the disease, and answer some of the questions we made in our introduction.   
+Like in Pandas, we can use column names to access columns (series in Pandas).
+However R `data.frame` variables aren't exactly object and we don't use the `.`
+operator but the `$` that allows accessing labels within a list.  
+
+```r
+existing_df$Afghanistan
+```
+
+```r
+## X1990 X1991 X1992 X1993 X1994 X1995 X1996 X1997 X1998 X1999 X2000 X2001 
+##   436   429   422   415   407   397   397   387   374   373   346   326 
+## X2002 X2003 X2004 X2005 X2006 X2007 
+##   304   308   283   267   251   238 
+## 17 Levels: 238 251 267 283 304 308 326 346 373 374 387 397 407 415 ... 436
+```
+
+An finally, since a `data.frame` is a list of elements (its columns), we can access
+columns as list elements using the list indexing operator `[[]]`.  
+
+```r
+existing_df[[1]]
+```
+
+```r
+## X1990 X1991 X1992 X1993 X1994 X1995 X1996 X1997 X1998 X1999 X2000 X2001 
+##   436   429   422   415   407   397   397   387   374   373   346   326 
+## X2002 X2003 X2004 X2005 X2006 X2007 
+##   304   308   283   267   251   238 
+## 17 Levels: 238 251 267 283 304 308 326 346 373 374 387 397 407 415 ... 436
+```
+
+At this point you should have realised that in R there are multiple ways of doing
+the same thing, and that this seems to happen more because of the language itself
+than because somebody wanted to provide different ways of doing things. This strongly
+contrasts with Python's philosophy of having one clear way of doing things (the 
+Pythonic way).  
+
+For row indexing we have the positional approach.  
+
+
+```r
+existing_df[1,]
+```
+
+```r
+##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
+## X1990         436      42      45             42      39    514       38
+##       Antigua and Barbuda Argentina Armenia Australia Austria Azerbaijan
+## X1990                  16        96      52         7      18         58
+##       Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin
+## X1990      54     120        639        8      62      16     65   140
+##       Bermuda Bhutan Bolivia Bosnia and Herzegovina Botswana Brazil
+## X1990      10    924     377                    160      344    124
+##       British Virgin Islands Brunei Darussalam Bulgaria Burkina Faso
+## X1990                     32                91       43          179
+##       Burundi Cambodia Cameroon Canada Cape Verde Cayman Islands
+## X1990     288      928      188      7        449             10
+##       Central African Republic Chad Chile China Colombia Comoros
+## X1990                      318  251    45   327       88     188
+##       Congo, Rep. Cook Islands Costa Rica Croatia Cuba Cyprus
+## X1990         209            0         30     126   32     14
+##       Czech Republic Cote d'Ivoire Korea, Dem. Rep. Congo, Dem. Rep.
+## X1990             22           292              841              275
+##       Denmark Djibouti Dominica Dominican Republic Ecuador Egypt
+## X1990      12    1,485       24                183     282    48
+##       El Salvador Equatorial Guinea Eritrea Estonia Ethiopia Fiji Finland
+## X1990         133               169     245      50      312   68      14
+##       France French Polynesia Gabon Gambia Georgia Germany Ghana Greece
+## X1990     21               67   359    350      51      15   533     30
+##       Grenada Guam Guatemala Guinea Guinea-Bissau Guyana Haiti Honduras
+## X1990       7  103       113    241           404     39   479      141
+##       Hungary Iceland India Indonesia Iran Iraq Ireland Israel Italy
+## X1990      67       5   586       443   50   88      19     11    11
+##       Jamaica Japan Jordan Kazakhstan Kenya Kiribati Kuwait Kyrgyzstan
+## X1990      10    62     19         95   125    1,026     89         90
+##       Laos Latvia Lebanon Lesotho Liberia Libyan Arab Jamahiriya Lithuania
+## X1990  428     56      64     225     476                     46        64
+##       Luxembourg Madagascar Malawi Malaysia Maldives Mali Malta Mauritania
+## X1990         19        367    380      159      143  640    10        585
+##       Mauritius Mexico Micronesia, Fed. Sts. Monaco Mongolia Montserrat
+## X1990        53    101                   263      3      477         14
+##       Morocco Mozambique Myanmar Namibia Nauru Nepal Netherlands
+## X1990     134        287     411     650   170   629          11
+##       Netherlands Antilles New Caledonia New Zealand Nicaragua Niger
+## X1990                   28           112          10       145   317
+##       Nigeria Niue Northern Mariana Islands Norway Oman Pakistan Palau
+## X1990     282  118                      142      8   40      430    96
+##       Panama Papua New Guinea Paraguay Peru Philippines Poland Portugal
+## X1990     74              498       95  394         799     88       51
+##       Puerto Rico Qatar Korea, Rep. Moldova Romania Russian Federation
+## X1990          17    71         223     105     118                 69
+##       Rwanda Saint Kitts and Nevis Saint Lucia
+## X1990    190                    17          26
+##       Saint Vincent and the Grenadines Samoa San Marino
+## X1990                               45    36          9
+##       Sao Tome and Principe Saudi Arabia Senegal Seychelles Sierra Leone
+## X1990                   346           68     380        113          465
+##       Singapore Slovakia Slovenia Solomon Islands Somalia South Africa
+## X1990        52       55       66             625     597          769
+##       Spain Sri Lanka Sudan Suriname Swaziland Sweden Switzerland
+## X1990    44       109   409      109       629      5          14
+##       Syrian Arab Republic Tajikistan Thailand Macedonia, FYR Timor-Leste
+## X1990                   94        193      336             92         706
+##       Togo Tokelau Tonga Trinidad and Tobago Tunisia Turkey Turkmenistan
+## X1990  702     139    45                  17      49     83          105
+##       Turks and Caicos Islands Tuvalu Uganda Ukraine United Arab Emirates
+## X1990                       42    593    206      67                   47
+##       United Kingdom Tanzania Virgin Islands (U.S.)
+## X1990              9      215                    30
+##       United States of America Uruguay Uzbekistan Vanuatu Venezuela
+## X1990                        7      35        114     278        46
+##       Viet Nam Wallis et Futuna West Bank and Gaza Yemen Zambia Zimbabwe
+## X1990      365              126                 55   265    436      409
+```
+
+There we retrieved data for every country in 1990. We can combine this with a
+column number.  
+
+
+```r
+existing_df[1,1]
+```
+
+```r
+## X1990 
+##   436 
+## 17 Levels: 238 251 267 283 304 308 326 346 373 374 387 397 407 415 ... 436
+```
+
+Or its name.  
+
+
+```r
+existing_df$Afghanistan[1]
+```
+
+```r
+## X1990 
+##   436 
+## 17 Levels: 238 251 267 283 304 308 326 346 373 374 387 397 407 415 ... 436
+```
+
+What did just do before? Basically we retrieved a column, that is a vector, and
+accessed that vector first element. That way we got the value for Afghanistan for
+the year 1990. We can do the same thing using the `[[]]` operator instead of the
+list element label.  
+
+
+```r
+existing_df[[1]][1]
+```
+
+```r
+## X1990 
+##   436 
+## 17 Levels: 238 251 267 283 304 308 326 346 373 374 387 397 407 415 ... 436
+```
+
+We can also select multiple columns and/or rows by passing R vectors.  
+
+
+```r
+existing_df[c(3,9,16),c(170,194)]
+```
+
+```r
+##       Spain United Kingdom
+## X1992    40             10
+## X1998    30              9
+## X2005    24             11
+```
+
+Finally, using names is also possible when using positional indexing.  
+
+
+```r
+existing_df["X1992","Spain"]
+```
+
+```r
+## X1992 
+##    40 
+## Levels:  25  26  27  28  30  33 23 24 34 35 37 40 42 44
+```
+
+That we can combine with vectors.  
+
+
+```r
+existing_df[c("X1992", "X1998", "X2005"), c("Spain", "United Kingdom")]
+```
+
+```r
+##       Spain United Kingdom
+## X1992    40             10
+## X1998    30              9
+## X2005    24             11
+```
+
+So enough about indexing. In the [next[part of the tutorial on data frames]() we will see how to perform more complex data accessing using selection.  Additionally, we will explain how to apply functions to a data frame elements, and how to group them.  
+

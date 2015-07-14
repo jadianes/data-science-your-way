@@ -14,10 +14,27 @@ In R, you use `read.csv` to read CSV files into `data.frame` variables. Although
 ```{r}
 library(RCurl)
 existing_cases_file <- getURL("https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0&output=csv")
-existing_df <- read.csv(text = existing_cases_file, row.names=1)
+existing_df <- read.csv(text = existing_cases_file, row.names=1, stringsAsFactor=F)
+str(existing_df)
 ```
 
-Our dataset is a bit tricky. If we have a look at what we got into the data frame with `head`  
+The `str()` function in R gives us information about a variable type. In this case
+we can see that, due to the `,` thousands separator,
+some of the columns hasn't been parsed as numbers but as character.
+If we want to properly work with our dataset we need to convert them to numbers.
+Once we know a bit more about indexing and mapping functions, I promise you will be 
+able to understand the following piece of code. By know let's say that we convert 
+a column and assign it again to its reference in the data frame.    
+
+```{r}
+existing_df[c(1,2,3,4,5,6,15,16,17,18)] <- 
+    lapply( existing_df[c(1,2,3,4,5,6,15,16,17,18)], 
+            function(x) { as.integer(gsub(',', '', x) )})
+str(existing_df)
+```
+
+Everything looks fine now. But still our dataset is a bit tricky. If we have a 
+look at what we got into the data frame with `head`  
 
 ```{r}
 head(existing_df,3)
@@ -63,5 +80,217 @@ But as we said we will leave them as they are by now.
 
 ## Data indexing  
 
+Similarly to what we do in Pandas (actually Pandas is inspired in R), we can
+access a `data.frame` column by its position.  
 
+```{r}
+existing_df[,1]
+```
 
+The position-based indexing in `R` uses the first element for the row number and
+the second one for the column one. If left blank, we are telling R to get all
+the row/columns. In the previous example we retrieved all the rows for the first
+column (Afghanistan) in the `data.frame`. And yes, R has a **1-based** indexing 
+schema.  
+
+Like in Pandas, we can use column names to access columns (series in Pandas).
+However R `data.frame` variables aren't exactly object and we don't use the `.`
+operator but the `$` that allows accessing labels within a list.  
+
+```{r}
+existing_df$Afghanistan
+```
+
+An finally, since a `data.frame` is a list of elements (its columns), we can access
+columns as list elements using the list indexing operator `[[]]`.  
+
+```{r}
+existing_df[[1]]
+```
+
+At this point you should have realised that in R there are multiple ways of doing
+the same thing, and that this seems to happen more because of the language itself
+than because somebody wanted to provide different ways of doing things. This strongly
+contrasts with Python's philosophy of having one clear way of doing things (the 
+Pythonic way).  
+
+For row indexing we have the positional approach.  
+
+```{r}
+existing_df[1,]
+```
+
+There we retrieved data for every country in 1990. We can combine this with a
+column number.  
+
+```{r}
+existing_df[1,1]
+```
+
+Or its name.  
+
+```{r}
+existing_df$Afghanistan[1]
+```
+
+What did just do before? Basically we retrieved a column, that is a vector, and
+accessed that vector first element. That way we got the value for Afghanistan for
+the year 1990. We can do the same thing using the `[[]]` operator instead of the
+list element label.  
+
+```{r}
+existing_df[[1]][1]
+```
+
+We can also select multiple columns and/or rows by passing R vectors.  
+
+```{r}
+existing_df[c(3,9,16),c(170,194)]
+```
+
+Finally, using names is also possible when using positional indexing.  
+
+```{r}
+existing_df["X1992","Spain"]
+```
+
+That we can combine with vectors.  
+
+```{r}
+existing_df[c("X1992", "X1998", "X2005"), c("Spain", "United Kingdom")]
+```
+
+So enough about indexing. In the next section we will see how to perform more 
+complex data accessing using conditional selection.  
+
+## Data Selection  
+
+As we did with Pandas, let's check the result of using a `data.frame` in a logical
+or boolean expression.  
+
+```{r}
+existing_df_gt10 <- existing_df>10
+existing_df_gt10
+```
+
+In this case we get a `matrix` variable, with boolean values. When applied to
+individual columns.  
+
+```{r}
+existing_df['United Kingdom'] > 10
+```
+
+The result (and the syntax) is equivalent to that of Pandas, and can be used for
+indexing as follows.  
+
+```{r}
+existing_df$Spain[existing_df['United Kingdom'] > 10]
+```
+
+As we did in Python/Pandas, let's use the whole boolean matrix we got before.  
+
+```{r}
+existing_df[ existing_df_gt10 ]
+```
+
+But hey, the results are quite different from what we would expect comming from
+using Pandas. We got a long vector of values, not a data frame. The problem is 
+that the `[ ]` operator, when passed a matrix, first coherces the data frame to a
+matrix. Basically we cannot seamlessly work with R data.frames and boolean matrices
+as we did with Pandas. We should instead index in both dimensions, columns and rows,
+separatelly.  
+
+But still, we can use matrix indexing with a data frame to replace elements.  
+
+```{r}
+existing_df_2 <- existing_df
+existing_df_2[ existing_df_gt10 ] <- -1
+head(existing_df_2)
+```
+
+We can see how many of the elements, those where we had more than 10 cases, where
+assigned a -1 value.  
+
+The most expressive way of selecting form a `data.frame` in R is by using the 
+`subset` function (type `?subset` in your R console to
+read about this function). The function is applied by row in the data frame. 
+The second argument can include any condition using column names. The third argument
+can include a list of columns. The resulting dataframe will contain those rows
+that satisfy the second argument conditions, including just those columns listed
+in the third argument (all of them bt default). For example, if we want to select
+those years when the United Kingdom had more than 10 cases, and list the resulting
+rows for three countries (UK, Spain, and Colombia) we will use:    
+
+```{r}
+# If a column name contains blanks, we can have to use ` `
+subset(existing_df,  `United Kingdom`>10, c('United Kingdom', 'Spain','Colombia'))
+```
+
+We can do the same thing using `[ ]` as follows.  
+
+```{r}
+existing_df[existing_df["United Kingdom"]>10, c('United Kingdom', 'Spain','Colombia')]
+```
+
+## Function mapping and grouping  
+
+### `lapply`  
+
+R has a long collection of *apply* functions that can be used to apply functions to
+elements within vectors, matrices, lists, and data frames. The one we will introduce here
+is **lapply** (type `?lapply` in your R console). It is the one we use with lists and, 
+since a data frame is a list of column vectors, will work with them as well.  
+
+For example, we can repeat the by year sum we did with Pandas as follows.  
+
+```{r}
+existing_df_sum_years <- lapply(existing_df, function(x) { sum(x) })
+existing_df_sum_years <- as.data.frame(existing_df_sum_years)
+existing_df_sum_years
+```
+
+What did we do there? Very simple. the `lapply` function gets a list and a function
+that will be applied to each element. It returns the result as a list. The function 
+is defined in-line (i.e. as a lambda in Python). For a given `x` if sums its elements.  
+
+If we want to sum by year, for every country, we can use the trasposed data frame
+we stored before.  
+
+```{r}
+existing_df_sum_countries <- lapply(existing_df_t, function(x) { sum(x) })
+existing_df_sum_countries <- as.data.frame(existing_df_sum_countries)
+existing_df_sum_countries
+```
+
+#### aggregate  
+
+R provided basic grouping functionality by using `aggregate`. Another option is
+to have alook at the powerful [dplyr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html) library that I highly recommend.  
+
+But `aggregate` is quite powerful as well. It accepts a data frame, a list of 
+grouping elements, and a function to apply to each group. First we need to define
+a grouping vector.  
+
+```{r}
+before_2000 <- c('1990-99','1990-99','1990-99','1990-99','1990-99',
+                 '1990-99','1990-99','1990-99','1990-99','1990-99',
+                 '2000-07','2000-07','2000-07','2000-07','2000-07',
+                 '2000-07','2000-07','2000-07')
+before_2000
+```
+
+Then we can use that column as groping element and use the function `mean`.  
+
+```{r}
+mean_cases_by_period <- aggregate(existing_df, list(Period = before_2000), mean)
+mean_cases_by_period
+```
+
+The `aggregate` function allows subsetting the dataframe we pass as first parameter
+of course, and also to pass multiple grouping elements and define our own functions
+(either as lambda or predefined functions). And again, the result is a data frame
+that we can index as usual.  
+
+```{r}
+mean_cases_by_period[,c('United Kingdom','Spain','Colombia')]
+```
