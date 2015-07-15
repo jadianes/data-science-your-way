@@ -624,656 +624,112 @@ or boolean expression.
 
 ```r
 existing_df_gt10 <- existing_df>10
-existing_df_gt10
+head(existing_df_gt10,2) # check just a couple of rows
 ```
 
 ```
 ##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
 ## X1990        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
 ## X1991        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
-## X1992        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X1993        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
-## X1994        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
-## X1995        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
-## X1996        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X1997        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
-## X1998        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
-## X1999        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X2000        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X2001        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X2002        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X2003        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X2004        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X2005        TRUE    TRUE    TRUE           TRUE    TRUE   TRUE     TRUE
-## X2006        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
-## X2007        TRUE    TRUE    TRUE          FALSE    TRUE   TRUE     TRUE
 ##       Antigua and Barbuda Argentina Armenia Australia Austria Azerbaijan
 ## X1990                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
 ## X1991                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1992                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1993                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1994                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1995                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1996                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1997                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1998                TRUE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X1999               FALSE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X2000               FALSE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X2001               FALSE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X2002               FALSE      TRUE    TRUE     FALSE    TRUE       TRUE
-## X2003               FALSE      TRUE    TRUE     FALSE   FALSE       TRUE
-## X2004               FALSE      TRUE    TRUE     FALSE   FALSE       TRUE
-## X2005               FALSE      TRUE    TRUE     FALSE   FALSE       TRUE
-## X2006               FALSE      TRUE    TRUE     FALSE   FALSE       TRUE
-## X2007               FALSE      TRUE    TRUE     FALSE   FALSE       TRUE
 ##       Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin
 ## X1990    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
 ## X1991    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1992    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1993    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1994    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1995    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1996    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1997    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1998    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X1999    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X2000    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X2001    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X2002    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X2003    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X2004    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X2005    TRUE    TRUE       TRUE    FALSE    TRUE    TRUE   TRUE  TRUE
-## X2006    TRUE    TRUE       TRUE    FALSE    TRUE   FALSE   TRUE  TRUE
-## X2007    TRUE    TRUE       TRUE    FALSE    TRUE   FALSE   TRUE  TRUE
 ##       Bermuda Bhutan Bolivia Bosnia and Herzegovina Botswana Brazil
 ## X1990   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
 ## X1991   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1992   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1993   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1994   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1995   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1996   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1997   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1998   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X1999   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2000   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2001   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2002   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2003   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2004   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2005   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2006   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
-## X2007   FALSE   TRUE    TRUE                   TRUE     TRUE   TRUE
 ##       British Virgin Islands Brunei Darussalam Bulgaria Burkina Faso
 ## X1990                   TRUE              TRUE     TRUE         TRUE
 ## X1991                   TRUE              TRUE     TRUE         TRUE
-## X1992                   TRUE              TRUE     TRUE         TRUE
-## X1993                   TRUE              TRUE     TRUE         TRUE
-## X1994                   TRUE              TRUE     TRUE         TRUE
-## X1995                   TRUE              TRUE     TRUE         TRUE
-## X1996                   TRUE              TRUE     TRUE         TRUE
-## X1997                   TRUE              TRUE     TRUE         TRUE
-## X1998                   TRUE              TRUE     TRUE         TRUE
-## X1999                   TRUE              TRUE     TRUE         TRUE
-## X2000                   TRUE              TRUE     TRUE         TRUE
-## X2001                   TRUE              TRUE     TRUE         TRUE
-## X2002                   TRUE              TRUE     TRUE         TRUE
-## X2003                   TRUE              TRUE     TRUE         TRUE
-## X2004                   TRUE              TRUE     TRUE         TRUE
-## X2005                   TRUE              TRUE     TRUE         TRUE
-## X2006                   TRUE              TRUE     TRUE         TRUE
-## X2007                   TRUE              TRUE     TRUE         TRUE
 ##       Burundi Cambodia Cameroon Canada Cape Verde Cayman Islands
 ## X1990    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
 ## X1991    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1992    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1993    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1994    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1995    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1996    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1997    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1998    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X1999    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2000    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2001    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2002    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2003    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2004    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2005    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2006    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
-## X2007    TRUE     TRUE     TRUE  FALSE       TRUE          FALSE
 ##       Central African Republic Chad Chile China Colombia Comoros
 ## X1990                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
 ## X1991                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1992                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1993                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1994                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1995                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1996                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1997                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1998                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X1999                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2000                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2001                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2002                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2003                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2004                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2005                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2006                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-## X2007                     TRUE TRUE  TRUE  TRUE     TRUE    TRUE
-##       Congo, Rep. Cook Islands Costa Rica Croatia  Cuba Cyprus
-## X1990        TRUE        FALSE       TRUE    TRUE  TRUE   TRUE
-## X1991        TRUE        FALSE       TRUE    TRUE  TRUE   TRUE
-## X1992        TRUE         TRUE       TRUE    TRUE  TRUE   TRUE
-## X1993        TRUE         TRUE       TRUE    TRUE  TRUE   TRUE
-## X1994        TRUE         TRUE       TRUE    TRUE  TRUE   TRUE
-## X1995        TRUE         TRUE       TRUE    TRUE  TRUE   TRUE
-## X1996        TRUE        FALSE       TRUE    TRUE  TRUE   TRUE
-## X1997        TRUE         TRUE       TRUE    TRUE  TRUE  FALSE
-## X1998        TRUE        FALSE       TRUE    TRUE  TRUE  FALSE
-## X1999        TRUE         TRUE       TRUE    TRUE  TRUE  FALSE
-## X2000        TRUE         TRUE       TRUE    TRUE  TRUE  FALSE
-## X2001        TRUE         TRUE       TRUE    TRUE  TRUE  FALSE
-## X2002        TRUE         TRUE       TRUE    TRUE  TRUE  FALSE
-## X2003        TRUE        FALSE       TRUE    TRUE FALSE  FALSE
-## X2004        TRUE         TRUE       TRUE    TRUE FALSE  FALSE
-## X2005        TRUE        FALSE       TRUE    TRUE FALSE  FALSE
-## X2006        TRUE         TRUE       TRUE    TRUE FALSE  FALSE
-## X2007        TRUE         TRUE       TRUE    TRUE FALSE  FALSE
+##       Congo, Rep. Cook Islands Costa Rica Croatia Cuba Cyprus
+## X1990        TRUE        FALSE       TRUE    TRUE TRUE   TRUE
+## X1991        TRUE        FALSE       TRUE    TRUE TRUE   TRUE
 ##       Czech Republic Cote d'Ivoire Korea, Dem. Rep. Congo, Dem. Rep.
 ## X1990           TRUE          TRUE             TRUE             TRUE
 ## X1991           TRUE          TRUE             TRUE             TRUE
-## X1992           TRUE          TRUE             TRUE             TRUE
-## X1993           TRUE          TRUE             TRUE             TRUE
-## X1994           TRUE          TRUE             TRUE             TRUE
-## X1995           TRUE          TRUE             TRUE             TRUE
-## X1996           TRUE          TRUE             TRUE             TRUE
-## X1997           TRUE          TRUE             TRUE             TRUE
-## X1998           TRUE          TRUE             TRUE             TRUE
-## X1999           TRUE          TRUE             TRUE             TRUE
-## X2000           TRUE          TRUE             TRUE             TRUE
-## X2001           TRUE          TRUE             TRUE             TRUE
-## X2002           TRUE          TRUE             TRUE             TRUE
-## X2003           TRUE          TRUE             TRUE             TRUE
-## X2004           TRUE          TRUE             TRUE             TRUE
-## X2005           TRUE          TRUE             TRUE             TRUE
-## X2006          FALSE          TRUE             TRUE             TRUE
-## X2007          FALSE          TRUE             TRUE             TRUE
 ##       Denmark Djibouti Dominica Dominican Republic Ecuador Egypt
 ## X1990    TRUE     TRUE     TRUE               TRUE    TRUE  TRUE
 ## X1991    TRUE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1992    TRUE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1993   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1994   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1995   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1996   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1997   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1998   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X1999   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2000   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2001   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2002   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2003   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2004   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2005   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2006   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
-## X2007   FALSE     TRUE     TRUE               TRUE    TRUE  TRUE
 ##       El Salvador Equatorial Guinea Eritrea Estonia Ethiopia Fiji Finland
 ## X1990        TRUE              TRUE    TRUE    TRUE     TRUE TRUE    TRUE
 ## X1991        TRUE              TRUE    TRUE    TRUE     TRUE TRUE    TRUE
-## X1992        TRUE              TRUE    TRUE    TRUE     TRUE TRUE    TRUE
-## X1993        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X1994        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X1995        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X1996        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X1997        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X1998        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X1999        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2000        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2001        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2002        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2003        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2004        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2005        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2006        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
-## X2007        TRUE              TRUE    TRUE    TRUE     TRUE TRUE   FALSE
 ##       France French Polynesia Gabon Gambia Georgia Germany Ghana Greece
 ## X1990   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
 ## X1991   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1992   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1993   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1994   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1995   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1996   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1997   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1998   TRUE             TRUE  TRUE   TRUE    TRUE    TRUE  TRUE   TRUE
-## X1999   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2000   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2001   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2002   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2003   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2004   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2005   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2006   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
-## X2007   TRUE             TRUE  TRUE   TRUE    TRUE   FALSE  TRUE   TRUE
 ##       Grenada Guam Guatemala Guinea Guinea-Bissau Guyana Haiti Honduras
 ## X1990   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
 ## X1991   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1992   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1993   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1994   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1995   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1996   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1997   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1998   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X1999   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2000   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2001   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2002   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2003   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2004   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2005   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2006   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
-## X2007   FALSE TRUE      TRUE   TRUE          TRUE   TRUE  TRUE     TRUE
 ##       Hungary Iceland India Indonesia Iran Iraq Ireland Israel Italy
 ## X1990    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE   TRUE  TRUE
 ## X1991    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1992    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1993    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1994    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1995    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1996    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1997    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1998    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X1999    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X2000    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X2001    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
-## X2002    TRUE   FALSE  TRUE      TRUE TRUE TRUE   FALSE  FALSE FALSE
-## X2003    TRUE   FALSE  TRUE      TRUE TRUE TRUE   FALSE  FALSE FALSE
-## X2004    TRUE   FALSE  TRUE      TRUE TRUE TRUE   FALSE  FALSE FALSE
-## X2005    TRUE   FALSE  TRUE      TRUE TRUE TRUE   FALSE  FALSE FALSE
-## X2006    TRUE   FALSE  TRUE      TRUE TRUE TRUE   FALSE  FALSE FALSE
-## X2007    TRUE   FALSE  TRUE      TRUE TRUE TRUE    TRUE  FALSE FALSE
 ##       Jamaica Japan Jordan Kazakhstan Kenya Kiribati Kuwait Kyrgyzstan
 ## X1990   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
 ## X1991   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1992   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1993   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1994   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1995   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1996   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1997   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1998   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X1999   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2000   FALSE  TRUE   TRUE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2001   FALSE  TRUE  FALSE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2002   FALSE  TRUE  FALSE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2003   FALSE  TRUE  FALSE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2004   FALSE  TRUE  FALSE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2005   FALSE  TRUE  FALSE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2006   FALSE  TRUE  FALSE       TRUE  TRUE     TRUE   TRUE       TRUE
-## X2007   FALSE  TRUE  FALSE       TRUE  TRUE     TRUE   TRUE       TRUE
 ##       Laos Latvia Lebanon Lesotho Liberia Libyan Arab Jamahiriya Lithuania
 ## X1990 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
 ## X1991 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1992 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1993 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1994 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1995 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1996 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1997 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1998 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X1999 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2000 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2001 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2002 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2003 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2004 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2005 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2006 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
-## X2007 TRUE   TRUE    TRUE    TRUE    TRUE                   TRUE      TRUE
 ##       Luxembourg Madagascar Malawi Malaysia Maldives Mali Malta Mauritania
 ## X1990       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
 ## X1991       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1992       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1993       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1994       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1995       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1996       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1997       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1998       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X1999       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2000       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2001       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2002       TRUE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2003      FALSE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2004      FALSE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2005      FALSE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2006      FALSE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
-## X2007      FALSE       TRUE   TRUE     TRUE     TRUE TRUE FALSE       TRUE
 ##       Mauritius Mexico Micronesia, Fed. Sts. Monaco Mongolia Montserrat
 ## X1990      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
 ## X1991      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1992      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1993      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1994      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1995      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1996      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1997      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1998      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X1999      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X2000      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X2001      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X2002      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X2003      TRUE   TRUE                  TRUE  FALSE     TRUE      FALSE
-## X2004      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X2005      TRUE   TRUE                  TRUE  FALSE     TRUE      FALSE
-## X2006      TRUE   TRUE                  TRUE  FALSE     TRUE       TRUE
-## X2007      TRUE   TRUE                  TRUE  FALSE     TRUE      FALSE
 ##       Morocco Mozambique Myanmar Namibia Nauru Nepal Netherlands
 ## X1990    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE        TRUE
 ## X1991    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1992    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1993    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1994    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1995    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1996    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1997    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1998    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X1999    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2000    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2001    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2002    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2003    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2004    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2005    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2006    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
-## X2007    TRUE       TRUE    TRUE    TRUE  TRUE  TRUE       FALSE
 ##       Netherlands Antilles New Caledonia New Zealand Nicaragua Niger
 ## X1990                 TRUE          TRUE       FALSE      TRUE  TRUE
 ## X1991                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X1992                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X1993                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X1994                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X1995                 TRUE          TRUE        TRUE      TRUE  TRUE
-## X1996                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X1997                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X1998                 TRUE          TRUE        TRUE      TRUE  TRUE
-## X1999                 TRUE          TRUE        TRUE      TRUE  TRUE
-## X2000                 TRUE          TRUE        TRUE      TRUE  TRUE
-## X2001                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X2002                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X2003                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X2004                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X2005                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X2006                 TRUE          TRUE       FALSE      TRUE  TRUE
-## X2007                 TRUE          TRUE       FALSE      TRUE  TRUE
-##       Nigeria  Niue Northern Mariana Islands Norway Oman Pakistan Palau
-## X1990    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1991    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1992    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1993    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1994    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1995    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1996    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1997    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1998    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X1999    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2000    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2001    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2002    TRUE  TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2003    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2004    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2005    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2006    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
-## X2007    TRUE FALSE                     TRUE  FALSE TRUE     TRUE  TRUE
+##       Nigeria Niue Northern Mariana Islands Norway Oman Pakistan Palau
+## X1990    TRUE TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
+## X1991    TRUE TRUE                     TRUE  FALSE TRUE     TRUE  TRUE
 ##       Panama Papua New Guinea Paraguay Peru Philippines Poland Portugal
 ## X1990   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
 ## X1991   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1992   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1993   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1994   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1995   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1996   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1997   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1998   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X1999   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2000   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2001   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2002   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2003   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2004   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2005   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2006   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
-## X2007   TRUE             TRUE     TRUE TRUE        TRUE   TRUE     TRUE
 ##       Puerto Rico Qatar Korea, Rep. Moldova Romania Russian Federation
 ## X1990        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
 ## X1991        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1992        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1993        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1994        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1995        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1996        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1997        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1998        TRUE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X1999       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2000       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2001       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2002       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2003       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2004       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2005       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2006       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
-## X2007       FALSE  TRUE        TRUE    TRUE    TRUE               TRUE
 ##       Rwanda Saint Kitts and Nevis Saint Lucia
 ## X1990   TRUE                  TRUE        TRUE
 ## X1991   TRUE                  TRUE        TRUE
-## X1992   TRUE                  TRUE        TRUE
-## X1993   TRUE                  TRUE        TRUE
-## X1994   TRUE                  TRUE        TRUE
-## X1995   TRUE                  TRUE        TRUE
-## X1996   TRUE                  TRUE        TRUE
-## X1997   TRUE                  TRUE        TRUE
-## X1998   TRUE                  TRUE        TRUE
-## X1999   TRUE                  TRUE        TRUE
-## X2000   TRUE                  TRUE        TRUE
-## X2001   TRUE                  TRUE        TRUE
-## X2002   TRUE                  TRUE        TRUE
-## X2003   TRUE                  TRUE        TRUE
-## X2004   TRUE                  TRUE        TRUE
-## X2005   TRUE                  TRUE        TRUE
-## X2006   TRUE                  TRUE        TRUE
-## X2007   TRUE                  TRUE        TRUE
 ##       Saint Vincent and the Grenadines Samoa San Marino
 ## X1990                             TRUE  TRUE      FALSE
 ## X1991                             TRUE  TRUE      FALSE
-## X1992                             TRUE  TRUE      FALSE
-## X1993                             TRUE  TRUE      FALSE
-## X1994                             TRUE  TRUE      FALSE
-## X1995                             TRUE  TRUE      FALSE
-## X1996                             TRUE  TRUE      FALSE
-## X1997                             TRUE  TRUE      FALSE
-## X1998                             TRUE  TRUE      FALSE
-## X1999                             TRUE  TRUE      FALSE
-## X2000                             TRUE  TRUE      FALSE
-## X2001                             TRUE  TRUE      FALSE
-## X2002                             TRUE  TRUE      FALSE
-## X2003                             TRUE  TRUE      FALSE
-## X2004                             TRUE  TRUE      FALSE
-## X2005                             TRUE  TRUE      FALSE
-## X2006                             TRUE  TRUE      FALSE
-## X2007                             TRUE  TRUE      FALSE
 ##       Sao Tome and Principe Saudi Arabia Senegal Seychelles Sierra Leone
 ## X1990                  TRUE         TRUE    TRUE       TRUE         TRUE
 ## X1991                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1992                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1993                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1994                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1995                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1996                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1997                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1998                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X1999                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2000                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2001                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2002                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2003                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2004                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2005                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2006                  TRUE         TRUE    TRUE       TRUE         TRUE
-## X2007                  TRUE         TRUE    TRUE       TRUE         TRUE
 ##       Singapore Slovakia Slovenia Solomon Islands Somalia South Africa
 ## X1990      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
 ## X1991      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1992      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1993      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1994      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1995      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1996      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1997      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1998      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X1999      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2000      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2001      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2002      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2003      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2004      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2005      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2006      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
-## X2007      TRUE     TRUE     TRUE            TRUE    TRUE         TRUE
 ##       Spain Sri Lanka Sudan Suriname Swaziland Sweden Switzerland
 ## X1990  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE        TRUE
 ## X1991  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE        TRUE
-## X1992  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE        TRUE
-## X1993  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE        TRUE
-## X1994  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X1995  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X1996  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X1997  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X1998  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X1999  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2000  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2001  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2002  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2003  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2004  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2005  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2006  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
-## X2007  TRUE      TRUE  TRUE     TRUE      TRUE  FALSE       FALSE
 ##       Syrian Arab Republic Tajikistan Thailand Macedonia, FYR Timor-Leste
 ## X1990                 TRUE       TRUE     TRUE           TRUE        TRUE
 ## X1991                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1992                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1993                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1994                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1995                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1996                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1997                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1998                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X1999                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2000                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2001                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2002                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2003                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2004                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2005                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2006                 TRUE       TRUE     TRUE           TRUE        TRUE
-## X2007                 TRUE       TRUE     TRUE           TRUE        TRUE
 ##       Togo Tokelau Tonga Trinidad and Tobago Tunisia Turkey Turkmenistan
 ## X1990 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
 ## X1991 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1992 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1993 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1994 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1995 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1996 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1997 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1998 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X1999 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2000 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2001 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2002 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2003 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2004 TRUE    TRUE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2005 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2006 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
-## X2007 TRUE   FALSE  TRUE                TRUE    TRUE   TRUE         TRUE
 ##       Turks and Caicos Islands Tuvalu Uganda Ukraine United Arab Emirates
 ## X1990                     TRUE   TRUE   TRUE    TRUE                 TRUE
 ## X1991                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1992                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1993                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1994                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1995                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1996                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1997                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1998                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X1999                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2000                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2001                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2002                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2003                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2004                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2005                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2006                     TRUE   TRUE   TRUE    TRUE                 TRUE
-## X2007                     TRUE   TRUE   TRUE    TRUE                 TRUE
 ##       United Kingdom Tanzania Virgin Islands (U.S.)
 ## X1990          FALSE     TRUE                  TRUE
 ## X1991          FALSE     TRUE                  TRUE
-## X1992          FALSE     TRUE                  TRUE
-## X1993          FALSE     TRUE                  TRUE
-## X1994          FALSE     TRUE                  TRUE
-## X1995          FALSE     TRUE                  TRUE
-## X1996          FALSE     TRUE                  TRUE
-## X1997          FALSE     TRUE                  TRUE
-## X1998          FALSE     TRUE                  TRUE
-## X1999          FALSE     TRUE                  TRUE
-## X2000          FALSE     TRUE                  TRUE
-## X2001          FALSE     TRUE                  TRUE
-## X2002          FALSE     TRUE                  TRUE
-## X2003          FALSE     TRUE                  TRUE
-## X2004          FALSE     TRUE                  TRUE
-## X2005           TRUE     TRUE                  TRUE
-## X2006           TRUE     TRUE                  TRUE
-## X2007           TRUE     TRUE                  TRUE
 ##       United States of America Uruguay Uzbekistan Vanuatu Venezuela
 ## X1990                    FALSE    TRUE       TRUE    TRUE      TRUE
 ## X1991                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1992                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1993                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1994                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1995                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1996                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1997                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1998                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X1999                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2000                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2001                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2002                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2003                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2004                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2005                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2006                    FALSE    TRUE       TRUE    TRUE      TRUE
-## X2007                    FALSE    TRUE       TRUE    TRUE      TRUE
 ##       Viet Nam Wallis et Futuna West Bank and Gaza Yemen Zambia Zimbabwe
 ## X1990     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
 ## X1991     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1992     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1993     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1994     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1995     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1996     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1997     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1998     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X1999     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2000     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2001     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2002     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2003     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2004     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2005     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2006     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
-## X2007     TRUE             TRUE               TRUE  TRUE   TRUE     TRUE
 ```
 
 In this case we get a `matrix` variable, with boolean values. When applied to
@@ -1322,260 +778,11 @@ As we did in Python/Pandas, let's use the whole boolean matrix we got before.
 
 
 ```r
-existing_df[ existing_df_gt10 ]
+head(existing_df[ existing_df_gt10 ]) # check first few elements
 ```
 
 ```
-##    [1]  436  429  422  415  407  397  397  387  374  373  346  326  304
-##   [14]  308  283  267  251  238   42   40   41   42   42   43   42   44
-##   [27]   43   42   40   34   32   32   29   29   26   22   45   44   44
-##   [40]   43   43   42   43   44   45   46   48   49   50   51   52   53
-##   [53]   55   56   42   14   18   17   22   25   12   11   39   37   35
-##   [66]   33   32   30   28   23   24   22   20   20   21   18   19   18
-##   [79]   17   19  514  514  513  512  510  508  512  363  414  384  530
-##   [92]  335  307  281  318  331  302  294   38   38   37   37   36   35
-##  [105]   35   36   36   36   35   35   35   35   35   34   34   34   16
-##  [118]   15   15   14   13   12   12   11   11   96   91   86   82   78
-##  [131]   74   71   67   63   58   52   51   42   41   39   39   37   35
-##  [144]   52   49   51   55   60   68   74   75   74   86   94   99   97
-##  [157]   91   85   79   79   81   18   17   16   15   15   14   13   13
-##  [170]   12   12   11   11   11   58   55   57   61   67   76   85   91
-##  [183]  100  106  113  117   99  109   90   85   86   86   54   53   52
-##  [196]   52   53   54   54   54   55   46   45   45   51   51   50   50
-##  [209]   50   51  120  113  108  101   97   92   89   86   83   67   57
-##  [222]   56   55   53   48   45   45   60  639  623  608  594  579  576
-##  [235]  550  535  516  492  500  491  478  458  444  416  392  387   62
-##  [248]   54   59   62   75   82   91   98  109  113  110  100   89   68
-##  [261]   68   68   69   69   16   15   15   15   15   14   13   13   12
-##  [274]   12   12   13   12   11   11   11   65   64   62   59   57   55
-##  [287]   37   41   53   53   39   36   36   40   42   38   41   46  140
-##  [300]  138  135  132  129  125  127  129  130  128  128  129  137  139
-##  [313]  134  135  134  135  924  862  804  750  699  651  620  597  551
-##  [326]  538  515  512  472  460  443  412  406  363  377  362  347  333
-##  [339]  320  306  271  264  254  248  238  229  223  218  211  205  202
-##  [352]  198  160  156  154  150  143  134  131  125   96   80   70   63
-##  [365]   66   63   55   58   58   55  344  355  351  349  347  349  336
-##  [378]  349  371  413  445  497  535  586  598  599  621  622  124  119
-##  [391]  114  109  104  100   97   93   88   86   83   80   77   72   63
-##  [404]   60   56   60   32   30   28   26   25   23   22   21   20   19
-##  [417]   19   18   18   17   16   17   16   16   91   91   91   91   91
-##  [430]   91   91   88   88   93  108   85   78   73   63   55   59   65
-##  [443]   43   48   54   57   58   57   59   65   68   68   64   63   52
-##  [456]   42   40   41   40   41  179  196  208  221  233  246  251  271
-##  [469]  286  308  338  368  398  419  426  421  411  403  288  302  292
-##  [482]  293  305  322  339  346  424  412  455  522  581  619  639  654
-##  [495]  657  647  928  905  881  858  836  811  810  789  777  764  758
-##  [508]  750  728  712  696  676  672  664  188  199  200  199  197  197
-##  [521]  196  207  212  219  228  241  240  227  228  213  201  195  449
-##  [534]  438  428  418  408  398  394  391  387  384  380  283  374  370
-##  [547]  367  278  285  280  318  336  342  350  356  365  270  395  419
-##  [560]  449  485  495  468  566  574  507  437  425  251  272  282  294
-##  [573]  304  315  354  408  433  390  420  450  502  573  548  518  505
-##  [586]  497   45   41   38   35   32   30   28   25   24   22   21   19
-##  [599]   19   18   15   15   13   12  327  321  315  309  303  303  290
-##  [612]  283  276  273  269  265  259  241  220  206  200  194   88   85
-##  [625]   82   79   76   73   71   69   67   61   51   62   60   58   55
-##  [638]   53   44   43  188  177  167  157  148  140  130  155  120  143
-##  [651]  112  103  104  107   99   91   86   83  209  222  231  243  255
-##  [664]  269  424  457  367  545  313  354  402  509  477  482  511  485
-##  [677]   57   47   38   19   13   40   12   29   11   15   16   31   30
-##  [690]   28   27   26   25   24   23   22   21   19   14   14   15   14
-##  [703]   12   12   12   11  126  123  121  118  113  106  103  102   99
-##  [716]   89   76   73   69   68   67   65   65   54   32   29   26   24
-##  [729]   22   20   18   17   15   14   13   12   11   14   13   13   12
-##  [742]   11   11   11   22   22   22   21   21   21   21   21   19   18
-##  [755]   16   14   13   12   11   11  292  304  306  309  312  319  329
-##  [768]  350  376  413  472  571  561  590  604  613  597  582  841  828
-##  [781]  815  802  788  775  775  775  775  770  713  650  577  527  499
-##  [794]  508  500  441  275  306  327  352  376  411  420  466  472  528
-##  [807]  592  643  697  708  710  702  692  666   12   12   11 1485 1477
-##  [820] 1463 1442 1414 1381  720  669  698  701  761  775  932  960 1034
-##  [833] 1046 1093 1104   24   24   24   23   23   22   22   18   20   20
-##  [846]   20   22   20   20   20   21   13   19  183  173  164  156  148
-##  [859]  141  135  132  128  122  119  115  102   93   90   85   84   82
-##  [872]  282  271  259  249  238  228  221  212  207  200  194  185  170
-##  [885]  162  155  155  148  140   48   47   47   45   45   44   51   46
-##  [898]   43   40   36   34   32   31   29   28   27   27  133  126  119
-##  [911]  112  105   99   97   80   76   72   69   66   62   60   57   52
-##  [924]   50   48  169  181  187  194  200  207  216  222  236  253  274
-##  [937]  441  470  490  370  366  358  469  245  245  242  239  235  232
-##  [950]  232  225  203  114  114  111  118  110  122  127  133  134   50
-##  [963]   50   56   66   77   85   88   98  102  105   72   68   62   56
-##  [976]   50   46   44   39  312  337  351  366  383  403  396  397  420
-##  [989]  464  486  539  569  601  613  612  604  579   68   65   62   58
-## [1002]   55   53   49   49   46   40   42   35   36   29   33   31   30
-## [1015]   30   14   12   11   21   20   19   18   17   16   15   15   14
-## [1028]   14   13   12   12   12   12   11   11   11   67   55   91   83
-## [1041]   93  107   55   48   56   54   40   42   32   29   28   31   31
-## [1054]   32  359  340  325  318  316  293  312  320  359  366  434  249
-## [1067]  302  299  288  332  358  379  350  350  349  347  344  341  324
-## [1080]  321  311  485  491  499  335  343  341  366  399  404   51   48
-## [1093]   50   54   59   66   73  104   87   90   98   95   95   94   90
-## [1106]   86   83   83   15   15   14   14   13   13   12   11   11  533
-## [1119]  519  502  480  455  432  426  388  384  382  368  358  359  358
-## [1132]  359  357  355  353   30   29   27   25   24   23   22   22   21
-## [1145]   20   19   18   18   17   17   16   16   16  103  101   96  110
-## [1158]  146   93   91   89   87   86   44   45   44   47   41   42   39
-## [1171]   36  113  111  108  106  103  100   95   94   93   92   90   91
-## [1184]   89   89   86   85   84   87  241  248  255  262  269  275  277
-## [1197]  293  305  317  332  346  363  380  391  425  426  448  404  403
-## [1210]  402  399  395  390  390  387  385  386  273  276  305  296  287
-## [1223]  283  270  276   39   43   34   43   50   67   78   81   90   93
-## [1236]   98  112  126  136  130  132  133  136  479  464  453  443  435
-## [1249]  429  428  426  417  407  403  397  388  380  377  368  368  366
-## [1262]  141  133  128  123  119  115  114  112  106   98   70   70   72
-## [1275]   71   72   71   70   71   67   68   70   72   73   73   74   72
-## [1288]   67   47   43   39   36   33   29   26   22   19  586  577  566
-## [1301]  555  542  525  517  501  487  476  443  411  389  349  311  299
-## [1314]  290  283  443  430  417  404  392  380  369  359  348  335  326
-## [1327]  314  297  287  274  261  251  244   50   51   56   54   55   55
-## [1340]   61   52   45   41   40   38   37   35   32   31   29   27   88
-## [1353]   88   88   88   88   88   84   84   82   80   71   69   65   67
-## [1366]   71   75   78   79   19   18   18   17   15   14   12   12   12
-## [1379]   12   12   11   11   11   11   62   60   58   56   53   51   50
-## [1392]   50   49   48   45   41   39   36   34   32   30   28   19   18
-## [1405]   17   17   16   15   20   18   12   11   11   95   87   85   84
-## [1418]   85   94  109  137  163  134  141  148  150  155  152  147  144
-## [1431]  139  125  120  134  152  177  207  233  277  313  351  393  384
-## [1444]  392  402  410  388  340  319 1026 1006  986  966  947  928  910
-## [1457]  853  571  556  546  607  587  477  439  419  405  423   89   84
-## [1470]   80   75   72   68   66   64   61   35   33   33   30   29   29
-## [1483]   30   25   25   90   93   93   93  101  118  141  165  147  146
-## [1496]  156  169  153  145  139  136  135  134  428  424  420  415  411
-## [1509]  407  373  360  352  344  344  337  330  324  313  298  291  289
-## [1522]   56   57   59   63   75   91   77   89   92   95   91   89   85
-## [1535]   78   72   66   61   55   64   64   63   62   62   59   64   54
-## [1548]   50   37   35   30   26   24   22   21   23   23  225  231  229
-## [1561]  228  232  242  248  264  298  518  356  370  399  408  414  421
-## [1574]  408  568  476  473  469  465  462  461  418  424  396  403  435
-## [1587]  437  382  429  370  416  393  398   46   45   45   43   43   42
-## [1600]   41   38   36   23   22   22   21   20   19   18   18   17   64
-## [1613]   66   71   79   89   98  110  119  125  120  115   96   83   72
-## [1626]   72   66   65   69   19   18   17   16   15   14   14   13   13
-## [1639]   12   11   11   11  367  368  369  369  370  370  339  345  346
-## [1652]  352  359  371  382  375  384  408  400  417  380  376  365  355
-## [1665]  353  348  337  342  345  349  362  350  358  353  346  342  324
-## [1678]  305  159  158  156  155  153  151  147  173  170  167  135  133
-## [1691]  132  128  128  126  123  121  143  130  118  107   97   88   88
-## [1704]  101   89   94   96   84   83   69   71   63   69   48  640  631
-## [1717]  621  609  597  583  573  566  565  567  571  573  572  578  584
-## [1730]  589  593  599  585  587  590  592  594  595  622  615  612  615
-## [1743]  619  624  632  642  494  565  556  559   53   51   50   48   47
-## [1756]   45   62   61   45   40   39   42   40   39   38   39   39   39
-## [1769]  101   93   86   80   74   68   64   58   52   48   42   38   35
-## [1782]   33   31   27   25   23  263  253  244  234  225  217  204  287
-## [1795]  276  265  173  171  152  142  128  124  112  100  477  477  477
-## [1808]  477  477  477  333  342  307  281  297  273  258  258  233  232
-## [1821]  217  234   14   14   14   14   14   13   13   13   13   13   13
-## [1834]   13   13   13   12  134  130  127  123  119  116  107  106  105
-## [1847]   99   98   95   87   91   89   85   82   80  287  313  328  343
-## [1860]  356  369  386  408  432  461  499  535  556  569  567  551  528
-## [1873]  504  411  400  389  379  370  361  298  309  312  298  267  238
-## [1886]  202  175  168  161  161  162  650  685  687  683  671  658  387
-## [1899]  395  411  442  481  506  544  560  572  570  556  532  170  285
-## [1912]  280  274   90  263  258  253  248   44   44   56   57   48  162
-## [1925]  121  174   33  629  607  585  564  543  523  498  473  448  363
-## [1938]  312  304  285  271  260  247  246  240   11   28   27   25   24
-## [1951]   23   22   21   20   19   18   17   17   17   16   16   15   15
-## [1964]   15  112  107  104   76   69   60   58   97   97   51   51   43
-## [1977]   34   28   29   29   25   25   11   11   11   11  145  137  129
-## [1990]  122  114  108  100   97   93   89   85   80   79   73   69   68
-## [2003]   64   56  317  318  319  319  319  318  322  292  281  281  278
-## [2016]  280  288  275  287  285  289  292  282  307  321  336  350  366
-## [2029]  379  399  423  452  489  526  563  575  573  563  543  521  118
-## [2042]  115  113  111  109  106  202  114  506  142  201  301  194  186
-## [2055]  185  188  331  334  220  135  120   95   83   80   83   83   72
-## [2068]   40   36   29   25   22   22   15   15   14   14   13   14   13
-## [2081]   13   12   13   13   14  430  428  427  426  424  422  421  421
-## [2094]  415  420  413  406  376  355  333  289  260  223   96   66   43
-## [2107]  260  414  187   53   92   54  376  104  102   69   64   31  102
-## [2120]   74   71   74   73   71   70   69   68   67   67   65   64   60
-## [2133]   51   48   49   44   44   44   45  498  498  497  497  496  496
-## [2146]  494  493  491  489  486  482  477  471  463  453  441  430   95
-## [2159]   93   92   91   89   88   71   92   92   91   90   89   88   85
-## [2172]   85   81   74   73  394  368  343  320  298  278  270  251  230
-## [2185]  222  210  198  187  182  167  155  143  136  799  783  766  750
-## [2198]  735  719  705  689  669  649  600  578  561  542  534  520  505
-## [2211]  500   88   87   86   85   83   79   74   68   63   58   53   50
-## [2224]   35   34   33   31   29   28   51   49   47   45   44   43   42
-## [2237]   41   39   38   36   34   33   32   29   27   24   23   17   15
-## [2250]   17   18   18   18   15   13   12   71   69   69   74   84   89
-## [2263]   87   84   75   78   78   78   75   71   71   69   77   81  223
-## [2276]  196  174  150  142  132  105   98   89  107  113  112  126  108
-## [2289]  112  118  122  126  105   99  103  111  122  138  157  171  191
-## [2302]  203  215  174  211  176  152  151  151  151  118  125  134  147
-## [2315]  159  167  174  184  129  194  197  206  180  185  178  148  138
-## [2328]  128   69   64   70   78   91  111  132  142  155  160  164  158
-## [2341]  148  140  135  121  117  115  190  211  226  243  259  278  297
-## [2354]  316  339  383  442  503  549  581  607  607  595  590   17   17
-## [2367]   16   16   16   15   16   15   11   12   15   13   12   14   13
-## [2380]   15   14   12   26   26   25   25   25   24   23   17   16   18
-## [2393]   20   18   17   19   18   18   18   18   45   45   44   43   42
-## [2406]   42   42   41   38   41   35   36   36   34   36   36   34   39
-## [2419]   36   35   34   33   32   31   35   33   50   31   27   33   28
-## [2432]   28   24   27   26   25  346  335  325  315  304  295  290  285
-## [2445]  290  276  272  266  261  266  255  256  252  240   68   60   59
-## [2458]   60   64   67   71   73   76   72   67   65   62   60   60   60
-## [2471]   62   65  380  379  379  378  377  376  372  388  397  424  420
-## [2484]  430  443  441  454  456  461  468  113  110  106  103  100   96
-## [2497]   66   59   71   90   52   53   42   66   52   57   56   55  465
-## [2510]  479  492  504  517  534  525  565  602  636  675  696  743  784
-## [2523]  830  866  902  941   52   52   53   50   49   49   50   50   48
-## [2536]   44   39   36   34   32   31   28   27   27   55   56   59   59
-## [2549]   56   51   46   42   38   35   32   30   29   26   25   21   20
-## [2562]   20   66   62   59   57   53   50   35   35   32   29   27   25
-## [2575]   22   21   19   16   16   15  625  593  563  534  506  480  380
-## [2588]  354  339  322  300  286  277  254  229  204  197  180  597  587
-## [2601]  577  566  555  543  465  444  446  431  414  398  391  362  334
-## [2614]  325  341  352  769  726  676  620  562  502  480  466  465  426
-## [2627]  515  581  586  649  676  707  690  692   44   42   40   37   35
-## [2640]   34   33   30   30   28   27   26   26   25   24   24   24   23
-## [2653]  109  106  104  102   99   97  102   93   90   89  107   99   88
-## [2666]   89   87   75   80   79  409  404  402  402  403  405  409  417
-## [2679]  378  382  375  389  363  371  376  384  391  402  109  100   79
-## [2692]   80   76   78   88  101  118  122  115  113  113  120  126  136
-## [2705]  146  155  629  590  527  477  448  441  460  504  556  647  740
-## [2718]  832  693  739  776  788  801  812   14   13   12   11   94   89
-## [2731]   84   80   75   71   67   61   54   48   41   37   35   33   31
-## [2744]   30   29   27  193  162  112   79   85  106  134  141  159  169
-## [2757]  191  221  248  256  277  282  301  322  336  319  307  297  291
-## [2770]  285  285  279  256  231  223  194  197  189  188  184  189  192
-## [2783]   92   90   89   86   83   77   74   73   72   65   56   39   40
-## [2796]   37   34   34   34   33  706  694  681  669  656  644  644  644
-## [2809]  644  644  644  644  345  359  367  370  385  378  702  687  668
-## [2822]  647  628  614  613  658  637  647  656  669  701  693  702  713
-## [2835]  726  750  139  140  143  112  301  112  112  112  112   45   44
-## [2848]   43   43   42   41   38   38   31   34   34   42   35   36   39
-## [2861]   32   34   28   17   17   17   16   16   16   16   16   15   15
-## [2874]   15   16   15   15   15   15   15   15   49   46   49   51   51
-## [2887]   49   48   46   44   31   30   28   27   26   27   27   28   28
-## [2900]   83   79   77   73   68   62   62   63   64   57   49   45   44
-## [2913]   43   44   44   32   34  105   99  101   97   92   80   92  114
-## [2926]  137  142  130  115  110  103   98   91   85   75   42   40   37
-## [2939]   35   33   31   30   29   28   17   16   23   23   22   22   22
-## [2952]   18   17  593  573  554  535  518  500  484  467  452  437  422
-## [2965]  408  394  381  368  245  261  203  206  313  342  377  394  418
-## [2978]  419  342  357  359  391  411  447  476  472  469  450  426   67
-## [2991]   64   67   72   75   78   87   93  104  109  120  128  133  135
-## [3004]  132  113   99  102   47   44   42   39   38   36   34   33   31
-## [3017]   30   27   27   27   25   25   24   24   24   11   11   12  215
-## [3030]  228  240  252  269  283  301  324  333  347  364  367  383  380
-## [3043]  373  364  353  337   30   28   27   25   24   23   19   18   17
-## [3056]   19   19   18   18   17   17   16   16   16   35   34   33   32
-## [3069]   31   30   28   27   28   28   27   25   27   25   23   24   25
-## [3082]   23  114  105  102  118  116  119  111  122  129  134  139  148
-## [3095]  144  152  149  144  134  140  278  268  259  250  242  234  226
-## [3108]  218  211  159  143  128  149  128  118  131  104  102   46   45
-## [3121]   44   43   42   42   41   41   40   39   39   41   41   39   38
-## [3134]   38   38   39  365  361  358  354  350  346  312  273  261  253
-## [3147]  248  243  235  234  226  227  222  220  126  352   64  174  172
-## [3160]   93  123  213  107  105  103   13  275  147   63   57   60   25
-## [3173]   55   54   54   52   52   50   49   46   44   42   40   39   37
-## [3186]   36   35   33   32   31  265  261  263  253  250  244  233  207
-## [3199]  194  175  164  154  149  146  138  137  135  130  436  456  494
-## [3212]  526  556  585  602  626  634  657  658  680  517  478  468  453
-## [3225]  422  387  409  417  415  419  426  439  453  481  392  430  479
-## [3238]  523  571  632  652  680  699  714
+## [1] 436 429 422 415 407 397
 ```
 
 But hey, the results are quite different from what we would expect comming from
@@ -1591,248 +798,112 @@ But still, we can use matrix indexing with a data frame to replace elements.
 ```r
 existing_df_2 <- existing_df
 existing_df_2[ existing_df_gt10 ] <- -1
-head(existing_df_2)
+head(existing_df_2,2)
 ```
 
 ```
 ##       Afghanistan Albania Algeria American Samoa Andorra Angola Anguilla
 ## X1990          -1      -1      -1             -1      -1     -1       -1
 ## X1991          -1      -1      -1             -1      -1     -1       -1
-## X1992          -1      -1      -1              4      -1     -1       -1
-## X1993          -1      -1      -1             -1      -1     -1       -1
-## X1994          -1      -1      -1             -1      -1     -1       -1
-## X1995          -1      -1      -1             -1      -1     -1       -1
 ##       Antigua and Barbuda Argentina Armenia Australia Austria Azerbaijan
 ## X1990                  -1        -1      -1         7      -1         -1
 ## X1991                  -1        -1      -1         7      -1         -1
-## X1992                  -1        -1      -1         7      -1         -1
-## X1993                  -1        -1      -1         7      -1         -1
-## X1994                  -1        -1      -1         7      -1         -1
-## X1995                  -1        -1      -1         7      -1         -1
 ##       Bahamas Bahrain Bangladesh Barbados Belarus Belgium Belize Benin
 ## X1990      -1      -1         -1        8      -1      -1     -1    -1
 ## X1991      -1      -1         -1        8      -1      -1     -1    -1
-## X1992      -1      -1         -1        7      -1      -1     -1    -1
-## X1993      -1      -1         -1        7      -1      -1     -1    -1
-## X1994      -1      -1         -1        6      -1      -1     -1    -1
-## X1995      -1      -1         -1        6      -1      -1     -1    -1
 ##       Bermuda Bhutan Bolivia Bosnia and Herzegovina Botswana Brazil
 ## X1990      10     -1      -1                     -1       -1     -1
 ## X1991      10     -1      -1                     -1       -1     -1
-## X1992       9     -1      -1                     -1       -1     -1
-## X1993       9     -1      -1                     -1       -1     -1
-## X1994       8     -1      -1                     -1       -1     -1
-## X1995       8     -1      -1                     -1       -1     -1
 ##       British Virgin Islands Brunei Darussalam Bulgaria Burkina Faso
 ## X1990                     -1                -1       -1           -1
 ## X1991                     -1                -1       -1           -1
-## X1992                     -1                -1       -1           -1
-## X1993                     -1                -1       -1           -1
-## X1994                     -1                -1       -1           -1
-## X1995                     -1                -1       -1           -1
 ##       Burundi Cambodia Cameroon Canada Cape Verde Cayman Islands
 ## X1990      -1       -1       -1      7         -1             10
 ## X1991      -1       -1       -1      7         -1             10
-## X1992      -1       -1       -1      7         -1              9
-## X1993      -1       -1       -1      6         -1              9
-## X1994      -1       -1       -1      6         -1              8
-## X1995      -1       -1       -1      6         -1              8
 ##       Central African Republic Chad Chile China Colombia Comoros
 ## X1990                       -1   -1    -1    -1       -1      -1
 ## X1991                       -1   -1    -1    -1       -1      -1
-## X1992                       -1   -1    -1    -1       -1      -1
-## X1993                       -1   -1    -1    -1       -1      -1
-## X1994                       -1   -1    -1    -1       -1      -1
-## X1995                       -1   -1    -1    -1       -1      -1
 ##       Congo, Rep. Cook Islands Costa Rica Croatia Cuba Cyprus
 ## X1990          -1            0         -1      -1   -1     -1
 ## X1991          -1           10         -1      -1   -1     -1
-## X1992          -1           -1         -1      -1   -1     -1
-## X1993          -1           -1         -1      -1   -1     -1
-## X1994          -1           -1         -1      -1   -1     -1
-## X1995          -1           -1         -1      -1   -1     -1
 ##       Czech Republic Cote d'Ivoire Korea, Dem. Rep. Congo, Dem. Rep.
 ## X1990             -1            -1               -1               -1
 ## X1991             -1            -1               -1               -1
-## X1992             -1            -1               -1               -1
-## X1993             -1            -1               -1               -1
-## X1994             -1            -1               -1               -1
-## X1995             -1            -1               -1               -1
 ##       Denmark Djibouti Dominica Dominican Republic Ecuador Egypt
 ## X1990      -1       -1       -1                 -1      -1    -1
 ## X1991      -1       -1       -1                 -1      -1    -1
-## X1992      -1       -1       -1                 -1      -1    -1
-## X1993      10       -1       -1                 -1      -1    -1
-## X1994      10       -1       -1                 -1      -1    -1
-## X1995       9       -1       -1                 -1      -1    -1
 ##       El Salvador Equatorial Guinea Eritrea Estonia Ethiopia Fiji Finland
 ## X1990          -1                -1      -1      -1       -1   -1      -1
 ## X1991          -1                -1      -1      -1       -1   -1      -1
-## X1992          -1                -1      -1      -1       -1   -1      -1
-## X1993          -1                -1      -1      -1       -1   -1      10
-## X1994          -1                -1      -1      -1       -1   -1       9
-## X1995          -1                -1      -1      -1       -1   -1      10
 ##       France French Polynesia Gabon Gambia Georgia Germany Ghana Greece
 ## X1990     -1               -1    -1     -1      -1      -1    -1     -1
 ## X1991     -1               -1    -1     -1      -1      -1    -1     -1
-## X1992     -1               -1    -1     -1      -1      -1    -1     -1
-## X1993     -1               -1    -1     -1      -1      -1    -1     -1
-## X1994     -1               -1    -1     -1      -1      -1    -1     -1
-## X1995     -1               -1    -1     -1      -1      -1    -1     -1
 ##       Grenada Guam Guatemala Guinea Guinea-Bissau Guyana Haiti Honduras
 ## X1990       7   -1        -1     -1            -1     -1    -1       -1
 ## X1991       7   -1        -1     -1            -1     -1    -1       -1
-## X1992       7   -1        -1     -1            -1     -1    -1       -1
-## X1993       7   -1        -1     -1            -1     -1    -1       -1
-## X1994       7   -1        -1     -1            -1     -1    -1       -1
-## X1995       7   -1        -1     -1            -1     -1    -1       -1
 ##       Hungary Iceland India Indonesia Iran Iraq Ireland Israel Italy
 ## X1990      -1       5    -1        -1   -1   -1      -1     -1    -1
 ## X1991      -1       4    -1        -1   -1   -1      -1     10    10
-## X1992      -1       4    -1        -1   -1   -1      -1     10    10
-## X1993      -1       4    -1        -1   -1   -1      -1      9     9
-## X1994      -1       4    -1        -1   -1   -1      -1      9     9
-## X1995      -1       4    -1        -1   -1   -1      -1      8     8
 ##       Jamaica Japan Jordan Kazakhstan Kenya Kiribati Kuwait Kyrgyzstan
 ## X1990      10    -1     -1         -1    -1       -1     -1         -1
 ## X1991      10    -1     -1         -1    -1       -1     -1         -1
-## X1992      10    -1     -1         -1    -1       -1     -1         -1
-## X1993      10    -1     -1         -1    -1       -1     -1         -1
-## X1994       9    -1     -1         -1    -1       -1     -1         -1
-## X1995       9    -1     -1         -1    -1       -1     -1         -1
 ##       Laos Latvia Lebanon Lesotho Liberia Libyan Arab Jamahiriya Lithuania
 ## X1990   -1     -1      -1      -1      -1                     -1        -1
 ## X1991   -1     -1      -1      -1      -1                     -1        -1
-## X1992   -1     -1      -1      -1      -1                     -1        -1
-## X1993   -1     -1      -1      -1      -1                     -1        -1
-## X1994   -1     -1      -1      -1      -1                     -1        -1
-## X1995   -1     -1      -1      -1      -1                     -1        -1
 ##       Luxembourg Madagascar Malawi Malaysia Maldives Mali Malta Mauritania
 ## X1990         -1         -1     -1       -1       -1   -1    10         -1
 ## X1991         -1         -1     -1       -1       -1   -1     9         -1
-## X1992         -1         -1     -1       -1       -1   -1     9         -1
-## X1993         -1         -1     -1       -1       -1   -1     8         -1
-## X1994         -1         -1     -1       -1       -1   -1     8         -1
-## X1995         -1         -1     -1       -1       -1   -1     7         -1
 ##       Mauritius Mexico Micronesia, Fed. Sts. Monaco Mongolia Montserrat
 ## X1990        -1     -1                    -1      3       -1         -1
 ## X1991        -1     -1                    -1      3       -1         -1
-## X1992        -1     -1                    -1      3       -1         -1
-## X1993        -1     -1                    -1      3       -1         -1
-## X1994        -1     -1                    -1      3       -1         -1
-## X1995        -1     -1                    -1      3       -1         -1
 ##       Morocco Mozambique Myanmar Namibia Nauru Nepal Netherlands
 ## X1990      -1         -1      -1      -1    -1    -1          -1
 ## X1991      -1         -1      -1      -1    -1    -1          10
-## X1992      -1         -1      -1      -1    -1    -1          10
-## X1993      -1         -1      -1      -1    -1    -1           9
-## X1994      -1         -1      -1      -1    -1    -1           9
-## X1995      -1         -1      -1      -1    -1    -1           8
 ##       Netherlands Antilles New Caledonia New Zealand Nicaragua Niger
 ## X1990                   -1            -1          10        -1    -1
 ## X1991                   -1            -1          10        -1    -1
-## X1992                   -1            -1           9        -1    -1
-## X1993                   -1            -1           9        -1    -1
-## X1994                   -1            -1          10        -1    -1
-## X1995                   -1            -1          -1        -1    -1
 ##       Nigeria Niue Northern Mariana Islands Norway Oman Pakistan Palau
 ## X1990      -1   -1                       -1      8   -1       -1    -1
 ## X1991      -1   -1                       -1      8   -1       -1    -1
-## X1992      -1   -1                       -1      8   -1       -1    -1
-## X1993      -1   -1                       -1      7   -1       -1    -1
-## X1994      -1   -1                       -1      7   -1       -1    -1
-## X1995      -1   -1                       -1      6   -1       -1    -1
 ##       Panama Papua New Guinea Paraguay Peru Philippines Poland Portugal
 ## X1990     -1               -1       -1   -1          -1     -1       -1
 ## X1991     -1               -1       -1   -1          -1     -1       -1
-## X1992     -1               -1       -1   -1          -1     -1       -1
-## X1993     -1               -1       -1   -1          -1     -1       -1
-## X1994     -1               -1       -1   -1          -1     -1       -1
-## X1995     -1               -1       -1   -1          -1     -1       -1
 ##       Puerto Rico Qatar Korea, Rep. Moldova Romania Russian Federation
 ## X1990          -1    -1          -1      -1      -1                 -1
 ## X1991          -1    -1          -1      -1      -1                 -1
-## X1992          -1    -1          -1      -1      -1                 -1
-## X1993          -1    -1          -1      -1      -1                 -1
-## X1994          -1    -1          -1      -1      -1                 -1
-## X1995          -1    -1          -1      -1      -1                 -1
 ##       Rwanda Saint Kitts and Nevis Saint Lucia
 ## X1990     -1                    -1          -1
 ## X1991     -1                    -1          -1
-## X1992     -1                    -1          -1
-## X1993     -1                    -1          -1
-## X1994     -1                    -1          -1
-## X1995     -1                    -1          -1
 ##       Saint Vincent and the Grenadines Samoa San Marino
 ## X1990                               -1    -1          9
 ## X1991                               -1    -1          9
-## X1992                               -1    -1          8
-## X1993                               -1    -1          8
-## X1994                               -1    -1          7
-## X1995                               -1    -1          7
 ##       Sao Tome and Principe Saudi Arabia Senegal Seychelles Sierra Leone
 ## X1990                    -1           -1      -1         -1           -1
 ## X1991                    -1           -1      -1         -1           -1
-## X1992                    -1           -1      -1         -1           -1
-## X1993                    -1           -1      -1         -1           -1
-## X1994                    -1           -1      -1         -1           -1
-## X1995                    -1           -1      -1         -1           -1
 ##       Singapore Slovakia Slovenia Solomon Islands Somalia South Africa
 ## X1990        -1       -1       -1              -1      -1           -1
 ## X1991        -1       -1       -1              -1      -1           -1
-## X1992        -1       -1       -1              -1      -1           -1
-## X1993        -1       -1       -1              -1      -1           -1
-## X1994        -1       -1       -1              -1      -1           -1
-## X1995        -1       -1       -1              -1      -1           -1
 ##       Spain Sri Lanka Sudan Suriname Swaziland Sweden Switzerland
 ## X1990    -1        -1    -1       -1        -1      5          -1
 ## X1991    -1        -1    -1       -1        -1      5          -1
-## X1992    -1        -1    -1       -1        -1      6          -1
-## X1993    -1        -1    -1       -1        -1      6          -1
-## X1994    -1        -1    -1       -1        -1      5          10
-## X1995    -1        -1    -1       -1        -1      5          10
 ##       Syrian Arab Republic Tajikistan Thailand Macedonia, FYR Timor-Leste
 ## X1990                   -1         -1       -1             -1          -1
 ## X1991                   -1         -1       -1             -1          -1
-## X1992                   -1         -1       -1             -1          -1
-## X1993                   -1         -1       -1             -1          -1
-## X1994                   -1         -1       -1             -1          -1
-## X1995                   -1         -1       -1             -1          -1
 ##       Togo Tokelau Tonga Trinidad and Tobago Tunisia Turkey Turkmenistan
 ## X1990   -1      -1    -1                  -1      -1     -1           -1
 ## X1991   -1      -1    -1                  -1      -1     -1           -1
-## X1992   -1      -1    -1                  -1      -1     -1           -1
-## X1993   -1      -1    -1                  -1      -1     -1           -1
-## X1994   -1       0    -1                  -1      -1     -1           -1
-## X1995   -1      -1    -1                  -1      -1     -1           -1
 ##       Turks and Caicos Islands Tuvalu Uganda Ukraine United Arab Emirates
 ## X1990                       -1     -1     -1      -1                   -1
 ## X1991                       -1     -1     -1      -1                   -1
-## X1992                       -1     -1     -1      -1                   -1
-## X1993                       -1     -1     -1      -1                   -1
-## X1994                       -1     -1     -1      -1                   -1
-## X1995                       -1     -1     -1      -1                   -1
 ##       United Kingdom Tanzania Virgin Islands (U.S.)
 ## X1990              9       -1                    -1
 ## X1991              9       -1                    -1
-## X1992             10       -1                    -1
-## X1993             10       -1                    -1
-## X1994              9       -1                    -1
-## X1995              9       -1                    -1
 ##       United States of America Uruguay Uzbekistan Vanuatu Venezuela
 ## X1990                        7      -1         -1      -1        -1
 ## X1991                        7      -1         -1      -1        -1
-## X1992                        7      -1         -1      -1        -1
-## X1993                        7      -1         -1      -1        -1
-## X1994                        6      -1         -1      -1        -1
-## X1995                        6      -1         -1      -1        -1
 ##       Viet Nam Wallis et Futuna West Bank and Gaza Yemen Zambia Zimbabwe
 ## X1990       -1               -1                 -1    -1     -1       -1
 ## X1991       -1               -1                 -1    -1     -1       -1
-## X1992       -1               -1                 -1    -1     -1       -1
-## X1993       -1               -1                 -1    -1     -1       -1
-## X1994       -1               -1                 -1    -1     -1       -1
-## X1995       -1               -1                 -1    -1     -1       -1
 ```
 
 We can see how many of the elements, those where we had more than 10 cases, where

@@ -170,7 +170,7 @@ or boolean expression.
 
 ```{r}
 existing_df_gt10 <- existing_df>10
-existing_df_gt10
+head(existing_df_gt10,2) # check just a couple of rows
 ```
 
 In this case we get a `matrix` variable, with boolean values. When applied to
@@ -190,7 +190,7 @@ existing_df$Spain[existing_df['United Kingdom'] > 10]
 As we did in Python/Pandas, let's use the whole boolean matrix we got before.  
 
 ```{r}
-existing_df[ existing_df_gt10 ]
+head(existing_df[ existing_df_gt10 ]) # check first few elements
 ```
 
 But hey, the results are quite different from what we would expect comming from
@@ -205,7 +205,7 @@ But still, we can use matrix indexing with a data frame to replace elements.
 ```{r}
 existing_df_2 <- existing_df
 existing_df_2[ existing_df_gt10 ] <- -1
-head(existing_df_2)
+head(existing_df_2,2)
 ```
 
 We can see how many of the elements, those where we had more than 10 cases, where
