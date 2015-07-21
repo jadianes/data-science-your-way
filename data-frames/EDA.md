@@ -14,8 +14,6 @@ In any data analysis process, there is one or more questions we want to answer. 
 
 ### Python  
 
-MORE: http://pandas.pydata.org/pandas-docs/stable/api.html#api-dataframe-stats
-
 The basic data descriptive statistics method for a `pandas.DataFrame` is `describe()`. It is the equivalent to R `data.frame` function `summary()`.  
 
 ```python
