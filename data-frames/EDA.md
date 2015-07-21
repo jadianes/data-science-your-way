@@ -14,6 +14,111 @@ In any data analysis process, there is one or more questions we want to answer. 
 
 ### Python  
 
+MORE: http://pandas.pydata.org/pandas-docs/stable/api.html#api-dataframe-stats
+
+The basic data descriptive statistics method for a `pandas.DataFrame` is `describe()`. It is the equivalent to R `data.frame` function `summary()`.  
+
+```python
+df_summary = existing_df.describe()
+df_summary
+```
+
+| country | Afghanistan | Albania   | Algeria   | American Samoa | Andorra   | Angola     | Anguilla  | Antigua and Barbuda | Argentina | Armenia   | ... | Uruguay   | Uzbekistan | Vanuatu    | Venezuela | Viet Nam   | Wallis et Futuna | West Bank and Gaza | Yemen      | Zambia     | Zimbabwe   |
+|---------|-------------|-----------|-----------|----------------|-----------|------------|-----------|---------------------|-----------|-----------|-----|-----------|------------|------------|-----------|------------|------------------|--------------------|------------|------------|------------|
+| count   | 18.000000   | 18.000000 | 18.000000 | 18.000000      | 18.000000 | 18.000000  | 18.000000 | 18.000000           | 18.000000 | 18.000000 | ... | 18.000000 | 18.000000  | 18.000000  | 18.000000 | 18.000000  | 18.000000        | 18.000000          | 18.000000  | 18.000000  | 18.000000  |
+| mean    | 353.333333  | 36.944444 | 47.388889 | 12.277778      | 25.277778 | 413.444444 | 35.611111 | 10.833333           | 61.222222 | 74.944444 | ... | 28.055556 | 128.888889 | 186.000000 | 40.888889 | 282.666667 | 126.222222       | 43.388889          | 194.333333 | 535.277778 | 512.833333 |
+| std     | 64.708396   | 6.915220  | 4.487091  | 9.886447       | 7.274497  | 97.751318  | 1.243283  | 2.812786            | 20.232634 | 16.129885 | ... | 3.717561  | 15.911109  | 62.027508  | 2.422660  | 57.322616  | 86.784083        | 8.332353           | 52.158131  | 91.975576  | 113.411925 |
+| min     | 238.000000  | 22.000000 | 42.000000 | 0.000000       | 17.000000 | 281.000000 | 34.000000 | 7.000000            | 35.000000 | 49.000000 | ... | 23.000000 | 102.000000 | 102.000000 | 38.000000 | 220.000000 | 13.000000        | 31.000000          | 130.000000 | 387.000000 | 392.000000 |
+| 25%     | 305.000000  | 32.000000 | 44.000000 | 6.000000       | 19.250000 | 321.250000 | 35.000000 | 9.000000            | 41.250000 | 62.000000 | ... | 25.000000 | 116.500000 | 128.750000 | 39.000000 | 234.250000 | 63.250000        | 36.250000          | 146.750000 | 459.000000 | 420.750000 |
+| 50%     | 373.500000  | 40.500000 | 45.500000 | 9.000000       | 22.500000 | 399.000000 | 35.000000 | 10.000000           | 60.500000 | 77.000000 | ... | 27.500000 | 131.500000 | 185.000000 | 41.000000 | 257.000000 | 106.000000       | 43.000000          | 184.500000 | 521.500000 | 466.000000 |
+| 75%     | 404.500000  | 42.000000 | 50.750000 | 16.250000      | 31.500000 | 512.000000 | 36.000000 | 12.750000           | 77.000000 | 85.750000 | ... | 30.750000 | 143.000000 | 240.000000 | 42.000000 | 349.000000 | 165.750000       | 51.500000          | 248.500000 | 620.000000 | 616.750000 |
+| max     | 436.000000  | 44.000000 | 56.000000 | 42.000000      | 39.000000 | 530.000000 | 38.000000 | 16.000000           | 96.000000 | 99.000000 | ... | 35.000000 | 152.000000 | 278.000000 | 46.000000 | 365.000000 | 352.000000       | 55.000000          | 265.000000 | 680.000000 | 714.000000 |  
+
+###### 8 rows × 207 columns  
+
+There is a lot of information there. We can access individual summaries as follows.
+
+```python
+df_summary[['Spain','United Kingdom']]
+```
+
+| country | Spain     | United Kingdom |
+|---------|-----------|----------------|
+| count   | 18.000000 | 18.000000      |
+| mean    | 30.666667 | 9.611111       |
+| std     | 6.677442  | 0.916444       |
+| min     | 23.000000 | 9.000000       |
+| 25%     | 25.250000 | 9.000000       |
+| 50%     | 29.000000 | 9.000000       |
+| 75%     | 34.750000 | 10.000000      |
+| max     | 44.000000 | 12.000000      |  
+
+There is a plethora of descriptive statistics methods in Pandas (check the [documentation](http://pandas.pydata.org/pandas-docs/stable/api.html#api-dataframe-stats)). Some of them are already included in our summary object, but there are many more. In following tutorials we will make good use of them in order to better understand our data.  
+
+For example, we can obtain the percentage change over the years for the number of tuberculosis cases in Spain.
+
+```python
+tb_pct_change_spain = existing_df.Spain.pct_change()
+tb_pct_change_spain
+```
+```python
+    year
+    1990         NaN
+    1991   -0.045455
+    1992   -0.047619
+    1993   -0.075000
+    1994   -0.054054
+    1995   -0.028571
+    1996   -0.029412
+    1997   -0.090909
+    1998    0.000000
+    1999   -0.066667
+    2000   -0.035714
+    2001   -0.037037
+    2002    0.000000
+    2003   -0.038462
+    2004   -0.040000
+    2005    0.000000
+    2006    0.000000
+    2007   -0.041667
+    Name: Spain, dtype: float64
+```
+
+And from there get the maximum value.
+
+```python
+tb_pct_change_spain.max()
+```
+```python
+    0.0
+```
+
+And do the same for the United Kingdom.
+
+```python
+existing_df['United Kingdom'].pct_change().max()
+```
+```python
+    0.11111111111111116
+```
+
+If we want to know the index value (year) we use `argmax` (callex `idmax` in later versions of Pandas) as follows.
+
+```python
+existing_df['Spain'].pct_change().argmax()
+```
+```python
+    '1998'
+```
+```python
+existing_df['United Kingdom'].pct_change().argmax()
+```
+```python
+    '1992'
+```
+
+That is, 1998 and 1992 were the worst years in Spain and the UK respectibely regarding the increase of infectious TB cases.  
+
 ### R  
 
 ## Plotting  
@@ -22,9 +127,11 @@ In this section we will take a look at the basic plotting functionality in Pytho
 
 ### Python  
 
-Pandas DataFrames implement up to three plotting methods out of the box (check the [documentation](http://pandas.pydata.org/pandas-docs/stable/api.html#id11)). The first one is a basic line plot for each of the series we include in the indexing.  
+Pandas DataFrames implement up to three plotting methods out of the box (check the [documentation](http://pandas.pydata.org/pandas-docs/stable/api.html#id11)). The first one is a basic line plot for each of the series we include in the indexing.  The first line might be needed when plotting while using IPython notebook.    
 
 ```python
+%matplotlib inline
+
  existing_df[['United Kingdom', 'Spain', 'Colombia']].plot()
 ```
 
@@ -52,7 +159,7 @@ Let's start with the real fun. Once we know our tools (from the previous tutoria
 If we want just the top ones we can make use of `apply` and `argmax`. Remember that, be default, `apply` works with columns (the countries in our case), and we want to apply it to each year. Therefore we need to transpose the data frame before using it, or we can pass the argument `axis=1`.
 
 ```python
- existing_df.apply(argmax, axis=1)
+ existing_df.apply(pd.Series.argmax, axis=1)
 ```
 
 ```python
@@ -152,6 +259,7 @@ outlier_countries_by_new_index =
 What proportion of countries do we have out of trend? For deaths:
 
 ```python
+num_countries = len(deaths_df.T)
 sum(outlier_countries_by_deaths_index)/num_countries
 ```
 ```python
@@ -223,7 +331,8 @@ Let's concentrate on epidemics control and have a look at the new cases data fra
 
 ```python
 super_outlier_new_df
-```
+```  
+
 | country | Bhutan | Botswana | Cambodia | Congo, Rep. | Cote d'Ivoire | Korea, Dem. Rep. | Djibouti | Kiribati | Lesotho | Malawi | ... | Philippines | Rwanda | Sierra Leone | South Africa | Swaziland | Timor-Leste | Togo | Uganda | Zambia | Zimbabwe |
 |---------|--------|----------|----------|-------------|---------------|------------------|----------|----------|---------|--------|-----|-------------|--------|--------------|--------------|-----------|-------------|------|--------|--------|----------|
 | year    |        |          |          |             |               |                  |          |          |         |        |     |             |        |              |              |           |             |      |        |        |          |
@@ -244,7 +353,8 @@ super_outlier_new_df
 | 2004    | 283    | 780      | 510      | 430         | 448           | 344              | 766      | 388      | 643     | 405    | ... | 306         | 423    | 479          | 898          | 1127      | 322         | 405  | 385    | 623    | 834      |
 | 2005    | 270    | 770      | 505      | 425         | 443           | 344              | 781      | 380      | 639     | 391    | ... | 301         | 418    | 509          | 925          | 1141      | 322         | 413  | 370    | 588    | 824      |
 | 2006    | 258    | 751      | 500      | 414         | 432           | 344              | 797      | 372      | 638     | 368    | ... | 295         | 408    | 540          | 940          | 1169      | 322         | 421  | 350    | 547    | 803      |
-| 2007    | 246    | 731      | 495      | 403         | 420           | 344              | 813      | 365      | 637     | 346    | ... | 290         | 397    | 574          | 948          | 1198      | 322         | 429  | 330    | 506    | 782      |
+| 2007    | 246    | 731      | 495      | 403         | 420           | 344              | 813      | 365      | 637     | 346    | ... | 290         | 397    | 574          | 948          | 1198      | 322         | 429  | 330    | 506    | 782      |  
+
 
 ###### 18 rows × 22 columns  
 
@@ -353,7 +463,7 @@ existing_df.China.plot(title="Estimated existing TB cases in China")
 - In 2007, the country with the highest estimated incidence rate of TB was Swaziland, with 1,200 cases per 100,000 people.  
 
 ```python
-new_df.apply(argmax, axis=1)['2007']
+new_df.apply(pd.Series.argmax, axis=1)['2007']
 ```
 ```python
     'Swaziland'
