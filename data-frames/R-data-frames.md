@@ -44,12 +44,9 @@ str(existing_df)
 ```
 
 The `str()` function in R gives us information about a variable type. In this case
-we can see that, due to the `,` thousands separator,
-some of the columns hasn't been parsed as numbers but as character.
-If we want to properly work with our dataset we need to convert them to numbers.
-Once we know a bit more about indexing and mapping functions, I promise you will be 
-able to understand the following piece of code. By know let's say that we convert 
-a column and assign it again to its reference in the data frame.    
+we can see that, due to the `,` thousands separator, some of the columns hasn't been parsed as numbers but as character. If we want to properly work with our dataset we need to convert them to numbers.  
+
+Once we know a bit more about indexing and mapping functions, I promise you will be able to understand the following piece of code. By know let's say that we convert a column and assign it again to its reference in the data frame.    
 
 
 ```r
@@ -1201,3 +1198,379 @@ mean_cases_by_period[,c('United Kingdom','Spain','Colombia')]
 ## 1          9.200 35.300    75.10
 ## 2         10.125 24.875    53.25
 ```
+
+## Descriptive statistics  
+
+The basic descriptive statistics method in R is, as we said, the function `summary()`.  
+
+
+```r
+existing_summary <- summary(existing_df)
+str(existing_summary)
+```
+
+```
+##  'table' chr [1:6, 1:207] "Min.   :238.0  " "1st Qu.:305.0  " ...
+##  - attr(*, "dimnames")=List of 2
+##   ..$ : chr [1:6] "" "" "" "" ...
+##   ..$ : chr [1:207] " Afghanistan" "   Albania" "   Algeria" "American Samoa" ...
+```
+
+It returns a table object where we have summary statistics for each of the columns in a data frame. A table object is good for visualising data, but not so good for accessing and indexing it as a data frame. Basically we access it as a matrix, using positional indexing. If we want the first column, that corresponding to Afghanistan, we do.      
+
+
+```r
+existing_summary[,1]
+```
+
+```
+##                                                                         
+## "Min.   :238.0  " "1st Qu.:305.0  " "Median :373.5  " "Mean   :353.3  " 
+##                                     
+## "3rd Qu.:404.5  " "Max.   :436.0  "
+```
+
+A trick we can to access by column name is use the column names in the original data frame. We also can build a new data frame with the results.    
+
+
+```r
+data.frame(
+    Spain=existing_summary[,which(colnames(existing_df)=='Spain')],
+    UK=existing_summary[,which(colnames(existing_df)=='United Kingdom')])
+```
+
+```
+##             Spain               UK
+## 1 Min.   :23.00   Min.   : 9.000  
+## 2 1st Qu.:25.25   1st Qu.: 9.000  
+## 3 Median :29.00   Median : 9.000  
+## 4 Mean   :30.67   Mean   : 9.611  
+## 5 3rd Qu.:34.75   3rd Qu.:10.000  
+## 6 Max.   :44.00   Max.   :12.000
+```
+
+Being R a functional language, we can apply functions such as `sum`, `mean`, `sd`, etc. to vectors. Remember that a data frame is a list of vectors (i.e. each column is a vector of values), so we can easily use these functions with columns. We can finally combine these functions with `lapply` or `sapply` and apply them to multiple columns in a data frame.  
+
+However, there is a family of functions in R that can be applied to columns or rows in order to get means and sums directly. These are more efficient than using apply functions, and also allows us to apply them not just by columns but also by row. If you type `?colSums' for example, the help page describes all of them.  
+
+For example, we can easily obtain the average number of existing cases per year with a single call.  
+
+
+```r
+rowMeans(existing_df)
+```
+
+```
+##    X1990    X1991    X1992    X1993    X1994    X1995    X1996    X1997 
+## 196.9662 196.4686 192.8116 191.1739 188.7246 187.9420 178.8986 180.9758 
+##    X1998    X1999    X2000    X2001    X2002    X2003    X2004    X2005 
+## 178.1208 180.4734 177.5217 177.7971 179.5169 176.4058 173.9227 171.1836 
+##    X2006    X2007 
+## 169.0193 167.2560
+```
+
+
+## Plotting  
+
+Base plotting in R is not very sophisticated when compared with ggplot2, but still
+is powerful and handy because many data types have implemented custom `plot()` methods
+that allow us to plot them with a single method call. However this is not always the
+case and more often than not we will need to pass the right set of elements to our basic plotting functions.  
+
+Let's start with a basic line chart like we did with Python/Pandas.  
+
+
+```r
+uk_series <- existing_df[,c("United Kingdom")]
+spain_series <- existing_df[,c("Spain")]
+colombia_series <- existing_df[,c("Colombia")]
+```
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, uk_series, 
+     type='l', xlab="Year", 
+     ylab="Existing cases per 100K", 
+     col = "blue", 
+     ylim=c(0,100))
+lines(xrange, spain_series,
+      col = "darkgreen")
+lines(xrange, colombia_series, 
+      col = "red")
+legend(x=2003, y=100, 
+       lty=1, cex=.7,
+       col=c("blue","darkgreen","red"), 
+       legend=c("UK","Spain","Colombia"))
+```
+
+![](R-data-frames_files/figure-html/unnamed-chunk-35-1.png) 
+
+You can compare how easy was to plot three series in Pandas, and how doing the
+same thing **with basic plotting** in R gets more verbose. At least we need
+three function calls, those for plot and line, and then we have the legend, etc. The base plotting in R is really intended to make quick and dirty charts.  
+
+Now with box plots.  
+
+
+```r
+boxplot(uk_series, spain_series, colombia_series, 
+        names=c("UK","Spain","Colombia"),
+        xlab="Year", 
+        ylab="Existing cases per 100K")
+```
+
+![](R-data-frames_files/figure-html/unnamed-chunk-36-1.png) 
+
+This one was way shorter, and we don't even need colours or a legend.  
+
+## Answering questions
+
+We already know that we can use `max` with a data frame column in R and get the maximum value. Additionally, we can use `which.max` in order to get its position (similarly to the use og `argmax` in Pandas). If we use the trasposed dataframe, we can use `lapply` or `sapply` to perform this operation in every year column, getting then either a list or a vector of indices (we will use `sapply` that returns a vector). We just need a little tweak and use a countries vector that we will index to get the country name instead of the index as a result.  
+
+
+```r
+country_names <- rownames(existing_df_t)
+sapply(existing_df_t, function(x) {country_names[which.max(x)]})
+```
+
+```
+##              X1990              X1991              X1992 
+##         "Djibouti"         "Djibouti"         "Djibouti" 
+##              X1993              X1994              X1995 
+##         "Djibouti"         "Djibouti"         "Djibouti" 
+##              X1996              X1997              X1998 
+##         "Kiribati"         "Kiribati"         "Cambodia" 
+##              X1999              X2000              X2001 
+## "Korea, Dem. Rep."         "Djibouti"        "Swaziland" 
+##              X2002              X2003              X2004 
+##         "Djibouti"         "Djibouti"         "Djibouti" 
+##              X2005              X2006              X2007 
+##         "Djibouti"         "Djibouti"         "Djibouti"
+```
+
+###### World trens in TB cases  
+
+Again, in order to explore the world general tendency, we need to sum up every countries’ values for the three datasets, per year. 
+
+But first we need to load the other two datasets for number of deaths and number of new cases. 
+
+
+```r
+# Download files
+deaths_file <- getURL("https://docs.google.com/spreadsheets/d/12uWVH_IlmzJX_75bJ3IH5E-Gqx6-zfbDKNvZqYjUuso/pub?gid=0&output=CSV")
+new_cases_file <- getURL("https://docs.google.com/spreadsheets/d/1Pl51PcEGlO9Hp4Uh0x2_QM0xVb53p2UDBMPwcnSjFTk/pub?gid=0&output=csv")
+
+# Read into data frames
+deaths_df <- read.csv(text = deaths_file, row.names=1, stringsAsFactor=F)
+new_df <- read.csv(text = new_cases_file, row.names=1, stringsAsFactor=F)
+
+# Cast data to int (deaths doesn't need it)
+new_df[1:18] <- lapply(new_df[1:18], function(x) { as.integer(gsub(',', '', x) )})
+
+# Transpose
+deaths_df_t <- deaths_df
+deaths_df <- as.data.frame(t(deaths_df))
+new_df_t <- new_df
+new_df <- as.data.frame(t(new_df))
+```
+
+And now the sums by row. We need to convert to a data frame since the function returns a numeric vector.  
+
+
+```r
+deaths_total_per_year_df <- data.frame(total=rowSums(deaths_df))
+existing_total_per_year_df <- data.frame(total=rowSums(existing_df))
+# We pass na.rm = TRUE in order to ignore missing values in the new
+# cases data frame when summing (no missing values in other dataframes though)
+new_total_per_year_df <- data.frame(total=rowSums(new_df, na.rm = TRUE))
+```
+
+Now we can plot each line using what we have learnt so far. In order to get a vector with the counts to pass to each plotting function, we use R data frame indexing selecting the first row and all the columns (`[1,]`).  
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, deaths_total_per_year_df$total, 
+     type='l', xlab="Year", 
+     ylab="Count per 100K", 
+     col = "blue", 
+     ylim=c(0,50000))
+lines(xrange, existing_total_per_year_df$total,
+      col = "darkgreen")
+lines(xrange, new_total_per_year_df$total, 
+      col = "red")
+legend(x=1992, y=52000, 
+       lty=1, 
+       cex = .7,
+       ncol = 3,
+       col=c("blue","darkgreen","red"), 
+       legend=c("Deaths","Existing cases","New cases"))
+```
+
+![](R-data-frames_files/figure-html/unnamed-chunk-40-1.png) 
+
+The conclusions are obviously the same as when using Python.  
+
+###### Countries out of tendency  
+
+So what countries are out of that tendency (for bad)? Again, in order to find this out, first we need to know the distribution of countries in an average year. We use `colMeans` for that purpose.    
+
+
+```r
+deaths_by_country_mean <- data.frame(mean=colMeans(deaths_df))
+existing_by_country_mean <- data.frame(mean=colMeans(existing_df))
+new_by_country_mean <- data.frame(mean=colMeans(new_df, na.rm=TRUE))
+```
+
+We can plot these distributions to have an idea of how the countries are distributed in an average year. We are not so interested about the individual countries but about the distribution itself.    
+
+
+```r
+barplot(sort(deaths_by_country_mean$mean))
+```
+
+![](R-data-frames_files/figure-html/unnamed-chunk-42-1.png) 
+
+Again we can see there are someway three sections, with a slowly decreasing part at the beginning, a second more step section, and a final peak that is clearly apart from the rest.  
+
+Let's skip this time the 1.5-outlier part and go diretcly to the 5.0-outliers. In R we will use a different approach we will use the `quantile()` function in order to get the inter-quartile range and determine the outlier threshold.  
+
+Since we already know the results from our Python section, let's do it just for the new cases, so we generate also the plots we did before.  
+
+
+
+```r
+new_super_outlier <- 
+    quantile(new_by_country_mean$mean, probs = c(.5)) * 5.0
+super_outlier_countries_by_new_index <- 
+    new_by_country_mean > new_super_outlier
+```
+
+And the proportion is.  
+
+
+```r
+sum(super_outlier_countries_by_new_index)/208
+```
+
+```
+## [1] 0.1057692
+```
+
+Let's obtain a data frame from this, with just those countries we consider to be outliers.  
+
+
+```r
+super_outlier_new_df <- new_df[, super_outlier_countries_by_new_index ]
+```
+
+Now we are ready to plot them.  
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, super_outlier_new_df[,1], 
+     type='l', xlab="Year", 
+     ylab="New cases per 100K", 
+     col = 1, 
+     ylim=c(0,1800))
+for (i in seq(2:ncol(super_outlier_new_df))) {
+    lines(xrange, super_outlier_new_df[,i],
+    col = i)
+}
+legend(x=1990, y=1800, 
+       lty=1, cex = 0.5,
+       ncol = 7,
+       col=1:22,
+       legend=colnames(super_outlier_new_df))
+```
+
+![](R-data-frames_files/figure-html/unnamed-chunk-46-1.png) 
+
+Definitely we can see here an advantage of using Pandas basic plotting versus R basic plotting!  
+
+So far our results match. We have 22 countries where the number of new cases on an average year is greater than 5 times the median value of the distribution. Let’s create a country that represents on average these 22. We will use `rowMeans()` here.    
+
+
+```r
+average_countries_df <- 
+    data.frame(
+        averageOutlierMean=rowMeans(super_outlier_new_df, na.rm=T)
+    )
+average_countries_df
+```
+
+```
+##       averageOutlierMean
+## X1990           314.3636
+## X1991           330.1364
+## X1992           340.6818
+## X1993           352.9091
+## X1994           365.3636
+## X1995           379.2273
+## X1996           390.8636
+## X1997           408.0000
+## X1998           427.0000
+## X1999           451.4091
+## X2000           476.5455
+## X2001           502.4091
+## X2002           525.7273
+## X2003           543.3182
+## X2004           548.9091
+## X2005           546.4091
+## X2006           540.8636
+## X2007           535.1818
+```
+
+Now let’s create a country that represents the rest of the world.  
+
+
+```r
+average_countries_df$averageBetterWorldMean <- 
+    rowMeans(new_df[ ,- super_outlier_countries_by_new_index ], na.rm=T)
+average_countries_df
+```
+
+```
+##       averageOutlierMean averageBetterWorldMean
+## X1990           314.3636               105.2767
+## X1991           330.1364               107.3786
+## X1992           340.6818               108.0243
+## X1993           352.9091               110.0388
+## X1994           365.3636               111.6942
+## X1995           379.2273               113.9369
+## X1996           390.8636               115.0971
+## X1997           408.0000               118.6408
+## X1998           427.0000               121.2913
+## X1999           451.4091               124.8350
+## X2000           476.5455               127.6505
+## X2001           502.4091               130.5680
+## X2002           525.7273               136.0194
+## X2003           543.3182               136.0388
+## X2004           548.9091               136.8155
+## X2005           546.4091               135.5121
+## X2006           540.8636               134.4493
+## X2007           535.1818               133.2184
+```
+
+Now let’s plot the outlier country with the average world country.  
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, average_countries_df$averageOutlierMean, 
+     type='l', xlab="Year", 
+     ylab="New cases per 100K", 
+     col = "darkgreen", 
+     ylim=c(0,600))
+lines(xrange, average_countries_df$averageBetterWorldMean, col = "blue")
+legend(x=1990, y=600, 
+       lty=1, cex = 0.7,
+       ncol = 2,
+       col=c("darkgreen","blue"),
+       legend=c("Average outlier country", "Average World Country"))
+```
+
+![](R-data-frames_files/figure-html/unnamed-chunk-49-1.png) 
+

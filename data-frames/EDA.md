@@ -1,5 +1,11 @@
 ## Introduction and Getting Data refresh  
 
+Here we are again, with a new episode in our series about doing data science with the two most popular open-source platforms you can use for the job nowadays. In this case we will have a look at a crucial step of the data analytics process, that of the [*Exploratory Data Analysis*](https://en.wikipedia.org/wiki/Exploratory_data_analysis). And with that idea in mind we will explain how to use descriptive statistics and basic plotting, together with data frames, in order to answer some questions and guide our further data analysis.  
+
+### Getting data  
+
+We will continue using the same datasets we already loaded in the part introducing data frames. So you can either continue where you left in that tutorial, or re-run the [section that gets and prepares the data](https://www.codementor.io/python/tutorial/python-vs-r-for-data-science-data-frames-i).  
+
 ## Questions we want to answer  
 
 In any data analysis process, there is one or more questions we want to answer. That is the most basic and important step in the whole process, to define these questions. Since we are going to perform some Exploratory Data Analysis in our TB dataset, these are the questions we want to answer:  
@@ -7,7 +13,7 @@ In any data analysis process, there is one or more questions we want to answer. 
 - Which are the countries with the highest and infectious TB incidence?  
 - What is the general world tendency in the period from 1990 to 2007?  
 - What countries don't follow that tendency?  
-- What events might have defined that world tendency and why do we have countries out of tendency?  
+- What other facts about the disease do we know that we can check with our data?  
 
 
 ## Descriptive Statistics  
@@ -119,6 +125,74 @@ That is, 1998 and 1992 were the worst years in Spain and the UK respectibely reg
 
 ### R  
 
+The basic descriptive statistics method in R is, as we said, the function `summary()`.  
+
+
+```r
+existing_summary <- summary(existing_df)
+str(existing_summary)
+```
+
+```
+##  'table' chr [1:6, 1:207] "Min.   :238.0  " "1st Qu.:305.0  " ...
+##  - attr(*, "dimnames")=List of 2
+##   ..$ : chr [1:6] "" "" "" "" ...
+##   ..$ : chr [1:207] " Afghanistan" "   Albania" "   Algeria" "American Samoa" ...
+```
+
+It returns a table object where we have summary statistics for each of the columns in a data frame. A table object is good for visualising data, but not so good for accessing and indexing it as a data frame. Basically we access it as a matrix, using positional indexing. If we want the first column, that corresponding to Afghanistan, we do.      
+
+
+```r
+existing_summary[,1]
+```
+
+```
+##                                                                         
+## "Min.   :238.0  " "1st Qu.:305.0  " "Median :373.5  " "Mean   :353.3  " 
+##                                     
+## "3rd Qu.:404.5  " "Max.   :436.0  "
+```
+
+A trick we can use to access by column name is use the column names in the original data frame together with `which()`. We also can build a new data frame with the results.    
+
+
+```r
+data.frame(
+    Spain=existing_summary[,which(colnames(existing_df)=='Spain')],
+    UK=existing_summary[,which(colnames(existing_df)=='United Kingdom')])
+```
+
+```
+##             Spain               UK
+## 1 Min.   :23.00   Min.   : 9.000  
+## 2 1st Qu.:25.25   1st Qu.: 9.000  
+## 3 Median :29.00   Median : 9.000  
+## 4 Mean   :30.67   Mean   : 9.611  
+## 5 3rd Qu.:34.75   3rd Qu.:10.000  
+## 6 Max.   :44.00   Max.   :12.000
+```
+
+Being R a functional language, we can apply functions such as `sum`, `mean`, `sd`, etc. to vectors. Remember that a data frame is a list of vectors (i.e. each column is a vector of values), so we can easily use these functions with columns. We can finally combine these functions with `lapply` or `sapply` and apply them to multiple columns in a data frame.  
+
+However, there is a family of functions in R that can be applied to columns or rows in order to get means and sums directly. These are more efficient than using apply functions, and also allows us to apply them not just by columns but also by row. If you type `?colSums' for example, the help page describes all of them.  
+
+Let's say we wan to obtain the average number of existing cases per year. We need a single function call.  
+
+
+```r
+rowMeans(existing_df)
+```
+
+```
+##    X1990    X1991    X1992    X1993    X1994    X1995    X1996    X1997 
+## 196.9662 196.4686 192.8116 191.1739 188.7246 187.9420 178.8986 180.9758 
+##    X1998    X1999    X2000    X2001    X2002    X2003    X2004    X2005 
+## 178.1208 180.4734 177.5217 177.7971 179.5169 176.4058 173.9227 171.1836 
+##    X2006    X2007 
+## 169.0193 167.2560
+```
+
 ## Plotting  
 
 In this section we will take a look at the basic plotting functionality in Python/Pandas and R. However, there are more powerful alternatives like [**ggplot2**](http://ggplot2.org/) that, although originally created for R, has its own [implementation for Python](http://ggplot.yhathq.com/) from the [Yhat](https://yhathq.com/) guys.  
@@ -146,15 +220,64 @@ There is also a `histogram()` method, but we can't use it with this type of data
 
 ### R  
 
+Base plotting in R is not very sophisticated when compared with [ggplot2](http://ggplot2.org/), but still is powerful and handy because many data types have implemented custom `plot()` methods that allow us to plot them with a single method call. However this is not always the case, and more often than not we will need to pass the right set of elements to our basic plotting functions.  
+
+Let's start with a basic line chart like we did with Python/Pandas.  
+
+
+```r
+uk_series <- existing_df[,c("United Kingdom")]
+spain_series <- existing_df[,c("Spain")]
+colombia_series <- existing_df[,c("Colombia")]
+```
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, uk_series, 
+     type='l', xlab="Year", 
+     ylab="Existing cases per 100K", 
+     col = "blue", 
+     ylim=c(0,100))
+lines(xrange, spain_series, 
+      col = "darkgreen")
+lines(xrange, colombia_series,
+      col = "red")
+legend(x=2003, y=100, 
+       lty=1, 
+       col=c("blue","darkgreen","red"), 
+       legend=c("UK","Spain","Colombia"))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/lzenqp1Q2xiQgC3nvUuw "enter image title here")
+
+You can compare how easy was to plot three series in Pandas, and how doing the
+same thing **with basic plotting** in R gets more verbose. At least we need
+three function calls, those for plot and line, and then we have the legend, etc. The base plotting in R is really intended to make quick and dirty charts.  
+
+Let's use now box plots.  
+
+
+```r
+boxplot(uk_series, spain_series, colombia_series, 
+        names=c("UK","Spain","Colombia"),
+        xlab="Year", 
+        ylab="Existing cases per 100K")
+```
+
+![enter image description here](https://www.filepicker.io/api/file/Epk8593ZRRGlq0mMCB5o "enter image title here")
+
+This one was way shorter, and we don't even need colours or a legend.
+
 ## Answering Questions  
 
-Let's start with the real fun. Once we know our tools (from the previous tutorial about data frames and this one), let's use them to answer some questions about the incidence and prevalence of infectious tuberculosis in the world.   
+Let's now start with the real fun. Once we know our tools (from the previous tutorial about data frames and this one), let's use them to answer some questions about the incidence and prevalence of infectious tuberculosis in the world.   
 
 **Question**: *We want to know, per year, what country has the highest number of existing and new TB cases.*
 
 ### Python  
 
-If we want just the top ones we can make use of `apply` and `argmax`. Remember that, be default, `apply` works with columns (the countries in our case), and we want to apply it to each year. Therefore we need to transpose the data frame before using it, or we can pass the argument `axis=1`.
+If we want just the top ones we can make use of `apply` and `argmax`. Remember that, by default, `apply` works with columns (the countries in our case), and we want to apply it to each year. Therefore we need to transpose the data frame before using it, or we can pass the argument `axis=1`.
 
 ```python
  existing_df.apply(pd.Series.argmax, axis=1)
@@ -435,7 +558,7 @@ two_world_df.plot(title="Estimated new TB cases per 100K",figsize=(12,8))
 ```
 ![enter image description here](https://www.filepicker.io/api/file/TepcmbKSKiqZt6fmLulo "enter image title here")
 
-The increase in new cases tendency is really stronger in the average super outlier country, so stronget that is difficult to percieve that same tendency in the *better world* country. The 90's decade brought a terrible increse in the number of TB cases in those countries. But let's have a look at the exact numbers.
+The increase in new cases tendency is really stronger in the average super outlier country, so stronger that is difficult to perceive that same tendency in the *better world* country. The 90's decade brought a terrible increase in the number of TB cases in those countries. But let's have a look at the exact numbers.
 
 ```python
 two_world_df.pct_change().plot(title="Percentage change in estimated new TB cases", figsize=(12,8))
@@ -444,9 +567,268 @@ two_world_df.pct_change().plot(title="Percentage change in estimated new TB case
 
 The deceleration and reversion of that tendency seem to happen at the same time in both average countries, something around 2002? We will try to find out in the next section.
 
+### R  
+
+We already know that we can use `max` with a data frame column in R and get the maximum value. Additionally, we can use `which.max` in order to get its position (similarly to the use og `argmax` in Pandas). If we use the transposed data frame, we can use `lapply` or `sapply` to perform this operation in every year column, getting then either a list or a vector of indices (we will use `sapply` that returns a vector). We just need a little tweak and use a countries vector that we will index to get the country name instead of the index as a result.  
+
+
+```r
+country_names <- rownames(existing_df_t)
+sapply(existing_df_t, function(x) {country_names[which.max(x)]})
+```
+
+```
+##              X1990              X1991              X1992 
+##         "Djibouti"         "Djibouti"         "Djibouti" 
+##              X1993              X1994              X1995 
+##         "Djibouti"         "Djibouti"         "Djibouti" 
+##              X1996              X1997              X1998 
+##         "Kiribati"         "Kiribati"         "Cambodia" 
+##              X1999              X2000              X2001 
+## "Korea, Dem. Rep."         "Djibouti"        "Swaziland" 
+##              X2002              X2003              X2004 
+##         "Djibouti"         "Djibouti"         "Djibouti" 
+##              X2005              X2006              X2007 
+##         "Djibouti"         "Djibouti"         "Djibouti"
+```
+
+###### World trends in TB cases  
+
+Again, in order to explore the world general tendency, we need to sum up every countries’ values for the three datasets, per year. 
+
+But first we need to load the other two datasets for number of deaths and number of new cases. 
+
+
+```r
+# Download files
+deaths_file <- getURL("https://docs.google.com/spreadsheets/d/12uWVH_IlmzJX_75bJ3IH5E-Gqx6-zfbDKNvZqYjUuso/pub?gid=0&output=CSV")
+new_cases_file <- getURL("https://docs.google.com/spreadsheets/d/1Pl51PcEGlO9Hp4Uh0x2_QM0xVb53p2UDBMPwcnSjFTk/pub?gid=0&output=csv")
+
+# Read into data frames
+deaths_df <- read.csv(
+    text = deaths_file, 
+    row.names=1, 
+    stringsAsFactor=F)
+new_df <- read.csv(
+    text = new_cases_file, 
+    row.names=1, 
+    stringsAsFactor=F)
+
+# Cast data to int (deaths doesn't need it)
+new_df[1:18] <- lapply(
+    new_df[1:18], 
+    function(x) { as.integer(gsub(',', '', x) )})
+
+# Transpose
+deaths_df_t <- deaths_df
+deaths_df <- as.data.frame(t(deaths_df))
+new_df_t <- new_df
+new_df <- as.data.frame(t(new_df))
+```
+
+And now the sums by row. We need to convert to a data frame since the function returns a numeric vector.  
+
+
+```r
+deaths_total_per_year_df <- data.frame(total=rowSums(deaths_df))
+existing_total_per_year_df <- data.frame(total=rowSums(existing_df))
+# We pass na.rm = TRUE in order to ignore missing values in the new
+# cases data frame when summing (no missing values in other dataframes though)
+new_total_per_year_df <- data.frame(total=rowSums(new_df, na.rm = TRUE))
+```
+
+Now we can plot each line using what we have learnt so far. In order to get a vector with the counts to pass to each plotting function, we use R data frame indexing by column name.  
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, deaths_total_per_year_df$total, 
+     type='l', xlab="Year", 
+     ylab="Count per 100K", 
+     col = "blue", 
+     ylim=c(0,50000))
+lines(xrange, existing_total_per_year_df$total,
+      col = "darkgreen")
+lines(xrange, new_total_per_year_df$total, 
+      col = "red")
+legend(x=1992, y=52000, 
+       lty=1, 
+       cex = .7,
+       ncol = 3,
+       col=c("blue","darkgreen","red"), 
+       legend=c("Deaths","Existing cases","New cases"))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/8jYeuVFCRsaU2cG57Zu2 "enter image title here")
+
+The conclusions are obviously the same as when using Python.  
+
+###### Countries out of tendency  
+
+So what countries are out of that tendency (for bad)? Again, in order to find this out, first we need to know the distribution of countries in an average year. We use `colMeans` for that purpose.    
+
+
+```r
+deaths_by_country_mean <- data.frame(mean=colMeans(deaths_df))
+existing_by_country_mean <- data.frame(mean=colMeans(existing_df))
+new_by_country_mean <- data.frame(mean=colMeans(new_df, na.rm=TRUE))
+```
+
+We can plot these distributions to have an idea of how the countries are distributed in an average year. We are not so interested about the individual countries but about the distribution itself.    
+
+
+```r
+barplot(sort(deaths_by_country_mean$mean))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/ncDFjd5aTUif1zX81SHK "enter image title here")
+
+Again we can see there are someway three sections, with a slowly decreasing part at the beginning, a second more step section, and a final peak that is clearly apart from the rest.  
+
+Let's skip this time the 1.5-outlier part and go diretcly to the 5.0-outliers. In R we will use a different approach we will use the `quantile()` function in order to get the inter-quartile range and determine the outlier threshold.  
+
+Since we already know the results from our Python section, let's do it just for the new cases, so we generate also the plots we did before.  
+
+
+```r
+new_super_outlier <- 
+    quantile(new_by_country_mean$mean, probs = c(.5)) * 5.0
+super_outlier_countries_by_new_index <- 
+    new_by_country_mean > new_super_outlier
+```
+
+And the proportion is.  
+
+
+```r
+sum(super_outlier_countries_by_new_index)/208
+```
+
+```
+## [1] 0.1057692
+```
+
+Let's obtain a data frame from this, with just those countries we consider to be outliers.  
+
+
+```r
+super_outlier_new_df <- 
+    new_df[, super_outlier_countries_by_new_index ]
+```
+
+Now we are ready to plot them.  
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, super_outlier_new_df[,1], 
+     type='l', xlab="Year", 
+     ylab="New cases per 100K", 
+     col = 1, 
+     ylim=c(0,1800))
+for (i in seq(2:ncol(super_outlier_new_df))) {
+    lines(xrange, super_outlier_new_df[,i],
+    col = i)
+}
+legend(x=1990, y=1800, 
+       lty=1, cex = 0.5,
+       ncol = 7,
+       col=1:22,
+       legend=colnames(super_outlier_new_df))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/SjGa0JiqTyKJrouXYYOl "enter image title here")
+
+Definitely we can see here an advantage of using Pandas basic plotting versus R basic plotting!  
+
+So far our results match. We have 22 countries where the number of new cases on an average year is greater than 5 times the median value of the distribution. Let’s create a country that represents on average these 22. We will use `rowMeans()` here.    
+
+
+```r
+average_countries_df <- 
+    data.frame(
+        averageOutlierMean=rowMeans(super_outlier_new_df, na.rm=T)
+    )
+average_countries_df
+```
+
+```
+##       averageOutlierMean
+## X1990           314.3636
+## X1991           330.1364
+## X1992           340.6818
+## X1993           352.9091
+## X1994           365.3636
+## X1995           379.2273
+## X1996           390.8636
+## X1997           408.0000
+## X1998           427.0000
+## X1999           451.4091
+## X2000           476.5455
+## X2001           502.4091
+## X2002           525.7273
+## X2003           543.3182
+## X2004           548.9091
+## X2005           546.4091
+## X2006           540.8636
+## X2007           535.1818
+```
+
+Now let’s create a country that represents the rest of the world.  
+
+
+```r
+average_countries_df$averageBetterWorldMean <- 
+    rowMeans(new_df[ ,- super_outlier_countries_by_new_index ], na.rm=T)
+average_countries_df
+```
+
+```
+##       averageOutlierMean averageBetterWorldMean
+## X1990           314.3636               105.2767
+## X1991           330.1364               107.3786
+## X1992           340.6818               108.0243
+## X1993           352.9091               110.0388
+## X1994           365.3636               111.6942
+## X1995           379.2273               113.9369
+## X1996           390.8636               115.0971
+## X1997           408.0000               118.6408
+## X1998           427.0000               121.2913
+## X1999           451.4091               124.8350
+## X2000           476.5455               127.6505
+## X2001           502.4091               130.5680
+## X2002           525.7273               136.0194
+## X2003           543.3182               136.0388
+## X2004           548.9091               136.8155
+## X2005           546.4091               135.5121
+## X2006           540.8636               134.4493
+## X2007           535.1818               133.2184
+```
+
+Now let’s plot the outlier country with the average world country.  
+
+
+```r
+xrange <- 1990:2007
+plot(xrange, average_countries_df$averageOutlierMean, 
+     type='l', xlab="Year", 
+     ylab="New cases per 100K", 
+     col = "darkgreen", 
+     ylim=c(0,600))
+lines(xrange, average_countries_df$averageBetterWorldMean, col = "blue")
+legend(x=1990, y=600, 
+       lty=1, cex = 0.7,
+       ncol = 2,
+       col=c("darkgreen","blue"),
+       legend=c("Average outlier country", "Average World Country"))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/etQ5YtRCSE20emH8ZC6w "enter image title here")
+
+
 ### Googling about events and dates in Tuberculosis
 
-Well, actually we just went straight to [Wikipedia's entry about the disease](https://en.wikipedia.org/wiki/Tuberculosis#Epidemiology). In the epidemics sections we found the following: 
+We will use just Python in this section. About googling, actually we just went straight to [Wikipedia's entry about the disease](https://en.wikipedia.org/wiki/Tuberculosis#Epidemiology). In the epidemics sections we found the following: 
 
 - The total number of tuberculosis cases has been decreasing since 2005, while **new cases** have decreased since 2002.  
  - This is confirmed by our previous analysis.    
@@ -467,7 +849,7 @@ new_df.apply(pd.Series.argmax, axis=1)['2007']
     'Swaziland'
 ```
 
-There are many more findings Wikipedia that we can confirm with these or other datasets from Gapmind world. For example, TB and HIV are frequently associated, together with poverty levels. It would be interesting to joind datasets and explore tendencies in each of them. We challenge the reader to give them a try and share with us their findings. 
+There are many more findings Wikipedia that we can confirm with these or other datasets from Gapminder world. For example, TB and HIV are frequently associated, together with poverty levels. It would be interesting to join datasets and explore tendencies in each of them. We challenge the reader to give them a try and share with us their findings. 
 
 ### Other web pages to explore
 
@@ -476,3 +858,11 @@ Some interesting resources about tuberculosis apart from the Gapminder website:
 - Gates foundation:  
  - http://www.gatesfoundation.org/What-We-Do/Global-Health/Tuberculosis  
  - http://www.gatesfoundation.org/Media-Center/Press-Releases/2007/09/New-Grants-to-Fight-Tuberculosis-Epidemic  
+
+## Conclusions  
+
+Exploratory data analysis is a key step in data analysis. It is during this stage when we start shaping any later work. It precedes any data visualisation or machine learning work, by showing us good or bad our data and our hypothesis are.   
+
+Traditionally, R has been the weapon of choice for most EDA work, although the use of a more expressive plotting library such as gglot2 is quite convenient. In fact, the base plotting functionality incorporated in Pandas makes the process cleaner and quicker when using Python. However, the questions we have answered here were very simple and didn't include multiple variables and encodings. In such cases an advanced library like ggplot2 will shine. Apart from providing nicer charts, it will saves us quite a lot of time due to its expressiveness and reusability.  
+
+But as simple as our analysis and charts are, we have been able to make the point about how serious the humanitarian crisis is regarding a disease like tuberculosis, specially when considering that the disease is relatively well controlled in more developed countries. We have seen how some coding skills and a good amount of curiosity allows us to create awareness in these and other world issues.   
