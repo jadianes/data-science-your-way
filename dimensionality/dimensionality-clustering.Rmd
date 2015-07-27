@@ -1,0 +1,345 @@
+---
+title: "Dimensionality Reduction and Clustering"
+author: "Jose A. Dianes"
+date: "27 July 2015"
+output:
+  html_document:
+    keep_md: yes
+---
+
+## Getting data  
+
+In R, you use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it.  
+
+```{r}
+library(RCurl)
+
+# Get and process existing cases file
+existing_cases_file <- getURL("https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0&output=csv")
+existing_df <- read.csv(text = existing_cases_file, row.names=1, stringsAsFactor=F)
+existing_df[c(1,2,3,4,5,6,15,16,17,18)] <- 
+    lapply( existing_df[c(1,2,3,4,5,6,15,16,17,18)], 
+            function(x) { as.integer(gsub(',', '', x) )})
+```
+
+
+## PCA  
+
+The default R package `stats` comes with function `prcomp()` to perform principal component analysis. This means that we don’t need to install anything (although there are other options using external packages). This is perhaps the quickest way to do a PCA, and I recommend you to call `?prcomp` in your R console if you're interested in the details of how to fine tune the PCA process with this function.  
+
+```{r}
+pca_existing <- prcomp(existing_df, scale. = TRUE)
+```
+
+The resulting object contains several pieces of information related with principal component analysis. We are interested in the scores, that we have in `pca_existing$x`. We got 18 different principal components. Remember that the total number of PCs corresponds to the total number of variables in the dataset, although we normally don't want to use all of them but the subset that corresponds to our purposes.  
+
+In our case we will use the first two. How much variation is explained by each one? In R we can use the `plot` function that comes with the PCA result for that.  
+
+```{r}
+plot(pca_existing)
+```
+
+Most variation is explained by the first PC. So let's use the first two PCs to represent all of our countries in a scatterplot.  
+
+```{r}
+scores_existing_df <- as.data.frame(pca_existing$x)
+# Show first two PCs for head countries
+head(scores_existing_df[1:2])
+```
+
+Now that we have them in a data frame, we can use them with `plot`.  
+
+```{r, fig.height=10,fig.width=9}
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid")
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8)
+```
+
+Let's set the color associated with the mean value for all the years. We will use functions `rgb`, `ramp`, and `rescale` to create a color palette from yellow (lower values) to blue (higher values).    
+
+```{r, fig.height=10,fig.width=9}
+library(scales)
+ramp <- colorRamp(c("yellow", "blue"))
+colours_by_mean <- rgb( 
+    ramp( as.vector(rescale(rowMeans(existing_df),c(0,1)))), 
+    max = 255 )
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=colours_by_mean)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=colours_by_mean)
+```
+
+Now let's associate colour with total sum.  
+
+```{r, fig.height=10,fig.width=9}
+ramp <- colorRamp(c("yellow", "blue"))
+colours_by_sum <- rgb( 
+    ramp( as.vector(rescale(rowSums(existing_df),c(0,1)))), 
+    max = 255 )
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=colours_by_sum)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=colours_by_sum)
+```
+
+And finally let's associate it with percentage of variation.  
+
+- TODO
+
+## Clustering  
+
+Obtaining clusters in R is as simple as calling to `kmeans`. The function has several parameters, but we will just use all the defaults and start trying with different values of k.  
+
+Let's start with `k=3` asuming that at least, the are countries in a really bad situation, countries in a good situation, and some of them in between.  
+
+```{r}
+set.seed(1234)
+existing_clustering <- kmeans(existing_df, centers = 3)
+```
+
+The result contains a list with components:  
+
+- `cluster`: A vector of integers indicating the cluster to which each point is allocated.  
+- `centers`: A matrix of cluster centres.  
+- `withinss`: The within-cluster sum of square distances for each cluster.  
+- `size`: The number of points in each cluster.  
+
+Let's colour our previous scatter plot based on what cluster each country belongs to.  
+
+```{r, fig.height=10,fig.width=9}
+existing_cluster_groups <- existing_clustering$cluster
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=existing_cluster_groups)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=existing_cluster_groups)
+```
+
+Most clusters are based on the first PC. That means that clusters are just defined in terms of the total number of cases per 100K and not how the data evolved on time (PC2). So let's try with `k=4` and see if some of these cluster are refined in the direction of the second PC.  
+
+```{r}
+set.seed(1234)
+existing_clustering <- kmeans(existing_df, centers = 4)
+existing_cluster_groups <- existing_clustering$cluster
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=existing_cluster_groups)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=existing_cluster_groups)
+```
+
+There is more refinement, but again is in the direction of the first PC. Let's try then with `k=5`.  
+
+```{r}
+set.seed(1234)
+existing_clustering <- kmeans(existing_df, centers = 5)
+existing_cluster_groups <- existing_clustering$cluster
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=existing_cluster_groups)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=existing_cluster_groups)
+```
+
+There we have it. Right in the middle we have a cluster that has been split in two different ones in the direction of the second PC. What if we try with `k=6`?  
+
+```{r}
+set.seed(1234)
+existing_clustering <- kmeans(existing_df, centers = 6)
+existing_cluster_groups <- existing_clustering$cluster
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=existing_cluster_groups)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=existing_cluster_groups)
+```
+
+We get some diagonal split in the second top cluster. That surely contains some interesting information, but let's revert to our `k=5` case and later on we will see how to use a different refinement process with clusters are too tight like we have at the top of the plot.  
+
+```{r}
+set.seed(1234)
+existing_clustering <- kmeans(existing_df, centers = 5)
+existing_cluster_groups <- existing_clustering$cluster
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=existing_cluster_groups)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=existing_cluster_groups)
+```
+
+## Analysing clusters
+
+Most of the work in this section is about data frame indexing. There isn't anything sophisticated about the code we will use, so we will pick up one of our languages and perform the whole thing (we will use R this time). In order to analyise each cluster, let's add a column in our data frame containing the cluster ID. We will use that for subsetting.  
+
+```{r}
+existing_df$cluster <- existing_clustering$cluster
+table(existing_df$cluster)
+```
+
+The last line shows how many countries do we have in each cluster.  
+
+### Centroids comparison chart  
+
+Let's start by creating a line chart that compares the time series for each cluster centroid. This chart will helps us better understand our cluster results.  
+
+```{r}
+xrange <- 1990:2007
+plot(xrange, existing_clustering$centers[1,], 
+     type='l', xlab="Year", 
+     ylab="New cases per 100K", 
+     col = 1, 
+     ylim=c(0,1000))
+for (i in 2:nrow(existing_clustering$centers)) {
+    lines(xrange, existing_clustering$centers[i,],
+    col = i)
+}
+legend(x=1990, y=1000, 
+       lty=1, cex = 0.5,
+       ncol = 5,
+       col=1:(nrow(existing_clustering$centers)+1),
+       legend=paste("Cluster",1:nrow(existing_clustering$centers)))
+```
+
+### Cluster 1  
+
+Cluster 1 contains just 16 countries. These are:  
+
+```{r}
+rownames(subset(existing_df, cluster==1))
+```
+
+The centroid that represents them is:
+
+```{r}
+existing_clustering$centers[1,]
+```
+
+These are by all means countries with the most tuberculosis cases every year. We can see in the carht that this is the top line, although the number of cases descends progressively.  
+
+### Cluster 2  
+
+Cluster 2 contains 30 countries. These are:  
+
+```{r}
+rownames(subset(existing_df, cluster==2))
+```
+
+The centroid that represents them is:
+
+```{r}
+existing_clustering$centers[2,]
+```
+
+It is a relatively large cluster. Still countries with lots of cases, but definitively less than the first cluster. We see countries such as India or China here, the larger countries on earth (from a previous tutorial we know that China itself has reduced its cases by 85%) and american countries such as Peru or Bolivia. In fact, this is the cluster with the fastest decrease in the number of existing cases as we see in the line chart.   
+
+### Cluster 3  
+
+This is an important one. Cluster 3 contains just 20 countries. These are:  
+
+```{r}
+rownames(subset(existing_df, cluster==3))
+```
+
+The centroid that represents them is:
+
+```{r}
+existing_clustering$centers[3,]
+```
+
+This is the only cluster where the number of cases has increased over the years, and is about to overtake the first position by 2007. Each of these countries are probably in the middle of an humanitarian crisis and probably beeing affected by other infectious diseases such as HIV. We can confirm here that PC2 is coding mostly that, the percentage of variation over time of the number of exiting cases.  
+
+### Cluster 4  
+
+The fourth cluster contains 51 countries.  
+
+```{r}
+rownames(subset(existing_df, cluster==4))
+```
+
+Represented by its centroid.  
+
+```{r}
+existing_clustering$centers[4,]
+```
+
+This cluster is pretty close to the last and larger one. It contains many american countries, some european countries, etc. Some of them are large and rich, such as Russia or Brazil. Structurally the differece with the countries in Cluster 5 may reside in a larger number of cases per 100K. They also seem to be decreasing the number of cases slightly faster than Cluster 5. These two reasons made k-means cluster them in a different group.  
+
+### Cluster 5  
+
+The last and bigger cluster contains 90 countries.  
+
+```{r}
+rownames(subset(existing_df, cluster==5))
+```
+
+Represented by its centroid.  
+
+```{r}
+existing_clustering$centers[5,]
+```
+
+This cluster is too heterogeneous and probably needs futher refinement. However, it is a good grouping when compared to other distant clusters. In any case it contains those countries with less number of existing cases in our set.    
+
+### A second level of clustering  
+
+So let's do just that quickly. Let's re-cluster the 90 countries in our Cluster 5 in order to firther refine them. As the number of clusters let's use 2. We are just interested in seeing if there are actually two different clusters withing Cluster 5. The reader can of course try to go further and use more than 2 centers.  
+
+```{r}
+# subset the original dataset
+cluster5_df <- subset(existing_df, cluster==5)
+# do the clustering
+set.seed(1234)
+cluster5_clustering <- kmeans(cluster5_df[,-19], centers = 2)
+# assign sub-cluster number to the data set for Cluster 5
+cluster5_df$cluster <- cluster5_clustering$cluster
+```
+
+Now we can plot them in order to see if there are actual differences.  
+
+```{r}
+xrange <- 1990:2007
+plot(xrange, cluster5_clustering$centers[1,], 
+     type='l', xlab="Year", 
+     ylab="Existing cases per 100K", 
+     col = 1, 
+     ylim=c(0,200))
+for (i in 2:nrow(cluster5_clustering$centers)) {
+    lines(xrange, cluster5_clustering$centers[i,],
+    col = i)
+}
+legend(x=1990, y=200, 
+       lty=1, cex = 0.5,
+       ncol = 5,
+       col=1:(nrow(cluster5_clustering$centers)+1),
+       legend=paste0("Cluster 5.",1:nrow(cluster5_clustering$centers)))
+```
+
+There are actually different tendencies in our data. We can see that there is a group of countries in our original Cluster 5 that is decreasing the number cases at a faster rate, trying to catch up with those countries with a lower number of existing TB cases per 100K.  
+
+```{r}
+rownames(subset(cluster5_df, cluster5_df$cluster==2))
+```
+
+While the countries with less number of cases and also slower decreasing rate is.  
+
+```{r}
+rownames(subset(cluster5_df, cluster5_df$cluster==1))
+```
+
+However, we won't likely obtain this clusters by just increasing in 1 the number of centers in our first clustering process with the original dataset. As we said, Cluster 5 seemed like a very cohesive group when compared with more distant countries. This two step clustering process is a useful technique that we can use with any dataset we want to explore.  
+
+
+
+
