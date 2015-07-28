@@ -115,9 +115,27 @@ text(PC1~PC2, data=scores_existing_df,
 
 ![](dimensionality-clustering_files/figure-html/unnamed-chunk-7-1.png) 
 
-And finally let's associate it with percentage of variation.  
+And finally let's associate it with the difference between first and last year, as a simple way to measure the change in time.  
 
-- TODO
+
+
+```r
+existing_df_change <- existing_df$X2007 - existing_df$X1990
+ramp <- colorRamp(c("yellow", "blue"))
+colours_by_change <- rgb( 
+    ramp( as.vector(rescale(existing_df_change,c(0,1)))), 
+    max = 255 )
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=colours_by_change)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=colours_by_change)
+```
+
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-8-1.png) 
+
+As we can see, the color gradation mostly changes on the direction of the second principal component. That is, while the first PC captures most of the variation within our dataset and this variation is based on the total cases in the 1990-2007 range, the second PC is largely affected by the change over time.  
 
 ## Clustering  
 
@@ -151,7 +169,7 @@ text(PC1~PC2, data=scores_existing_df,
      cex=.8, col=existing_cluster_groups)
 ```
 
-![](dimensionality-clustering_files/figure-html/unnamed-chunk-9-1.png) 
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-10-1.png) 
 
 Most clusters are based on the first PC. That means that clusters are just defined in terms of the total number of cases per 100K and not how the data evolved on time (PC2). So let's try with `k=4` and see if some of these cluster are refined in the direction of the second PC.  
 
@@ -168,7 +186,7 @@ text(PC1~PC2, data=scores_existing_df,
      cex=.8, col=existing_cluster_groups)
 ```
 
-![](dimensionality-clustering_files/figure-html/unnamed-chunk-10-1.png) 
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-11-1.png) 
 
 There is more refinement, but again is in the direction of the first PC. Let's try then with `k=5`.  
 
@@ -185,7 +203,7 @@ text(PC1~PC2, data=scores_existing_df,
      cex=.8, col=existing_cluster_groups)
 ```
 
-![](dimensionality-clustering_files/figure-html/unnamed-chunk-11-1.png) 
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-12-1.png) 
 
 There we have it. Right in the middle we have a cluster that has been split in two different ones in the direction of the second PC. What if we try with `k=6`?  
 
@@ -202,7 +220,7 @@ text(PC1~PC2, data=scores_existing_df,
      cex=.8, col=existing_cluster_groups)
 ```
 
-![](dimensionality-clustering_files/figure-html/unnamed-chunk-12-1.png) 
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-13-1.png) 
 
 We get some diagonal split in the second top cluster. That surely contains some interesting information, but let's revert to our `k=5` case and later on we will see how to use a different refinement process with clusters are too tight like we have at the top of the plot.  
 
@@ -219,7 +237,7 @@ text(PC1~PC2, data=scores_existing_df,
      cex=.8, col=existing_cluster_groups)
 ```
 
-![](dimensionality-clustering_files/figure-html/unnamed-chunk-13-1.png) 
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-14-1.png) 
 
 ## Analysing clusters
 
@@ -262,7 +280,7 @@ legend(x=1990, y=1000,
        legend=paste("Cluster",1:nrow(existing_clustering$centers)))
 ```
 
-![](dimensionality-clustering_files/figure-html/unnamed-chunk-15-1.png) 
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-16-1.png) 
 
 ### Cluster 1  
 
@@ -550,7 +568,7 @@ legend(x=1990, y=200,
        legend=paste0("Cluster 5.",1:nrow(cluster5_clustering$centers)))
 ```
 
-![](dimensionality-clustering_files/figure-html/unnamed-chunk-27-1.png) 
+![](dimensionality-clustering_files/figure-html/unnamed-chunk-28-1.png) 
 
 There are actually different tendencies in our data. We can see that there is a group of countries in our original Cluster 5 that is decreasing the number cases at a faster rate, trying to catch up with those countries with a lower number of existing TB cases per 100K.  
 

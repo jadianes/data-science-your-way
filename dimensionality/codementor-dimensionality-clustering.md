@@ -141,10 +141,27 @@ text(PC1~PC2, data=scores_existing_df,
 
 ![enter image description here](https://www.filepicker.io/api/file/GXfizhZVTN2LzUfub8cO "enter image title here")
 
-And finally let's associate it with percentage of variation.  
+And finally let's associate it with the difference between first and last year, as a simple way to measure the change in time.  
 
-- TODO
 
+
+```r
+existing_df_change <- existing_df$X2007 - existing_df$X1990
+ramp <- colorRamp(c("yellow", "blue"))
+colours_by_change <- rgb( 
+    ramp( as.vector(rescale(existing_df_change,c(0,1)))), 
+    max = 255 )
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=colours_by_change)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=colours_by_change)
+```
+
+![enter image description here](https://www.filepicker.io/api/file/Xmin5urEQBe5QamSerzA "enter image title here")
+
+We have some interesting conclusions already, but first let's repeat the process using Python.    
 
 ### Python   
 
@@ -156,7 +173,9 @@ And finally let's associate it with percentage of variation.
 
 From the plots we have done in Python and R, we can confirm that most variation happens along the y axis, that we have assigned to PC1.  At the very top we see an important concentration of countries, mostly developed. While we descend that axis, the number of countries is more sparse, and they belong to less developed regions of the world.   
 
-When colouring points using two absolute magnitudes such as average and total number of cases, we can see that the directions also correspond to a variation in this magnitudes.  
+When colouring points using two absolute magnitudes such as average and total number of cases, we can see that the directions also correspond to a variation in these magnitudes.  
+
+Moreover, when using color to code the difference in the number of cases over time (2007 minus 1990), the color gradient mostly changes along the direction of the second principal component, with more positive values (i.e. increase in the number of cases) coloured in blue . That is, while the first PC captures most of the variation within our dataset and this variation is based on the total cases in the 1990-2007 range, the second PC is largely affected by the change over time. 
 
 In the next section we will try to discover other relationships between countries.  
 

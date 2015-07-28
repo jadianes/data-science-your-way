@@ -89,9 +89,24 @@ text(PC1~PC2, data=scores_existing_df,
      cex=.8, col=colours_by_sum)
 ```
 
-And finally let's associate it with percentage of variation.  
+And finally let's associate it with the difference between first and last year, as a simple way to measure the change in time.  
 
-- TODO
+
+```{r}
+existing_df_change <- existing_df$X2007 - existing_df$X1990
+ramp <- colorRamp(c("yellow", "blue"))
+colours_by_change <- rgb( 
+    ramp( as.vector(rescale(existing_df_change,c(0,1)))), 
+    max = 255 )
+plot(PC1~PC2, data=scores_existing_df, 
+     main= "Existing TB cases per 100K distribution",
+     cex = .1, lty = "solid", col=colours_by_change)
+text(PC1~PC2, data=scores_existing_df, 
+     labels=rownames(existing_df),
+     cex=.8, col=colours_by_change)
+```
+
+As we can see, the color gradation mostly changes on the direction of the second principal component. That is, while the first PC captures most of the variation within our dataset and this variation is based on the total cases in the 1990-2007 range, the second PC is largely affected by the change over time.  
 
 ## Clustering  
 
