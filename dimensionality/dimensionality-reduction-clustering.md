@@ -415,9 +415,17 @@ across all the years.
       <th>PC2</th>
       <th>country_mean</th>
       <th>country_mean_scaled</th>
+      <th>country_sum</th>
+      <th>country_sum_scaled</th>
+      <th>country_change</th>
+      <th>country_change_scaled</th>
     </tr>
     <tr>
       <th>country</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -430,35 +438,55 @@ across all the years.
       <td>-732.215864</td>
       <td> 203.381494</td>
       <td> 353.333333</td>
+      <td> 0.334325</td>
+      <td> 6360</td>
       <td> 0.329731</td>
+      <td>-198</td>
+      <td> 0.850840</td>
     </tr>
     <tr>
       <th>Albania</th>
       <td> 613.296510</td>
       <td>   4.715978</td>
       <td>  36.944444</td>
+      <td> 0.037014</td>
+      <td>  665</td>
       <td> 0.032420</td>
+      <td> -20</td>
+      <td> 1.224790</td>
     </tr>
     <tr>
       <th>Algeria</th>
       <td> 569.303713</td>
       <td> -36.837051</td>
       <td>  47.388889</td>
+      <td> 0.046829</td>
+      <td>  853</td>
       <td> 0.042234</td>
+      <td>  11</td>
+      <td> 1.289916</td>
     </tr>
     <tr>
       <th>American Samoa</th>
       <td> 717.082766</td>
       <td>   5.464696</td>
       <td>  12.277778</td>
+      <td> 0.013835</td>
+      <td>  221</td>
       <td> 0.009240</td>
+      <td> -37</td>
+      <td> 1.189076</td>
     </tr>
     <tr>
       <th>Andorra</th>
       <td> 661.802241</td>
       <td>  11.037736</td>
       <td>  25.277778</td>
+      <td> 0.026051</td>
+      <td>  455</td>
       <td> 0.021457</td>
+      <td> -20</td>
+      <td> 1.224790</td>
     </tr>
   </tbody>
 </table>
