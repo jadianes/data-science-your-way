@@ -505,7 +505,7 @@ those with negative values in the original non-scaled version, since we are
 scaling to a [0,1] range.
 
 
-    existing_df_2d['country_change'] = pd.Series(existing_df['1990']-existing_df['2007'], index=existing_df_2d.index)
+    existing_df_2d['country_change'] = pd.Series(existing_df['2007']-existing_df['1990'], index=existing_df_2d.index)
     country_change_max = existing_df_2d['country_change'].max()
     country_change_min = existing_df_2d['country_change'].min()
     country_change_scaled = (existing_df_2d.country_change - country_change_min) / country_change_max
@@ -534,28 +534,28 @@ scaling to a [0,1] range.
   <tbody>
     <tr>
       <th>Afghanistan</th>
-      <td> 198</td>
-      <td> 1.117745</td>
+      <td>-198</td>
+      <td> 0.850840</td>
     </tr>
     <tr>
       <th>Albania</th>
-      <td>  20</td>
-      <td> 0.822554</td>
+      <td> -20</td>
+      <td> 1.224790</td>
     </tr>
     <tr>
       <th>Algeria</th>
-      <td> -11</td>
-      <td> 0.771144</td>
+      <td>  11</td>
+      <td> 1.289916</td>
     </tr>
     <tr>
       <th>American Samoa</th>
-      <td>  37</td>
-      <td> 0.850746</td>
+      <td> -37</td>
+      <td> 1.189076</td>
     </tr>
     <tr>
       <th>Andorra</th>
-      <td>  20</td>
-      <td> 0.822554</td>
+      <td> -20</td>
+      <td> 1.224790</td>
     </tr>
   </tbody>
 </table>
@@ -569,7 +569,7 @@ scaling to a [0,1] range.
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f3196230250>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f3196625c50>
 
 
 
