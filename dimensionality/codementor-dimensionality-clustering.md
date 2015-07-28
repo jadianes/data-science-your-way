@@ -45,6 +45,47 @@ existing_df[c(1,2,3,4,5,6,15,16,17,18)] <-
 
 ###  Python  
 
+So first, we need to download Google Spreadsheet data as CSV.
+
+```python
+import urllib
+    
+tb_existing_url_csv = 'https://docs.google.com/spreadsheets/d/1X5Jp7Q8pTs3KLJ5JBWKhncVACGsg5v4xu6badNs4C7I/pub?gid=0&output=csv'
+local_tb_existing_file = 'tb_existing_100.csv'
+existing_f = urllib.urlretrieve(tb_existing_url_csv, local_tb_existing_file)
+```
+
+Now that we have it locally, we need to read the CSV file as a data frame.
+
+```python
+import pandas as pd
+    
+existing_df = pd.read_csv(
+    local_tb_existing_file, 
+    index_col = 0, 
+    thousands  = ',')
+existing_df.index.names = ['country']
+existing_df.columns.names = ['year']
+```
+
+We have specified `index_col` to be 0 since we want the country names to be the
+row labels. We also specified the `thousands` separator to be ',' so Pandas
+automatically parses cells as numbers. We can use `head()` to check the first
+few lines.
+
+```python
+existing_df.head()
+```
+
+| year           | 1990 | 1991 | 1992 | 1993 | 1994 | 1995 | 1996 | 1997 | 1998 | 1999 | 2000 | 2001 | 2002 | 2003 | 2004 | 2005 | 2006 | 2007 |
+|----------------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|------|
+| country        |      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |
+| Afghanistan    | 436  | 429  | 422  | 415  | 407  | 397  | 397  | 387  | 374  | 373  | 346  | 326  | 304  | 308  | 283  | 267  | 251  | 238  |
+| Albania        | 42   | 40   | 41   | 42   | 42   | 43   | 42   | 44   | 43   | 42   | 40   | 34   | 32   | 32   | 29   | 29   | 26   | 22   |
+| Algeria        | 45   | 44   | 44   | 43   | 43   | 42   | 43   | 44   | 45   | 46   | 48   | 49   | 50   | 51   | 52   | 53   | 55   | 56   |
+| American Samoa | 42   | 14   | 4    | 18   | 17   | 22   | 0    | 25   | 12   | 8    | 8    | 6    | 5    | 6    | 9    | 11   | 9    | 5    |
+| Andorra        | 39   | 37   | 35   | 33   | 32   | 30   | 28   | 23   | 24   | 22   | 20   | 20   | 21   | 18   | 19   | 18   | 17   | 19   |
+
 
 ## Dimensionality reduction with PCA  
  
@@ -165,17 +206,192 @@ We have some interesting conclusions already, but first let's repeat the process
 
 ### Python   
 
-- Find PCs
-- Scatterplot
+Python's sklearn machine learning library comes with a [PCA implementation](http
+://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html).
+This implementation uses the `scipy.linalg` implementation of the [singular value decomposition](https://en.wikipedia.org/wiki/Singular_value_decomposition). It
+only works for dense arrays (see [numPy dense arrays](http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) or
+[sparse array PCA](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.SparsePCA.html#sklearn.decomposition.SparsePCA) if you are using sparse arrays) and is not scalable to large dimensional data. For large dimensional data we should consider something such as [Spark's dimensionality reduction features](http://spark.apache.org/docs/latest/mllib-dimensionality-reduction.html). In our case we just have 18 variables, and that is far from being a large number of features for today's machine learning libraries and computer capabilities.
+
+When using this implementation of PCA we need to specify in advance the number
+of principal components we want to use. Then we can just call the `fit()` method
+with our data frame and check the results.
+
+```python
+from sklearn.decomposition import PCA
+    
+pca = PCA(n_components=2)
+pca.fit(existing_df)
+```
+```python
+    PCA(copy=True, n_components=2, whiten=False)
+```
 
 
-### Results  
+This gives us an object we can use to transform our data by calling `transform`.
 
-From the plots we have done in Python and R, we can confirm that most variation happens along the y axis, that we have assigned to PC1.  At the very top we see an important concentration of countries, mostly developed. While we descend that axis, the number of countries is more sparse, and they belong to less developed regions of the world.   
+```python
+existing_2d = pca.transform(existing_df)
+```
 
-When colouring points using two absolute magnitudes such as average and total number of cases, we can see that the directions also correspond to a variation in these magnitudes.  
+Or we could have just called `fit_transform` to perform both steps in one single
+call.
 
-Moreover, when using color to code the difference in the number of cases over time (2007 minus 1990), the color gradient mostly changes along the direction of the second principal component, with more positive values (i.e. increase in the number of cases) coloured in blue . That is, while the first PC captures most of the variation within our dataset and this variation is based on the total cases in the 1990-2007 range, the second PC is largely affected by the change over time. 
+In both cases we will end up with a lower dimension representation of our data
+frame, as a numPy array. Let's put it in a new data frame.
+
+```python
+existing_df_2d = pd.DataFrame(existing_2d)
+existing_df_2d.index = existing_df.index
+existing_df_2d.columns = ['PC1','PC2']
+existing_df_2d.head()
+```
+
+| PC1            | PC2         |            |
+|----------------|-------------|------------|
+| country        |             |            |
+| Afghanistan    | -732.215864 | 203.381494 |
+| Albania        | 613.296510  | 4.715978   |
+| Algeria        | 569.303713  | -36.837051 |
+| American Samoa | 717.082766  | 5.464696   |
+| Andorra        | 661.802241  | 11.037736  |
+
+
+We can also print the explained variance ratio as follows.
+
+```python
+print(pca.explained_variance_ratio_) 
+```
+```python
+    [ 0.91808789  0.060556  ]
+```
+
+We see that the first PC already explains almost 92% of the variance, while the
+second one accounts for another 6% for a total of almost 98% between the two of
+them.
+
+Now we are ready to plot the lower dimensionality version of our dataset. We just need to call plot on the data frame, by passing the kind of plot we want (see [here](http://pandas.pydata.org/pandas-docs/version/0.15.0/visualization.html) for more on plotting data frames) and what columns correspond to each axis. We also add an annotation loop that tags every point with its country name.
+
+```python
+%matplotlib inline
+    
+ax = existing_df_2d.plot(kind='scatter', x='PC2', y='PC1', figsize=(16,8))
+    
+for i, country in enumerate(existing_df.index):
+    ax.annotate(
+        country, 
+        (existing_df_2d.iloc[i].PC2, existing_df_2d.iloc[i].PC1)
+    )
+```
+
+![enter image description here](https://www.filepicker.io/api/file/PPomuIILRdGBVLyfMOZU "enter image title here")
+
+
+Let's now create a bubble chart, by setting the point size to a value proportional to the mean value for all the years in that particular country. First we need to add a new column containing the re-scaled mean per country across all the years.
+
+```python
+from sklearn.preprocessing import normalize
+    
+existing_df_2d['country_mean'] = pd.Series(existing_df.mean(axis=1), index=existing_df_2d.index)
+country_mean_max = existing_df_2d['country_mean'].max()
+country_mean_min = existing_df_2d['country_mean'].min()
+country_mean_scaled = 
+    (existing_df_2d.country_mean-country_mean_min) / country_mean_max
+existing_df_2d['country_mean_scaled'] = pd.Series(
+        country_mean_scaled, 
+        index=existing_df_2d.index) 
+existing_df_2d.head()
+```
+
+| PC1            | PC2         | country_mean | country_mean_scaled |          |
+|----------------|-------------|--------------|---------------------|----------|
+| country        |             |              |                     |          |
+| Afghanistan    | -732.215864 | 203.381494   | 353.333333          | 0.329731 |
+| Albania        | 613.296510  | 4.715978     | 36.944444           | 0.032420 |
+| Algeria        | 569.303713  | -36.837051   | 47.388889           | 0.042234 |
+| American Samoa | 717.082766  | 5.464696     | 12.277778           | 0.009240 |
+| Andorra        | 661.802241  | 11.037736    | 25.277778           | 0.021457 |
+
+
+Now we are ready to plot using this variable size (we will omit the country names this time since we are not so interested in them).
+
+```python
+existing_df_2d.plot(
+    kind='scatter', 
+    x='PC2', 
+    y='PC1', 
+    s=existing_df_2d['country_mean_scaled']*100, 
+    figsize=(16,8))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/qWOGxtCMTDYFTHk3uwaw "enter image title here")
+
+
+Let's do the same with the sum instead of the mean.
+
+```python
+existing_df_2d['country_sum'] = pd.Series(
+    existing_df.sum(axis=1), 
+    index=existing_df_2d.index)
+country_sum_max = existing_df_2d['country_sum'].max()
+country_sum_min = existing_df_2d['country_sum'].min()
+country_sum_scaled =
+    (existing_df_2d.country_sum-country_sum_min) / country_sum_max
+existing_df_2d['country_sum_scaled'] = pd.Series(
+        country_sum_scaled, 
+        index=existing_df_2d.index)
+existing_df_2d.plot(
+    kind='scatter', 
+    x='PC2', y='PC1', 
+    s=existing_df_2d['country_sum_scaled']*100, 
+    figsize=(16,8))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/oH9GfaOQTvWDLcEW2Hmi "enter image title here")
+
+
+And finally let's associate the size with the change between 1990 and 2007. Note that in the scaled version, those values close to zero will make reference to those with negative values in the original non-scaled version, since we are scaling to a [0,1] range.
+
+```python
+existing_df_2d['country_change'] = pd.Series(
+    existing_df['2007']-existing_df['1990'], 
+    index=existing_df_2d.index)
+country_change_max = existing_df_2d['country_change'].max()
+country_change_min = existing_df_2d['country_change'].min()
+country_change_scaled = 
+    (existing_df_2d.country_change - country_change_min) / country_change_max
+existing_df_2d['country_change_scaled'] = pd.Series(
+        country_change_scaled, 
+        index=existing_df_2d.index)
+existing_df_2d[['country_change','country_change_scaled']].head()
+```
+
+| country_change | country_change_scaled |          |
+|----------------|-----------------------|----------|
+| country        |                       |          |
+| Afghanistan    | -198                  | 0.850840 |
+| Albania        | -20                   | 1.224790 |
+| Algeria        | 11                    | 1.289916 |
+| American Samoa | -37                   | 1.189076 |
+| Andorra        | -20                   | 1.224790 |
+
+
+```python
+existing_df_2d.plot(
+    kind='scatter', 
+    x='PC2', y='PC1', 
+    s=existing_df_2d['country_change_scaled']*100, 
+    figsize=(16,8))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/7M91LztARI2wT7Aya9Yx "enter image title here")
+
+### PCA Results  
+
+From the plots we have done in Python and R, we can confirm that most variation happens along the y axis, that we have assigned to PC1.  We saw that the first PC already explains almost 92% of the variance, while the second one accounts for another 6% for a total of almost 98% between the two of them. At the very top of our charts we could see an important concentration of countries, mostly developed. While we descend that axis, the number of countries is more sparse, and they belong to less developed regions of the world.   
+
+When colouring/sizing points using two absolute magnitudes such as average and total number of cases, we can see that the directions also correspond to a variation in these magnitudes.  
+
+Moreover, when using color/size to code the difference in the number of cases over time (2007 minus 1990), the color gradient mostly changed along the direction of the second principal component, with more positive values (i.e. increase in the number of cases) coloured in blue or with bigger size . That is, while the first PC captures most of the variation within our dataset and this variation is based on the total cases in the 1990-2007 range, the second PC is largely affected by the change over time. 
 
 In the next section we will try to discover other relationships between countries.  
 
