@@ -395,7 +395,7 @@ Moreover, when using color/size to code the difference in the number of cases ov
 
 In the next section we will try to discover other relationships between countries.  
 
-## Uncovering relationships with k-means clustering   
+## Exploring data structure with k-means clustering   
 
 In this section we will use [k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering) to group countries based on how similar their situation has been year-by-year. That is, we will cluster the data based in the 18 variables that we have. Then we will use the cluster assignment to colour the previous 2D chart, in order to discover hidden relationship within our data and better understand the world situation regarding the tuberculosis disease.  
 
@@ -506,9 +506,38 @@ text(PC1~PC2, data=scores_existing_df,
 
 ### Python  
 
-- Run k-means clustering  
-- Assign colours to scatterplot  
+Again we will use `sklearn`, in this case its [k-means clustering](http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html) implementation, in order to perform our clustering on the TB data. Since we already decided on a number of clusters of 5, we will use it here straightaway.
 
+```python
+from sklearn.cluster import KMeans
+    
+kmeans = KMeans(n_clusters=5)
+clusters = kmeans.fit(existing_df)
+```
+
+Now we need to store the cluster assignments together with each country in our
+data frame. The cluster labels are returned in `clusters.labels_`.
+
+```python
+existing_df_2d['cluster'] = pd.Series(clusters.labels_, index=existing_df_2d.index)
+```
+
+And now we are ready to plot, using the cluster column as color.
+
+```python
+import numpy as np
+    
+existing_df_2d.plot(
+        kind='scatter',
+        x='PC2',y='PC1',
+        c=existing_df_2d.cluster.astype(np.float), 
+        figsize=(16,8))
+```
+
+![enter image description here](https://www.filepicker.io/api/file/Ob67rnLiRHuabdX71mE1 "enter image title here")
+
+The result is pretty much as the one obtained with R, with the color differences
+and without the country names that we decided not to include here so we can better see the colours. In the next section we will analyse each cluster in detail.  
 
 ## Cluster interpretation  
 
