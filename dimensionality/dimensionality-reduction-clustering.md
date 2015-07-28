@@ -605,4 +605,99 @@ scaling to a [0,1] range.
 ![png](dimensionality-reduction-clustering_files/dimensionality-reduction-clustering_33_1.png)
 
 
-## 
+### PCA Results
+
+From the plots we have done, we can confirm that most variation happens along
+the y axis, that we have assigned to PC1.  We saw that the first PC already
+explains almost 92% of the variance, while the second one accounts for another
+6% for a total of almost 98% between the two of them. At the very top of our
+charts we could see an important concentration of countries, mostly developed.
+While we descend that axis, the number of countries is more sparse, and they
+belong to less developed regions of the world.
+
+When sizing points using two absolute magnitudes such as average and total
+number of cases, we can see that the directions also correspond to a variation
+in these magnitudes.
+
+Moreover, when using size to code the difference in the number of cases over
+time (2007 minus 1990), the size mostly changed along the direction of the
+second principal component, with more positive values (i.e. increase in the
+number of cases) having a bigger size. That is, while the first PC captures most
+of the variation within our dataset and this variation is based on the total
+cases in the 1990-2007 range, the second PC is largely affected by the change
+over time.
+
+In the next section we will try to discover other relationships between
+countries.
+
+## Uncovering data structure with k-means clustering 
+
+In this section we will use [k-means
+clustering](https://en.wikipedia.org/wiki/K-means_clustering) to group countries
+based on how similar their situation has been year-by-year. That is, we will
+cluster the data based in the 18 variables that we have. Then we will use the
+cluster assignment to colour the previous 2D chart, in order to discover hidden
+relationship within our data and better understand the world situation regarding
+the tuberculosis disease.
+
+When using k-means, we need to determine the right number of groups for our
+case. This can be done more or less accurately by iterating through different
+values for the number of groups and compare an amount called the within-cluster
+sum of square distances for each iteration. This is the squared sum of distances
+to the cluster center for each cluster member. Of course this distance is
+minimal when the number of clusters gets equal to the number of samples, but we
+don't want to get there. We normally stop when the improvement in this value
+starts decreasing at a lower rate.
+
+However, we will use a more intuitive approach based on our understanding of the
+world situation and the nature of the results that we want to achieve. Sometimes
+this is the way to go in data analysis, specially when doing exploration tasks.
+To use the knowledge that we have about the nature of our data is always a good
+thing to do.
+
+Again we will use sklearn, in this case its [k-means clustering](http://scikit-
+learn.org/stable/modules/generated/sklearn.cluster.KMeans.html) implementation,
+in order to perform our clustering on the TB data. Since we already decided on a
+number of clusters of 5, we will use it here straightaway.
+
+
+    from sklearn.cluster import KMeans
+    
+    kmeans = KMeans(n_clusters=5)
+    
+    clusters = kmeans.fit(existing_df)
+
+Now we need to store the cluster assignments together with each country in our
+data frame. The cluster labels are returned in `clusters.labels_`.
+
+
+    existing_df_2d['cluster'] = pd.Series(clusters.labels_, index=existing_df_2d.index)
+
+And now we are ready to plot, using the cluster column as color.
+
+
+    import numpy as np
+    
+    existing_df_2d.plot(
+        kind='scatter',
+        x='PC2',y='PC1',
+        c=existing_df_2d.cluster.astype(np.float), 
+        figsize=(16,8))
+
+
+
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f3198573890>
+
+
+
+
+![png](dimensionality-reduction-clustering_files/dimensionality-reduction-clustering_43_1.png)
+
+
+The result is pretty much as the one obtained with R, with the color differences
+and without the country names that we decided not to include here. Next section
+we will analise each cluster in detail.
+
+
+    
