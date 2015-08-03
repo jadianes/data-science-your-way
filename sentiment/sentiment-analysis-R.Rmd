@@ -1,0 +1,210 @@
+---
+title: "Sentiment Analysis"
+author: "Jose A. Dianes"
+date: "3 August 2015"
+output:
+  html_document:
+    keep_md: yes
+---
+
+
+## Getting and preparing data
+
+In R, you use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it. Moreover, from the Kaggle page description we know that the file is tab-separated, there is not header, and we need to disable quoting since some sentences include quotes and that will stop file parsing at some point.  
+
+
+```{r}
+library(RCurl)
+
+test_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/testdata.txt?sv=2012-02-12&se=2015-08-06T10%3A32%3A23Z&sr=b&sp=r&sig=a8lqVKO0%2FLjN4hMrFo71sPcnMzltKk1HN8m7OPolArw%3D"
+train_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/training.txt?sv=2012-02-12&se=2015-08-06T10%3A34%3A08Z&sr=b&sp=r&sig=meGjVzfSsvayeJiDdKY9S6C9ep7qW8v74M6XzON0YQk%3D"
+
+test_data_file <- getURL(test_data_url)
+train_data_file <- getURL(train_data_url)
+
+train_data_df <- read.csv(
+    text = train_data_file, 
+    sep='\t', 
+    header=FALSE, 
+    quote = "",
+    stringsAsFactor=F,
+    col.names=c("Sentiment", "Text"))
+test_data_df <- read.csv(
+    text = test_data_file, 
+    sep='\t', 
+    header=FALSE, 
+    quote = "",
+    stringsAsFactor=F,
+    col.names=c("Text"))
+# we need to convert Sentiment to factor
+train_data_df$Sentiment <- as.factor(train_data_df$Sentiment)
+```
+
+Now we have our data in data frames. We have 7086 sentences for the training data and 33052 sentences for the test data. The sentences are in a column named `Text` and the sentiment tag (just for training data) in a column named `Sentiment`. Let's have a look at the first few lines of the training data.  
+
+```{r}
+head(train_data_df)
+```
+
+We can also get a glimpse at how tags ar distributed. In R we can use `table`.  
+
+```{r}
+table(train_data_df$Sentiment)
+```
+
+That is, we have data more or less evenly distributed, with 3091 negatively tagged sentences, and 3995 positively tagged sentences. How long on average are our sentences in words?    
+
+```{r}
+mean(sapply(sapply(train_data_df$Text, strsplit, " "), length))
+```
+
+About 10.8 words in length.  
+
+## Preparing a corpus  
+
+> In linguistics, a corpus (plural corpora) or text corpus is a large and structured set of texts (nowadays usually electronically stored and processed). They are used to do statistical analysis and hypothesis testing, checking occurrences or validating linguistic rules within a specific language territory.  
+> Source: [Wikipedia](https://en.wikipedia.org/wiki/Text_corpus)  
+
+In this section we will process our text sentences and create a corpus. We will also extract important words and stablish them as input variables for our classifier.  
+
+```{r}
+library(tm)
+corpus <- Corpus(VectorSource(c(train_data_df$Text, test_data_df$Text)))
+corpus
+```
+
+Let's explain what we just did. First we used both, test and train data. We need to consider all possible word in our corpus. Then we created a `VectorSource`, that is the input type for the `Corpus` function defined in the package `tm`. That gives us a `VCorpus` object that basically is a collection of content+metadata objects, where the content contains our sentences. For example, the content on the first document looks like this.    
+
+```{r}
+corpus[1]$content
+```
+
+In order to make use of this corpus, we need to transform its contents as follows.  
+
+```{r}
+corpus <- tm_map(corpus, tolower)
+corpus <- tm_map(corpus, PlainTextDocument)
+corpus <- tm_map(corpus, removePunctuation)
+corpus <- tm_map(corpus, removeWords, stopwords("english"))
+corpus <- tm_map(corpus, stripWhitespace)
+corpus <- tm_map(corpus, stemDocument)
+```
+
+First we put everything in lowercase. The second transformation is needed in order to have each document in the format we will need later on. Then we remove punctuation, english stopwords, strip whitespaces, and [stem](https://en.wikipedia.org/wiki/Stemming) each word. Right now, the first entry now looks like this.  
+
+```{r}
+corpus[1]$content
+```
+
+In our way to find document input features for our classifier, we want to put this corpus in the shame of a document matrix. A document matrix is a numeric matrix containing a column for each different word in our whole corpus, and a row for each document. A given cell equals to the freqency in a document for a given term.  
+
+This is how we do it in R.  
+
+```{r}
+dtm <- DocumentTermMatrix(corpus)
+dtm
+```
+
+If we consider each column as a term for our model, we will end up with a very complex model with 8383 different features. This will make the model slow and probably not very efficient. Some terms or words are more important than others, and we want to remove those that are not so much. We can use the function `removeSparseTerms` from the `tm` package where we pass the matrix and a number that gives the maximal allowed sparsity for a term in our corpus. For example, if we want terms that appear in at least 1% of the documents we can do as follows.  
+
+```{r}
+sparse <- removeSparseTerms(dtm, 0.99)
+sparse
+```
+
+We end up with just 85 terms. The close that value is to 1, the more terms we will have in our `sparse` object, since the number of documents we need a term to be in is smaller.  
+
+Now we want to convert this matrix into a data frame that we can use to train a classifier in the next section.  
+
+```{r}
+important_words_df <- as.data.frame(as.matrix(sparse))
+colnames(important_words_df) <- make.names(colnames(important_words_df))
+# split into train and test
+important_words_train_df <- head(important_words_df, nrow(train_data_df))
+important_words_test_df <- tail(important_words_df, nrow(test_data_df))
+
+# Add to original dataframes
+train_data_words_df <- cbind(train_data_df, important_words_train_df)
+test_data_words_df <- cbind(test_data_df, important_words_test_df)
+
+# Get rid of the original Text field
+train_data_words_df$Text <- NULL
+test_data_words_df$Text <- NULL
+```
+
+Now we are ready to train our first classifier.  
+
+## A bag-of-words linear classifier  
+
+The approach we are using here is called a [bag-of-words model](https://en.wikipedia.org/wiki/Bag-of-words_model). In this kind of model we simplify documents to a multiset of terms frequencies. That means that, for our model, a document sentiment tag will depend on what words appear in that document, discarding any grammar or word order but keeping multiplicity.  
+
+But first of all we need to split our train data into train and test data. Why we do that if we already have a testing set? Simple. The test set from the Kaggle competition doesn't have tags at all (obviously). If we want to asses our model accuracy we need a test set with sentiment tags to compare our results. We will split using `sample.split` from the [`caTools`](https://cran.r-project.org/web/packages/caTools/index.html) package.    
+
+```{r}
+library(caTools)
+set.seed(1234)
+# first we create an index with 80% True values based on Sentiment
+spl <- sample.split(train_data_words_df$Sentiment, .85)
+# now we use it to split our data into train and test
+eval_train_data_df <- train_data_words_df[spl==T,]
+eval_test_data_df <- train_data_words_df[spl==F,]
+```
+
+Building linear models is something that is at the very heart of R. Therefore is very easy, and it requires just a single function call.  
+
+```{r}
+log_model <- glm(Sentiment~., data=eval_train_data_df, family=binomial)
+summary(log_model)
+```
+
+The first parameter is a formula in the form `Output~Input` where the `.` at the input side means to use every single variable but the output one. Then we pass the data frame and `family=binomial` that means we want to use logistic regression.  
+
+The summary function gives us really good insight into the model we just built. The coefficient section lists all the input variables used in the model. A series of asterisks at the very end of them gives us the importance of each one, with `***` being the greatest significance level, and `**` or `*` being also important. These starts relate to the values in `Pr`. for example, we get that the stem `awesom` has a great significance, with a high positive `Estimate` value. That means that a document with that stem is very likely to be tagged with sentiment 1 (positive). We see the oposite case with the stem `hate`. We also see that there are many terms that doesn't seem to have a great significance.    
+
+So let's use our model with the test data.  
+
+```{r}
+log_pred <- predict(log_model, newdata=eval_test_data_df, type="response")
+```
+
+The previous `predict` called with `type="response"` will return probabilities (see [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression)). Let's say that we want a .5 threshold for a document to be classified as positive (Sentiment tag equals 1). Then we can calculate accuracy as follows.   
+
+```{r}
+# Calculate accuracy based on prob
+table(eval_test_data_df$Sentiment, log_pred>.5)
+```
+
+The cases where our model performed properly are given by the diagonal.  
+
+```{r}
+(453 + 590) / nrow(eval_test_data_df)
+```
+
+This is a very good accuracy. It seems that our bag of words approach works nicely with this particular problem.  
+
+We know we don't have tags on the given test dataset. Still we will try something. We will use our model to tag their entries and then get a random sample of entries and visually inspect how are they tagged. We can do this quickly in R as follows.  
+
+```{r}
+log_pred_test <- predict(log_model, newdata=test_data_words_df, type="response")
+
+test_data_df$Sentiment <- log_pred_test>.5
+    
+set.seed(1234)
+spl_test <- sample.split(test_data_df$Sentiment, .0005)
+test_data_sample_df <- test_data_df[spl_test==T,]
+```
+
+So lest check what has been classified as positive entries.  
+
+```{r}
+test_data_sample_df[test_data_sample_df$Sentiment==T, c('Text')]
+```
+
+And negative ones.  
+
+```{r}
+test_data_sample_df[test_data_sample_df$Sentiment==F, c('Text')]
+```
+
+So judge by yourself. Is our classifier doing a good job at all?
+
