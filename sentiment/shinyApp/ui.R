@@ -4,21 +4,32 @@ library(shiny)
 shinyUI(fluidPage(
     
     # Application title
-    titlePanel("Hello Shiny!"),
+    titlePanel("Text Sentiment Analyser"),
     
     # Sidebar with a slider input for the number of bins
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+            fileInput('file1', 'Choose CSV File',
+                      accept=c('text/csv', 
+                               'text/comma-separated-values,text/plain', 
+                               '.csv')),
+            tags$hr(),
+            checkboxInput('header', 'Header', FALSE),
+            radioButtons('sep', 'Separator',
+                         c(Comma=',',
+                           Semicolon=';',
+                           Tab='\t'),
+                         '\t'),
+            radioButtons('quote', 'Quote',
+                         c(None='',
+                           'Double Quote'='"',
+                           'Single Quote'="'"),
+                         '')
         ),
         
         # Show a plot of the generated distribution
         mainPanel(
-            plotOutput("distPlot")
+            tableOutput('contents')
         )
     )
 ))
