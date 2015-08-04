@@ -1,8 +1,8 @@
-Today we will introduce one of those applications of machine learning that leaves you thinking for days about how to put into some product or service and build a company around (and surely some of you with the right set of genes will). [Sentiment analysis](https://en.wikipedia.org/wiki/Sentiment_analysis) refers to the use of *natural language processing*, *text analysis* and *statistical learning* to identify and extract subjective information in source materials.  
+Today we will introduce one of those applications of machine learning that leaves you thinking about how to put it into some product or service and build a company around it (and surely some of you with the right set of genes will). [Sentiment analysis](https://en.wikipedia.org/wiki/Sentiment_analysis) refers to the use of *natural language processing*, *text analysis* and *statistical learning* to identify and extract subjective information in source materials.  
 
 In simple terms, sentiment analysis aims to determine the attitude of a speaker or a writer with respect to some topic or the overall contextual polarity of a document. In our case we will use it to determine if a text has a positive, negative, or neutral mood or animosity. Imagine for example that we apply it to entries in Twitter about the hashtag #Windows10. We will be able to determine how people feels about the new version of Microsoft operating system. Of course this is not a big deal applied to an individual piece of text. I believe that the average person will always make a better judgement than what we will build here. However our model will show its benefits when automatically processing large amounts of text very quickly, or processing a large number of entries.     
 
-So in the sentiment analysis process there are a couple of stages more or less differentiated. The first is about *processing natural language*, and the second about *training a model*. The first stage is in charge of processing text in a way that, when we are ready to train our model, we already know what variables the model needs to consider as inputs. The model itself is in charge of learning how to determine the sentiment of a piece of text based on these variables. This might sound a bit complicated right now, but I promise it will be cristal-clear by the end of the tutorial.  
+So in the sentiment analysis process there are a couple of stages more or less differentiated. The first is about *processing natural language*, and the second about *training a model*. The first stage is in charge of processing text in a way that, when we are ready to train our model, we already know what variables the model needs to consider as inputs. The model itself is in charge of learning how to determine the sentiment of a piece of text based on these variables. This might sound a bit complicated right now, but I promise it will be crystal-clear by the end of the tutorial.  
 
 For the model part we will introduce and use linear models. They aren't the most powerful methods in terms of accuracy, but they are simple enough to be interpreted in their results as we will see. Linear methods allow us to define our input variable as a linear combination of input variables.  In tis case we will introduce [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression). 
 
@@ -10,10 +10,11 @@ Finally we will need some data to train our model. For this we will use data fro
 
 ## Loading and preparing data
 
+As usual, we will first download our datasets locally, and then we will load them into data frames in both, R and Python.  
+
 ### R 
 
-In R, you use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it. Moreover, from the Kaggle page description we know that the file is tab-separated, there is not header, and we need to disable quoting since some sentences include quotes and that will stop file parsing at some point.  
-
+In R, we use `read.csv` to read CSV files into `data.frame` variables. Although the R function `read.csv` can work with URLs, https is a problem for R in many cases, so you need to use a package like RCurl to get around it. Moreover, from the Kaggle page description we know that the file is tab-separated, there is not header, and we need to disable quoting since some sentences include quotes and that will stop file parsing at some point.  
 
 
 ```r
@@ -101,17 +102,120 @@ About 10.8 words in length.
 
 ### Python  
 
+Although we will end up using `sklearn.feature_extraction.text.CountVectorizer`
+to create a bag-of-words set of features, and this library directly accepts a
+file name, we need to pass instead a sequence of documents since our training
+file contains not just text but also sentiment tags (that we need to strip out).
+
+```python
+import urllib
+    
+# define URLs
+test_data_url = "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/testdata.txt?sv=2012-02-12&se=2015-08-06T10%3A32%3A23Z&sr=b&sp=r&sig=a8lqVKO0%2FLjN4hMrFo71sPcnMzltKk1HN8m7OPolArw%3D"
+train_data_url = "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/training.txt?sv=2012-02-12&se=2015-08-06T10%3A34%3A08Z&sr=b&sp=r&sig=meGjVzfSsvayeJiDdKY9S6C9ep7qW8v74M6XzON0YQk%3D"
+    
+# define local file names
+test_data_file_name = 'test_data.csv'
+train_data_file_name = 'train_data.csv'
+    
+# download files using urlib
+test_data_f = urllib.urlretrieve(test_data_url, test_data_file_name)
+train_data_f = urllib.urlretrieve(train_data_url, train_data_file_name)
+```
+
+Now that we have our files downloaded locally, we can load them into data frames
+for processing.
+
+```python
+import pandas as pd
+    
+test_data_df = pd.read_csv(test_data_file_name, header=None, delimiter="\t", quoting=3)
+test_data_df.columns = ["Text"]
+train_data_df = pd.read_csv(train_data_file_name, header=None, delimiter="\t", quoting=3)
+train_data_df.columns = ["Sentiment","Text"]
+```
+```python
+train_data_df.shape
+```
+```python
+    (7086, 2)
+```
+```python
+test_data_df.shape
+```
+```python
+    (33052, 1)
+```
+
+Here, `header=0` indicates that the first line of the file contains column names, `delimiter=\t` indicates that the fields are separated by tabs, and `quoting=3` tells Python to ignore doubled quotes, otherwise you may encounter errors trying to read the file.
+
+Let's check the first few lines of the train data.
+
+```python
+ train_data_df.head()
+```
+
+|.    | Sentiment | Text |
+|---|-----------------|---------------------------------------------------|
+| 0 | 1         | The Da Vinci Code book is just awesome.           |
+| 1 | 1         | this was the first clive cussler i've ever rea... |
+| 2 | 1         | i liked the Da Vinci Code a lot.                  |
+| 3 | 1         | i liked the Da Vinci Code a lot.                  |
+| 4 | 1         | I liked the Da Vinci Code but it ultimatly did... |
+
+
+And the test data.
+
+```python
+test_data_df.head()
+```
+
+
+| . | Text                                                  |
+|------|---------------------------------------------------|
+| 0    | " I don't care what anyone says, I like Hillar... |
+| 1    | have an awesome time at purdue!..                 |
+| 2    | Yep, I'm still in London, which is pretty awes... |
+| 3    | Have to say, I hate Paris Hilton's behavior bu... |
+| 4    | i will love the lakers.                           |
+
+
+Let's count how many labels do we have for each sentiment class.
+
+```python
+train_data_df.Sentiment.value_counts()
+```
+```python
+    1    3995
+    0    3091
+    dtype: int64
+```
+
+Finally, let's calculate the average number of words per sentence. We could do
+the following using a list comprehension with the number of words per sentence.
+
+```python
+import numpy as np 
+np.mean([len(s.split(" ")) for s in train_data_df.Text])
+```
+```python
+    10.886819079875812
+```
+
 
 ## Preparing a corpus  
 
+In linguistics, a corpus or text corpus is a large and structured set of texts (nowadays usually electronically stored and processed). They are used to do statistical analysis and hypothesis testing, checking occurrences or validating linguistic rules within a specific language territory. In our particular case, we are talking about the collection of text fragments that we want to classify in either positive or negative sentiment.  
+
+Working with text corpora involves using natural language processing techniques. Bot, R and Python are capable of performing really powerful transformation with textual data. However we will use just some basic ones. The requirements of a bag-of-words classifier are minimal in that sense. We just need to count words, so the process is reduced to do some simplification and unification of terms and then count them.   
+
+So in this section we will process our text sentences and create a corpus. We will also extract important words and establish them as input variables for our classifier.  
+
+
 ### R  
 
-> In linguistics, a corpus (plural corpora) or text corpus is a large and structured set of texts (nowadays usually electronically stored and processed). They are used to do statistical analysis and hypothesis testing, checking occurrences or validating linguistic rules within a specific language territory.  
-> Source: [Wikipedia](https://en.wikipedia.org/wiki/Text_corpus)  
-
-In this section we will process our text sentences and create a corpus. We will also extract important words and stablish them as input variables for our classifier.  
-
-
+In R we will use the [tm](https://cran.r-project.org/web/packages/tm/index.html) package for text mining, so let's import it first and then create a corpus.  
+ 
 ```r
 library(tm)
 ```
@@ -122,11 +226,6 @@ library(tm)
 
 ```r
 corpus <- Corpus(VectorSource(c(train_data_df$Text, test_data_df$Text)))
-corpus
-```
-
-```
-## <<VCorpus (documents: 40138, metadata (corpus/indexed): 0/0)>>
 ```
 
 Let's explain what we just did. First we used both, test and train data. We need to consider all possible word in our corpus. Then we created a `VectorSource`, that is the input type for the `Corpus` function defined in the package `tm`. That gives us a `VCorpus` object that basically is a collection of content+metadata objects, where the content contains our sentences. For example, the content on the first document looks like this.    
@@ -138,7 +237,6 @@ corpus[1]$content
 
 ```
 ## [[1]]
-## <<PlainTextDocument (metadata: 7)>>
 ## The Da Vinci Code book is just awesome.
 ```
 
@@ -154,7 +252,7 @@ corpus <- tm_map(corpus, stripWhitespace)
 corpus <- tm_map(corpus, stemDocument)
 ```
 
-First we put everything in lowercase. The second transformation is needed in order to have each document in the format we will need later on. Then we remove punctuation, english stopwords, strip whitespaces, and [stem](https://en.wikipedia.org/wiki/Stemming) each word. Right now, the first entry now looks like this.  
+First we put everything in lowercase. The second transformation is needed in order to have each document in the format we will need later on. Then we remove punctuation, english stop words, strip white spaces, and [stem](https://en.wikipedia.org/wiki/Stemming) each word. Right now, the first entry now looks like this.  
 
 
 ```r
@@ -163,11 +261,10 @@ corpus[1]$content
 
 ```
 ## [[1]]
-## <<PlainTextDocument (metadata: 7)>>
 ##  da vinci code book just awesom
 ```
 
-In our way to find document input features for our classifier, we want to put this corpus in the shame of a document matrix. A document matrix is a numeric matrix containing a column for each different word in our whole corpus, and a row for each document. A given cell equals to the freqency in a document for a given term.  
+In our way to find document input features for our classifier, we want to put this corpus in the shame of a document matrix. A document matrix is a numeric matrix containing a column for each different word in our whole corpus, and a row for each document. A given cell equals to the frequency in a document for a given term.  
 
 This is how we do it in R.  
 
@@ -178,7 +275,7 @@ dtm
 ```
 
 ```
-## <<DocumentTermMatrix (documents: 40138, terms: 8383)>>
+## DocumentTermMatrix (documents: 40138, terms: 8383)
 ## Non-/sparse entries: 244159/336232695
 ## Sparsity           : 100%
 ## Maximal term length: 614
@@ -194,7 +291,7 @@ sparse
 ```
 
 ```
-## <<DocumentTermMatrix (documents: 40138, terms: 85)>>
+## DocumentTermMatrix (documents: 40138, terms: 85)
 ## Non-/sparse entries: 119686/3292044
 ## Sparsity           : 96%
 ## Maximal term length: 9
@@ -222,18 +319,185 @@ train_data_words_df$Text <- NULL
 test_data_words_df$Text <- NULL
 ```
 
-Now we are ready to train our first classifier.  
+Now we are ready to train our first classifier, but first let's see how to work with corpora in Python.    
 
 ### Python  
 
+Now in Python. The class [sklearn.feature_extraction.text.CountVectorizer](http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html) in the wonderful `scikit learn` Python library converts a collection of text documents to a matrix of token counts. This is just what we need to implement later on our bag-of-words linear classifier.
+
+First we need to init the *vectoriser*. We need to remove punctuations, lowercase,
+remove stop words, and stem words. All these steps can be directly performed by
+`CountVectorizer` if we pass the right parameter values. We can do as follows.
+
+```python
+import re, nltk
+from sklearn.feature_extraction.text import CountVectorizer        
+from nltk.stem.porter import PorterStemmer
+
+#######
+# based on http://www.cs.duke.edu/courses/spring14/compsci290/assignments/lab02.html
+stemmer = PorterStemmer()
+def stem_tokens(tokens, stemmer):
+    stemmed = []
+    for item in tokens:
+        stemmed.append(stemmer.stem(item))
+    return stemmed
+
+def tokenize(text):
+    # remove non letters
+    text = re.sub("[^a-zA-Z]", " ", text)
+    # tokenize
+    tokens = nltk.word_tokenize(text)
+    # stem
+    stems = stem_tokens(tokens, stemmer)
+    return stems
+######## 
+
+vectorizer = CountVectorizer(
+    analyzer = 'word',
+    tokenizer = tokenize,
+    lowercase = True,
+    stop_words = 'english',
+    max_features = 85
+)
+```
+
+The method `fit_transform` does two functions: First, it fits the model and learns the vocabulary; second, it transforms our corpus data into feature vectors. The input to `fit_transform` should be a list of strings, so we concatenate train and test data as follows.
+
+```python
+corpus_data_features = vectorizer.fit_transform(
+    train_data_df.Text.tolist() + test_data_df.Text.tolist())
+```
+
+`Numpy` arrays are easy to work with, so convert the result to an array.
+
+```python
+corpus_data_features_nd = corpus_data_features.toarray()
+corpus_data_features_nd.shape
+```
+```python
+    (40138, 85)
+```
+
+Let take a look at the words in the vocabulary.
+
+```python
+vocab = vectorizer.get_feature_names()
+print vocab
+```
+```python
+    [u'aaa', u'amaz', u'angelina', u'awesom', u'beauti', u'becaus', u'boston', u'brokeback', u'citi', u'code', u'cool', u'cruis', u'd', u'da', u'drive', u'francisco', u'friend', u'fuck', u'geico', u'good', u'got', u'great', u'ha', u'harri', u'harvard', u'hate', u'hi', u'hilton', u'honda', u'imposs', u'joli', u'just', u'know', u'laker', u'left', u'like', u'littl', u'london', u'look', u'lot', u'love', u'm', u'macbook', u'make', u'miss', u'mission', u'mit', u'mountain', u'movi', u'need', u'new', u'oh', u'onli', u'pari', u'peopl', u'person', u'potter', u'purdu', u'realli', u'right', u'rock', u's', u'said', u'san', u'say', u'seattl', u'shanghai', u'stori', u'stupid', u'suck', u't', u'thi', u'thing', u'think', u'time', u'tom', u'toyota', u'ucla', u've', u'vinci', u'wa', u'want', u'way', u'whi', u'work']
+```
+
+We can also print the counts of each word in the vocabulary as follows.
+
+```python
+# Sum up the counts of each vocabulary word
+dist = np.sum(corpus_data_features_nd, axis=0)
+    
+# For each, print the vocabulary word and the number of times it 
+# appears in the data set
+for tag, count in zip(vocab, dist):
+    print count, tag
+```
+
+```python
+    1179 aaa
+    485 amaz
+    1765 angelina
+    3170 awesom
+    2146 beauti
+    1694 becaus
+    2190 boston
+    2000 brokeback
+    423 citi
+    2003 code
+    481 cool
+    2031 cruis
+    439 d
+    2087 da
+    433 drive
+    1926 francisco
+    477 friend
+    452 fuck
+    1085 geico
+    773 good
+    571 got
+    1178 great
+    776 ha
+    2094 harri
+    2103 harvard
+    4492 hate
+    794 hi
+    2086 hilton
+    2192 honda
+    1098 imposs
+    1764 joli
+    1054 just
+    896 know
+    2019 laker
+    425 left
+    4080 like
+    507 littl
+    2233 london
+    811 look
+    421 lot
+    10334 love
+    1568 m
+    1059 macbook
+    631 make
+    1098 miss
+    1101 mission
+    1340 mit
+    2081 mountain
+    1207 movi
+    1220 need
+    459 new
+    551 oh
+    674 onli
+    2094 pari
+    1018 peopl
+    454 person
+    2093 potter
+    1167 purdu
+    2126 realli
+    661 right
+    475 rock
+    3914 s
+    495 said
+    2038 san
+    627 say
+    2019 seattl
+    1189 shanghai
+    467 stori
+    2886 stupid
+    4614 suck
+    1455 t
+    1705 thi
+    662 thing
+    1524 think
+    781 time
+    2117 tom
+    2028 toyota
+    2008 ucla
+    774 ve
+    2001 vinci
+    3703 wa
+    1656 want
+    932 way
+    547 whi
+    512 work
+```
 
 ## A bag-of-words linear classifier   
 
+Now we get to the exciting part: building a classifier. The approach we will be using here is called a [bag-of-words model](https://en.wikipedia.org/wiki/Bag-of-words_model). In this kind of model we simplify documents to a multi-set of terms frequencies. That means that, for our model, a document sentiment tag will depend on what words appear in that document, discarding any grammar or word order but keeping multiplicity.  
+
+This is what we just did before, use our text entries to build term frequencies. We ended up with the same entries in our dataset but, instead of having them defined by a whole text, they are now defined by a series of counts of the most frequent words in our whole corpus. Now we are going to use these vectors as features to train a classifier.     
+
 ### R  
 
-The approach we are using here is called a [bag-of-words model](https://en.wikipedia.org/wiki/Bag-of-words_model). In this kind of model we simplify documents to a multiset of terms frequencies. That means that, for our model, a document sentiment tag will depend on what words appear in that document, discarding any grammar or word order but keeping multiplicity.  
-
-But first of all we need to split our train data into train and test data. Why we do that if we already have a testing set? Simple. The test set from the Kaggle competition doesn't have tags at all (obviously). If we want to asses our model accuracy we need a test set with sentiment tags to compare our results. We will split using `sample.split` from the [`caTools`](https://cran.r-project.org/web/packages/caTools/index.html) package.    
+First of all we need to split our train data into train and test data. Why we do that if we already have a testing set? Simple. The test set from the Kaggle competition doesn't have tags at all (obviously). If we want to asses our model accuracy we need a test set with sentiment tags to compare our results. We will split using `sample.split` from the [`caTools`](https://cran.r-project.org/web/packages/caTools/index.html) package.    
 
 
 ```r
@@ -473,9 +737,98 @@ test_data_sample_df[test_data_sample_df$Sentiment==F, c('Text')]
 
 ### Python  
 
+In order to perform logistic regression in Python we use [LogisticRegression](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). But first let's split our training data in order to get an evaluation set. We will use [train test split](http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.train_test_split.html).
+
+```python
+from sklearn.cross_validation import train_test_split
+    
+# remember that corpus_data_features_nd contains all of our 
+# original train and test data, so we need to exclude
+# the unlabeled test entries
+X_train, X_test, y_train, y_test  = train_test_split(
+        corpus_data_features_nd[0:len(train_data_df)], 
+        train_data_df.Sentiment,
+        train_size=0.85, 
+        random_state=1234)
+```
+
+Now we are ready to train our classifier.
+
+```python
+from sklearn.linear_model import LogisticRegression
+    
+log_model = LogisticRegression()
+log_model = log_model.fit(X=X_train, y=y_train)
+```
+
+Now we use the classifier to label our evaluation set. We can use either
+`predict` for classes or `predict_proba` for probabilities.
+
+```python
+y_pred = log_model.predict(X_test)
+```
+
+There is a function for classification called [sklearn.metrics.classification_report](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html) which calculates several types of (predictive) scores on a classification model. Check also [sklearn.metrics](http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics). In this case we want to know our classifier's precision.
+
+```python
+from sklearn.metrics import classification_report
+print(classification_report(y_test, y_pred))
+```
+
+```python
+                 precision    recall  f1-score   support
+    
+              0       0.98      0.99      0.98       467
+              1       0.99      0.98      0.99       596
+    
+    avg / total       0.98      0.98      0.98      1063
+```   
+
+
+Finally, we can re-train our model with all the training data and use it for
+sentiment classification with the original (unlabeled) test set.
+
+```python
+# train classifier
+log_model = LogisticRegression()
+log_model = log_model.fit(X=corpus_data_features_nd[0:len(train_data_df)], y=train_data_df.Sentiment)
+    
+# get predictions
+test_pred = log_model.predict(corpus_data_features_nd[len(train_data_df):])
+    
+# sample some of them
+import random
+spl = random.sample(xrange(len(test_pred)), 15)
+    
+# print text and labels
+for text, sentiment in zip(test_data_df.Text[spl], test_pred[spl]):
+    print sentiment, text
+```
+
+```python
+    1 I love paris hilton...
+    1 i love seattle..
+    1 I love those GEICO commercials especially the one with Mini-Me doing that little rap dance.; )..
+    1 However you look at it, I've been here almost two weeks now and so far I absolutely love UCLA...
+    0 By the time I left the Hospital, I had no time to drive to Boston-which sucked because 1)
+    1 Before I left Missouri, I thought London was going to be so good and cool and fun and a really great experience and I was really excited.
+    0 I know you're way too smart and way too cool to let stupid UCLA get to you...
+    0 PARIS HILTON SUCKS!
+    1 Geico was really great.
+    0 hy I Hate San Francisco, # 29112...
+    0 I need to pay Geico and a host of other bills but that is neither here nor there.
+    1 As much as I love the Lakers and Kobe, I still have to state the facts...
+    1 I'm biased, I love Angelina Jolie..
+    0 I despise Hillary Clinton, but I don't think she's cold.
+    0 i hate geico and old navy.
+```
 
 ## Conclusions  
 
-So judge by yourself. Is our classifier doing a good job at all?  
+So judge by yourself. Is our classifier doing a good job at all? Considering how small our training data is, first we are getting a decent accuracy in the eval split, and second, when getting a sample of predictions for the test set, most of the tags make sense. It would be great to find a larger training dataset with labels. Doing so we will be able to train a better model and also to have more data to split into train/eval sets and check our model accuracy.   
 
-In the next part of the tutorial, we will use the R model we just built to create a web application where we can enter text and will get a sentiment classification estimate.  
+In any case, we have used very simple methods here. And mostly using default parameters. There is a lot of space for improvement in both areas. We can fine tune each library parameters and we can also try more sophisticated parameters (e.g. Random Forests are very powerful).  Additionally, we can use a different sparsity coefficient when selecting important words. Our models just considered 85 words. We might try increasing this number to take into account more words (or less?) and see how the accuracy changes.  
+
+Finally, although the purpose of these tutorials is not to find a winer between R and Python  but to show that there are just problems to solve and methods that can use with both platforms, we find here some differences. In the case of R for example we have a nice `summary` function that we can use with the result of training a linear classifier. This summary shows us very important information regarding how significative each feature is (i.e. each word in our case). Also the text analysis process seems more straightforward in R. But Python as usual is more structured and granular, and is easier to adapt to our particular needs by plugging and pipelining different parts of the process.  
+
+In the next part of the tutorial, we will use the R model we just built to create a web application where we can submit text and get a sentiment classification estimate. For that we will introduce the [Shiny](http://shiny.rstudio.com/) platform, a great idea to create and share data products as web applications.   
