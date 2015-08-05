@@ -82,6 +82,7 @@ shinyServer(function(input, output) {
             main=paste0("Sentiment Distribution (Prob > ", input$threshold, ")")
         )
         polygon(d, col="lightgrey", border="lightgrey")
+        abline(v = input$threshold, col = "blue")
     })
     
     distribution <- reactive({
