@@ -29,6 +29,12 @@ shinyUI(fluidPage(
         
         # Show a plot of the generated distribution
         mainPanel(
+            plotOutput('distribution')
+        )
+    ),
+    tags$hr(),
+    fluidRow(
+        column(12,
             tableOutput('contents')
         )
     )

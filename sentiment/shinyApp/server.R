@@ -59,9 +59,29 @@ build_model <- function(new_data_df) {
 shinyServer(function(input, output) {
     
     output$contents <- renderTable({
-
-        inFile <- input$file1
+        results()
+    })
+    
+    output$distribution <- renderPlot({
+        if (is.null(results()))
+            return(NULL)
+        d <- density(
+            as.numeric(results()$Sentiment)
+        )
+        plot(
+            d, 
+            xlim = c(0, 1),
+            main="Sentiment Distribution"
+        )
+        polygon(d, col="lightgrey", border="lightgrey")
+    })
+    
+    distribution <- reactive({
         
+    })
+    results <- reactive({
+        inFile <- input$file1
+            
         if (is.null(inFile))
             return(NULL)
         
@@ -82,7 +102,6 @@ shinyServer(function(input, output) {
         message("renderTable: ", "predictions made")
         
         new_data_df$Sentiment <- pred
-        new_data_df <- rbind(new_data_df, c("AVERAGE",mean(new_data_df$Sentiment)))
         
         new_data_df
     })
