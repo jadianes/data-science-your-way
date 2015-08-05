@@ -1,57 +1,65 @@
 library(shiny)
 library(tm)
+library(randomForest)
 
-build_model <- function(new_data_df) {
-    
-    message("build_model: ", "starting...")
-    # Load train and test data
-    train_data_df <- read.csv(
-        file = "train_data.csv", 
-        sep='\t', 
-        header=FALSE, 
-        quote = "",
-        stringsAsFactor=F,
-        col.names=c("Sentiment", "Text"))
-    message("build_model: ", "train data loaded")
-    train_data_df$Sentiment <- as.factor(train_data_df$Sentiment)
-    
-    # Create corpus
-    corpus <- Corpus(VectorSource(c(train_data_df$Text, new_data_df$Text)))
-    message("build_model: ", "corpus created")
-    corpus <- tm_map(corpus, tolower)
-    message("build_model: ", "corpus to lower")
-    corpus <- tm_map(corpus, PlainTextDocument)
-    corpus <- tm_map(corpus, removePunctuation)
-    message("build_model: ", "corpus punctuation removed")
-    corpus <- tm_map(corpus, removeWords, stopwords("english"))
-    message("build_model: ", "corpus stopwords removed")
-    corpus <- tm_map(corpus, stripWhitespace)
-    message("build_model: ", "corpus white space stripped")
-    corpus <- tm_map(corpus, stemDocument)
-    message("build_model: ", "corpus stemmed")
-    message("build_model: ", "corpus DONE")
+# Load train and test data
+train_data_df <- read.csv(
+    file = "train_data.csv", 
+    sep='\t', 
+    header=FALSE, 
+    quote = "",
+    stringsAsFactor=F,
+    col.names=c("Sentiment", "Text"))
+train_data_df$Sentiment <- as.factor(train_data_df$Sentiment)
+
+# Create training corpus for later re-use
+train_corpus <- Corpus(VectorSource(train_data_df$Text))
+train_corpus <- tm_map(train_corpus, tolower)
+train_corpus <- tm_map(train_corpus, PlainTextDocument)
+train_corpus <- tm_map(train_corpus, removePunctuation)
+train_corpus <- tm_map(train_corpus, removeWords, stopwords("english"))
+train_corpus <- tm_map(train_corpus, stripWhitespace)
+train_corpus <- tm_map(train_corpus, stemDocument)
+message("init: training corpus DONE")
+# create document-term matrix
+train_dtm <- DocumentTermMatrix(train_corpus)
+train_dtm_df <- as.data.frame(as.matrix(train_dtm))
+colnames(train_dtm_df) <- make.names(colnames(train_dtm_df))
+
+build_model <- function(new_data_df, num_trees) {
+    # Create new data corpus
+    new_corpus <- Corpus(VectorSource(new_data_df$Text))
+    new_corpus <- tm_map(new_corpus, tolower)
+    new_corpus <- tm_map(new_corpus, PlainTextDocument)
+    new_corpus <- tm_map(new_corpus, removePunctuation)
+    new_corpus <- tm_map(new_corpus, removeWords, stopwords("english"))
+    new_corpus <- tm_map(new_corpus, stripWhitespace)
+    new_corpus <- tm_map(new_corpus, stemDocument)
+    message("init: corpus DONE")
     
     # create document-term matrix
-    dtm <- DocumentTermMatrix(corpus)
-    sparse <- removeSparseTerms(dtm, 0.98)
-    important_words_df <- as.data.frame(as.matrix(sparse))
-    colnames(important_words_df) <- make.names(colnames(important_words_df))
-    # split into train and test
-    important_words_train_df <- head(important_words_df, nrow(train_data_df))
-    important_words_new_df <- tail(important_words_df, nrow(new_data_df))
-    # Add to original dataframes
-    train_data_words_df <- cbind(train_data_df, important_words_train_df)
-    new_data_words_df <- cbind(new_data_df, important_words_new_df)
-    # Get rid of the original Text field
-    train_data_words_df$Text <- NULL
-    new_data_words_df$Text <- NULL
-    message("build_model: ", "term matrix created")
+    new_dtm <- DocumentTermMatrix(new_corpus)
+    new_dtm_df <- as.data.frame(as.matrix(new_dtm))
+    colnames(new_dtm_df) <- make.names(colnames(new_dtm_df))
+    message("build_model: ", "term matrix created for new data with ", ncol(new_dtm_df), " variables")
+    
+    # intersect corpora and prepare final training data
+    common_names = intersect(colnames(train_dtm_df),colnames(new_dtm_df))
+    new_dtm_df <- subset(new_dtm_df, select=names(new_dtm_df) %in% common_names)
+    message("build_model: ", "new data term matrix reduced to ", ncol(new_dtm_df), " variables")
+    
+    model_train_data_df <- cbind(train_data_df, subset(train_dtm_df, select=names(train_dtm_df) %in% common_names))
+    model_train_data_df$Text <- NULL
+    message("build_model: ", "final training data created with ", ncol(model_train_data_df)-1, " variables")
     
     # train classifier
-    log_model <- glm(Sentiment~., data=train_data_words_df, family=binomial)
-    message("build_model: ", "model trained")
+    message("build_model: ", "training classifier...")
+    model <- randomForest(
+        Sentiment ~ .,
+        data=model_train_data_df, ntree=num_trees)
+    message("build_model: ", "classifier training DONE!")
     
-    list(log_model, new_data_words_df)
+    list(model, new_dtm_df)
 }
 
 
@@ -66,12 +74,12 @@ shinyServer(function(input, output) {
         if (is.null(results()))
             return(NULL)
         d <- density(
-            as.numeric(results()$Sentiment)
+            as.numeric(results()$Prob > input$threshold)
         )
         plot(
             d, 
             xlim = c(0, 1),
-            main="Sentiment Distribution"
+            main=paste0("Sentiment Distribution (Prob > ", input$threshold, ")")
         )
         polygon(d, col="lightgrey", border="lightgrey")
     })
@@ -88,22 +96,24 @@ shinyServer(function(input, output) {
         # load input data
         new_data_df <- read.csv(
             inFile$datapath, 
-            header=input$header, 
-            sep=input$sep, 
-            quote=input$quote,
+            sep='\t', 
+            header=FALSE, 
+            quote = "",
             stringsAsFactor=F,
             col.names=c("Text")
         )
         message("renderTable: ", "input file loaded")
         
-        model_and_data <- build_model(new_data_df)
+        model_and_data <- build_model(new_data_df, input$num_trees)
         
-        pred <- predict(model_and_data[[1]], newdata=model_and_data[[2]], type="response")
-        message("renderTable: ", "predictions made")
+        message("renderTable: ", "making predictions...")
+        pred <- predict(model_and_data[[1]], newdata=model_and_data[[2]], type="prob")
+        message("renderTable: ", "predictions DONE")
         
-        new_data_df$Sentiment <- pred
-        
+        new_data_df$Prob <- pred[,2]
+
         new_data_df
     })
+    
 })
 
