@@ -6,7 +6,12 @@ So in the sentiment analysis process there are a couple of stages more or less d
 
 For the model part we will introduce and use linear models. They aren't the most powerful methods in terms of accuracy, but they are simple enough to be interpreted in their results as we will see. Linear methods allow us to define our input variable as a linear combination of input variables.  In tis case we will introduce [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression). 
 
-Finally we will need some data to train our model. For this we will use data from the Kaggle competition [UMICH SI650](https://inclass.kaggle.com/c/si650winter11). As described there, it is a sentiment classification task. Every document (a line in the data file) is a sentence extracted from social media. Our goal is to classify the sentiment of each sentence into "positive" or "negative". So let's have a look at how to load and prepare our data using both, Python and R.  
+Finally we will need some data to train our model. For this we will use data from the Kaggle competition [UMICH SI650](https://inclass.kaggle.com/c/si650winter11). As described there, it is a sentiment classification task. Every document (a line in the data file) is a sentence extracted from social media. The files contain:  
+ 
+- Training data: 7086 lines. Format: 1|0 (tab) sentence
+- Test data: 33052 lines, each contains one sentence.   
+
+The data was originally collected from opinmind.com (which is no longer active). Our goal is to classify the sentiment of each sentence into "positive" or "negative". So let's have a look at how to load and prepare our data using both, Python and R.  
 
 ## Loading and preparing data
 
@@ -26,8 +31,8 @@ library(RCurl)
 ```
 
 ```r
-test_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/testdata.txt?sv=2012-02-12&se=2015-08-06T10%3A32%3A23Z&sr=b&sp=r&sig=a8lqVKO0%2FLjN4hMrFo71sPcnMzltKk1HN8m7OPolArw%3D"
-train_data_url <- "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/training.txt?sv=2012-02-12&se=2015-08-06T10%3A34%3A08Z&sr=b&sp=r&sig=meGjVzfSsvayeJiDdKY9S6C9ep7qW8v74M6XzON0YQk%3D"
+test_data_url <- "https://dl.dropboxusercontent.com/u/8082731/datasets/UMICH-SI650/testdata.txt"
+train_data_url <- "https://dl.dropboxusercontent.com/u/8082731/datasets/UMICH-SI650/training.txt"
 
 test_data_file <- getURL(test_data_url)
 train_data_file <- getURL(train_data_url)
@@ -111,8 +116,8 @@ file contains not just text but also sentiment tags (that we need to strip out).
 import urllib
     
 # define URLs
-test_data_url = "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/testdata.txt?sv=2012-02-12&se=2015-08-06T10%3A32%3A23Z&sr=b&sp=r&sig=a8lqVKO0%2FLjN4hMrFo71sPcnMzltKk1HN8m7OPolArw%3D"
-train_data_url = "https://kaggle2.blob.core.windows.net/competitions-data/inclass/2558/training.txt?sv=2012-02-12&se=2015-08-06T10%3A34%3A08Z&sr=b&sp=r&sig=meGjVzfSsvayeJiDdKY9S6C9ep7qW8v74M6XzON0YQk%3D"
+test_data_url = "https://dl.dropboxusercontent.com/u/8082731/datasets/UMICH-SI650/testdata.txt"
+train_data_url = "https://dl.dropboxusercontent.com/u/8082731/datasets/UMICH-SI650/training.txt"
     
 # define local file names
 test_data_file_name = 'test_data.csv'
@@ -207,7 +212,7 @@ np.mean([len(s.split(" ")) for s in train_data_df.Text])
 
 In linguistics, a corpus or text corpus is a large and structured set of texts (nowadays usually electronically stored and processed). They are used to do statistical analysis and hypothesis testing, checking occurrences or validating linguistic rules within a specific language territory. In our particular case, we are talking about the collection of text fragments that we want to classify in either positive or negative sentiment.  
 
-Working with text corpora involves using natural language processing techniques. Bot, R and Python are capable of performing really powerful transformation with textual data. However we will use just some basic ones. The requirements of a bag-of-words classifier are minimal in that sense. We just need to count words, so the process is reduced to do some simplification and unification of terms and then count them.   
+Working with text corpora involves using natural language processing techniques. Bot, R and Python are capable of performing really powerful transformation with textual data. However we will use just some basic ones. The requirements of a bag-of-words classifier are minimal in that sense. We just need to count words, so the process is reduced to do some simplification and unification of terms and then count them. The simplification process mostly includes removing punctuation, lowercasing, removing stop-words, and reducing words to its lexical roots (i.e. [stemming](https://en.wikipedia.org/wiki/Stemming)).    
 
 So in this section we will process our text sentences and create a corpus. We will also extract important words and establish them as input variables for our classifier.  
 
@@ -228,7 +233,7 @@ library(tm)
 corpus <- Corpus(VectorSource(c(train_data_df$Text, test_data_df$Text)))
 ```
 
-Let's explain what we just did. First we used both, test and train data. We need to consider all possible word in our corpus. Then we created a `VectorSource`, that is the input type for the `Corpus` function defined in the package `tm`. That gives us a `VCorpus` object that basically is a collection of content+metadata objects, where the content contains our sentences. For example, the content on the first document looks like this.    
+Let's explain what we just did. First we used both, test and train data. We need to consider all possible words in our corpus. Then we create a `VectorSource`, that is the input type for the `Corpus` function defined in the package `tm`. That gives us a `VCorpus` object that basically is a collection of content+metadata objects, where the content contains our sentences. For example, the content on the first document looks like this.    
 
 
 ```r
@@ -264,7 +269,7 @@ corpus[1]$content
 ##  da vinci code book just awesom
 ```
 
-In our way to find document input features for our classifier, we want to put this corpus in the shame of a document matrix. A document matrix is a numeric matrix containing a column for each different word in our whole corpus, and a row for each document. A given cell equals to the frequency in a document for a given term.  
+In our way to find document input features for our classifier, we want to put this corpus in the shape of a document matrix. A document matrix is a numeric matrix containing a column for each different word in our whole corpus, and a row for each document. A given cell equals to the frequency in a document for a given term.  
 
 This is how we do it in R.  
 
@@ -298,7 +303,7 @@ sparse
 ## Weighting          : term frequency (tf)
 ```
 
-We end up with just 85 terms. The close that value is to 1, the more terms we will have in our `sparse` object, since the number of documents we need a term to be in is smaller.  
+We end up with just 85 terms. The closer that value is to 1, the more terms we will have in our `sparse` object, since the number of documents we need a term to be in is smaller.  
 
 Now we want to convert this matrix into a data frame that we can use to train a classifier in the next section.  
 
@@ -327,7 +332,7 @@ Now in Python. The class [sklearn.feature_extraction.text.CountVectorizer](http:
 
 First we need to init the *vectoriser*. We need to remove punctuations, lowercase,
 remove stop words, and stem words. All these steps can be directly performed by
-`CountVectorizer` if we pass the right parameter values. We can do as follows.
+`CountVectorizer` if we pass the right [parameter values](http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html). We can do this as follows. Notice that for the stemming step, we need to provide a stemmer ourselves. We will use a basic implementation of a [Porter Stemmer](http://tartarus.org/martin/PorterStemmer/), a stemmer widely used named after its creator.  
 
 ```python
 import re, nltk
@@ -361,6 +366,8 @@ vectorizer = CountVectorizer(
     max_features = 85
 )
 ```
+
+We pas a few parameters to the vectoriser including our `tokenizer` that removes non-letters and performs the stemming, together with lowercasing and removing english stop-words. Although we can also pass a sparsity coefficient to this class, we hace decided to directly specify how many terms to we want in our final vectors (i.e. 85).  
 
 The method `fit_transform` does two functions: First, it fits the model and learns the vocabulary; second, it transforms our corpus data into feature vectors. The input to `fit_transform` should be a list of strings, so we concatenate train and test data as follows.
 
@@ -495,9 +502,11 @@ Now we get to the exciting part: building a classifier. The approach we will be 
 
 This is what we just did before, use our text entries to build term frequencies. We ended up with the same entries in our dataset but, instead of having them defined by a whole text, they are now defined by a series of counts of the most frequent words in our whole corpus. Now we are going to use these vectors as features to train a classifier.     
 
+First of all we need to split our train data into train and test data. Why we do that if we already have a testing set? Simple. The test set from the Kaggle competition doesn't have tags at all (obviously). If we want to asses our model accuracy we need a test set with sentiment tags to compare our results.  
+
 ### R  
 
-First of all we need to split our train data into train and test data. Why we do that if we already have a testing set? Simple. The test set from the Kaggle competition doesn't have tags at all (obviously). If we want to asses our model accuracy we need a test set with sentiment tags to compare our results. We will split using `sample.split` from the [`caTools`](https://cran.r-project.org/web/packages/caTools/index.html) package.    
+So in order to obtain our evaluation set, we will split using `sample.split` from the [`caTools`](https://cran.r-project.org/web/packages/caTools/index.html) package.    
 
 
 ```r
@@ -737,7 +746,7 @@ test_data_sample_df[test_data_sample_df$Sentiment==F, c('Text')]
 
 ### Python  
 
-In order to perform logistic regression in Python we use [LogisticRegression](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). But first let's split our training data in order to get an evaluation set. We will use [train test split](http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.train_test_split.html).
+In order to perform logistic regression in Python we use [LogisticRegression](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). But first let's split our training data in order to get an evaluation set. Wether we use R or Python, the problem with not having labels in our original test set still persists, and we need to create a separate evaluation set from our original training data if we want to evaluate our classifier. We will use [train test split](http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.train_test_split.html).
 
 ```python
 from sklearn.cross_validation import train_test_split
