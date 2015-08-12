@@ -10,9 +10,9 @@ shinyUI(fluidPage(
     sidebarLayout(
         sidebarPanel(
             fileInput('file1', 'Choose text File',
-                      accept=c('text/csv', 
-                               'text/comma-separated-values,text/plain', 
-                               '.csv')),
+                      accept=c('text/tsv', 
+                               'text/tab-separated-values,text/plain', 
+                               '.tsv')),
             tags$hr(),
             sliderInput("threshold",
                         "Positive sentiment threshold",
@@ -20,11 +20,11 @@ shinyUI(fluidPage(
                         max = 1.0,
                         value = .5),
             tags$hr(),
-            sliderInput("num_trees",
-                        "Num. trees in RandomForest",
-                        min = 5,
-                        max = 500,
-                        value = 10)
+            sliderInput("sparsity",
+                        "Max. term sparsity",
+                        min = 0.1,
+                        max = 1.0,
+                        value = .9)
         ),
         
         # Show a plot of the generated distribution
