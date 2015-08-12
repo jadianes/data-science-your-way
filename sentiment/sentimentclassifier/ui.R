@@ -9,6 +9,10 @@ shinyUI(fluidPage(
     # Sidebar with a slider input for the number of bins
     sidebarLayout(
         sidebarPanel(
+            helpText("Starting...",
+            textOutput("status")
+            ),
+            tags$hr(),
             fileInput('file1', 'Choose text File',
                       accept=c('text/tsv', 
                                'text/tab-separated-values,text/plain', 
@@ -16,15 +20,15 @@ shinyUI(fluidPage(
             tags$hr(),
             sliderInput("threshold",
                         "Positive sentiment threshold",
-                        min = 0.1,
-                        max = 1.0,
+                        min = .1,
+                        max = .99,
                         value = .5),
             tags$hr(),
             sliderInput("sparsity",
                         "Max. term sparsity",
-                        min = 0.1,
-                        max = 1.0,
-                        value = .9)
+                        min = .1,
+                        max = .99,
+                        value = .95)
         ),
         
         # Show a plot of the generated distribution

@@ -1,43 +1,18 @@
 library(shiny)
 library(tm)
-library(rpart)
-library(randomForest)
+library(SnowballC)
 
-# Load train and test data
-train_data_df <- read.csv(
-    file = "train_data.tsv", 
-    sep='\t', 
-    header=FALSE, 
-    quote = "",
-    stringsAsFactor=F,
-    col.names=c("Sentiment", "Text"))
-train_data_df$Sentiment <- as.factor(train_data_df$Sentiment)
-
-# Create training corpus for later re-use
-train_corpus <- Corpus(VectorSource(train_data_df$Text))
-train_corpus <- tm_map(train_corpus, tolower)
-train_corpus <- tm_map(train_corpus, removePunctuation)
-train_corpus <- tm_map(train_corpus, removeWords, stopwords("english"))
-train_corpus <- tm_map(train_corpus, stripWhitespace)
-train_corpus <- tm_map(train_corpus, stemDocument)
-train_corpus <- tm_map(train_corpus, PlainTextDocument)
-message("init: training corpus DONE")
-
-# create document-term matrix
-train_dtm <- DocumentTermMatrix(train_corpus)
-train_dtm_df <- as.data.frame(as.matrix(train_dtm))
-colnames(train_dtm_df) <- make.names(colnames(train_dtm_df))
-message("init: training dtm DONE")
+options(shiny.maxRequestSize=3*1024^2)
+options(mc.cores=1)
 
 build_model <- function(new_data_df, sparsity) {
     # Create new data corpus
     new_corpus <- Corpus(VectorSource(new_data_df$Text))
-    new_corpus <- tm_map(new_corpus, tolower)
+    new_corpus <- tm_map(new_corpus, content_transformer(tolower))
     new_corpus <- tm_map(new_corpus, removePunctuation)
     new_corpus <- tm_map(new_corpus, removeWords, stopwords("english"))
     new_corpus <- tm_map(new_corpus, stripWhitespace)
     new_corpus <- tm_map(new_corpus, stemDocument)
-    new_corpus <- tm_map(new_corpus, PlainTextDocument)
     message("build_model: corpus DONE")
     
     # create document-term matrix
@@ -65,11 +40,16 @@ build_model <- function(new_data_df, sparsity) {
 }
 
 
-
 shinyServer(function(input, output) {
     
     output$contents <- renderTable({
         results()
+    })
+    
+    output$status <- renderText({
+        if (!is.null(train_dtm_df))
+            return("Ready!")
+        return("Starting...")
     })
     
     output$distribution <- renderPlot({
@@ -87,9 +67,6 @@ shinyServer(function(input, output) {
         abline(v = input$threshold, col = "blue")
     })
     
-    distribution <- reactive({
-        
-    })
     results <- reactive({
         inFile <- input$file1
             
@@ -117,6 +94,44 @@ shinyServer(function(input, output) {
 
         new_data_df
     })
-    
 })
+
+train_data_url <- "https://dl.dropboxusercontent.com/u/8082731/datasets/shiny-sentiment-classifier/train_data.tsv"
+
+# Load train and test data
+train_data_df <- read.csv(
+    file = 'train_data.tsv',
+    sep='\t', 
+    quote = "",
+    header=FALSE, 
+    stringsAsFactor=F,
+    col.names=c("Sentiment", "Text")
+)
+train_data_df$Sentiment <- as.factor(train_data_df$Sentiment)
+message(paste("There are", nrow(train_data_df), "rows in training dataset"))
+
+# Create training corpus for later re-use
+train_corpus <- Corpus(VectorSource(train_data_df$Text))
+#message("init: corpus created with length ", length(train_corpus))
+train_corpus <- tm_map(train_corpus, content_transformer(tolower))
+#message("init: corpus lowercased with length ", length(train_corpus))
+train_corpus <- tm_map(train_corpus, removePunctuation)
+#message("init: corpus punctuation removed with length ", length(train_corpus))
+train_corpus <- tm_map(train_corpus, removeWords, stopwords("english"))
+#message("init: corpus stopwords removed with length ", length(train_corpus))
+train_corpus <- tm_map(train_corpus, stripWhitespace)
+#message("init: corpus space stripped with length ", length(train_corpus))
+train_corpus <- tm_map(train_corpus, stemDocument)
+#message("init: corpus stemmed with length ", length(train_corpus))
+message("init: training corpus DONE")
+
+# create document-term matrix
+train_dtm <- DocumentTermMatrix(train_corpus)
+train_dtm <- removeSparseTerms(train_dtm, 0.995)
+message(paste0("init: training dtm created (", ncol(train_dtm), " terms in training corpus)"))
+train_dtm_df <- data.frame(as.matrix(train_dtm))
+message(paste0("init: training dtm converted to df (", ncol(train_dtm), " terms in training corpus)"))
+colnames(train_dtm_df) <- make.names(colnames(train_dtm_df))
+message(paste0("init: training dtm DONE (", ncol(train_dtm_df), " terms in training corpus)"))
+
 
