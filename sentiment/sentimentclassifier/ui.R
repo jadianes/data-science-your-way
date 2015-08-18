@@ -1,13 +1,12 @@
 library(shiny)
 
-# Define UI for application that draws a histogram
 shinyUI(fluidPage(
     
     # Application title
     headerPanel("Text Sentiment Analyser"),
     
-    # Sidebar with a slider input for the number of bins
     sidebarLayout(
+        # the control panel
         sidebarPanel(
             helpText("Starting...",
             textOutput("status")
@@ -38,6 +37,7 @@ shinyUI(fluidPage(
     ),
     tags$hr(),
     fluidRow(
+        # the results detail panel
         column(12,
             tableOutput('contents')
         )

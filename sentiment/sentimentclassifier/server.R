@@ -1,6 +1,7 @@
 library(shiny)
 library(tm)
 library(SnowballC)
+library(randomForest)
 
 options(shiny.maxRequestSize=3*1024^2)
 options(mc.cores=1)
@@ -33,7 +34,7 @@ build_model <- function(new_data_df, sparsity) {
     
     # train classifier
     message("build_model: ", "training classifier...")
-    model <- glm(Sentiment~.,data=model_train_data_df, family="binomial")
+    model <- randomForest(Sentiment~.,data=model_train_data_df, ntree=50)
     message("build_model: ", "classifier training DONE!")
     
     list(model, new_dtm_df)
@@ -87,16 +88,14 @@ shinyServer(function(input, output) {
         model_and_data <- build_model(new_data_df, input$sparsity)
         
         message("renderTable: ", "making predictions...")
-        pred <- predict(model_and_data[[1]], newdata=model_and_data[[2]], type="response")
+        pred <- predict(model_and_data[[1]], newdata=model_and_data[[2]], type="prob")
         message("renderTable: ", "predictions DONE")
         
-        new_data_df$Prob <- pred
+        new_data_df$Prob <- pred[,2]
 
         new_data_df
     })
 })
-
-train_data_url <- "https://dl.dropboxusercontent.com/u/8082731/datasets/shiny-sentiment-classifier/train_data.tsv"
 
 # Load train and test data
 train_data_df <- read.csv(
