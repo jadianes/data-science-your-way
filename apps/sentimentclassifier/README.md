@@ -62,7 +62,7 @@ That's it. We can proceed to explain how we intersect this set of terms, given b
 
 Our model selection process is basically the intersection of terms we previously explained. As we said, the idea is to end up with a model in which every input variable (i.e. term) appears in the text that we want to classify.  
 
-All the code here will be included in the `build_model` function within the file [`server.R`](https://gist.github.com/jadianes/7a6d0f132f1b5bcd9647).
+All the code here will be included in the `build_model` function within the file [`server.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/server.R).
 
 So as we did with the training data, we start by creating a corpus, using the same set of transformations. Then we convert it to a document-term matrix and then to a data frame that we can use to intersect with the training one.    
 
@@ -111,7 +111,7 @@ So that is basically everything regarding machine learning in our web applicatio
 
 ## A Shiny web application  
 
-Our Shiny web application is composed of two files. One defined the user interface, and is called [`ui.R`](https://gist.github.com/jadianes/7a6d0f132f1b5bcd9647#file-ui-r) by convention (i.e. the Shiny framework expects that). The other one defines how the server deals with the user interface and executes any required R code. This file is called [`server.R`](https://gist.github.com/jadianes/7a6d0f132f1b5bcd9647#file-server-r).  
+Our Shiny web application is composed of two files. One defined the user interface, and is called [`ui.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/ui.R) by convention (i.e. the Shiny framework expects that). The other one defines how the server deals with the user interface and executes any required R code. This file is called [`server.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/server.R).  
 
 There is an alternative deployment where we have a single `app.R` file including both parts, but we think the two-file approach promotes better software design practices.   
 
@@ -301,7 +301,7 @@ The code itself does three things:
 
 A change in any of the two listed input elements will trigger the execution of this code and the result will be assigned to `results`. Any other reactive code (e.g. `renderPlot`) listening for `results()` will detect a change in the value and execute iiself if needed.  
 
-The code within `build_model` was explained in the previous section. That leaves the complete [`server.R`](https://gist.github.com/jadianes/7a6d0f132f1b5bcd9647#file-server-r) file as follows.  
+The code within `build_model` was explained in the previous section. That leaves the complete [`server.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/server.R) file as follows.  
 
 ```r
 library(shiny)
@@ -419,7 +419,7 @@ colnames(train_dtm_df) <- make.names(colnames(train_dtm_df))
 
 ## How to run it  
 
-Both, `ui.R` and `server.R` code can be found in the [following Gist](https://gist.github.com/jadianes/7a6d0f132f1b5bcd9647). The other file you need is the training data, that can be downloaded from [here](). These three files need to be placed in the same folder (e.g. `sentimentclassifier`).  
+Both, [`ui.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/ui.R) and [`server.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/server.R) code can be found in [this repo](https://github.com/jadianes/data-science-your-way/tree/master/apps/sentimentclassifier). The other file you need is the training data, that can be downloaded from [here](). These three files need to be placed in the same folder (e.g. `sentimentclassifier`).  
 
 In order to use the web app you just created you can do two things. You can run it locally using RStudio or you can share it at [Shinyapps.io](http://www.shinyapps.io/) with all of us (with your own modifications, this is [ours](https://jadianes.shinyapps.io/sentimentclassifier)). This last option can be performed also from RStudio. The IDE (if you use a recent enough version) will detect that you are building a Shiny app when the files `ui.R` and `server.R` are present, and will show buttons to run and deploy your app. In order to deploy to Shinyapps.io you need to sign up there first. There is a free account that works perfectly for our purposes.  
 
