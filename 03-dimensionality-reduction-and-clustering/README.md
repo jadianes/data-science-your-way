@@ -1,4 +1,4 @@
-## Introduction  
+# Dimensionality Reduction and Clustering  
 
 An important step in data analysis is data exploration and representation. We have already seen some concepts in Exploratory Data Analysis and how to use them with both, Python and R. In this tutorial we will see how by combining a technique called [Principal Component Analysis (PCA)](https://en.wikipedia.org/wiki/Principal_component_analysis) together with [Cluster Analysis](https://en.wikipedia.org/wiki/Cluster_analysis) we can **represent in a two dimensional space data defined in a higher dimensional one** while, at the same time, being able to group this data in similar groups or clusters and **find hidden relationships in our data**.  
 

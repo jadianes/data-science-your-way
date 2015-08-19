@@ -1,24 +1,4 @@
-## Motivation
-
-These series of tutorials on Data Science will try to compare how different concepts
-in the discipline can be implemented in the two dominant ecosystems nowadays: R and Python.
-We will do this from a neutral point of view. Our opinion is that each environment has 
-good and bad things, and any data scientist should know how to use both in order to be as 
-prepared as posible for job market or to start personal project.  
-
-To get a feeling of what is going on regarding this hot topic, we refer the reader to 
-[DataCamp's Data Science War](http://blog.datacamp.com/r-or-python-for-data-analysis/)
-infographic. Their infographic explores what the strengths of **R** are over **Python**
-and vice versa, and aims to provide a basic comparison between these two programming 
-languages from a data science and statistics perspective.  
-
-Far from being a repetition from the previous, our series of tutorials will go hands-on
-into how to actually perform different data science taks such as working with data frames,
-doing aggregations, or creating different statistical models such in the areas of supervised
-and unsupervised learning.  
-
-As usual, we will use real-world datasets. This will help us to quickly transfer what we 
-learn here to actual data analysis situations.  
+# Data Frames  
 
 The first tutorial in our series will deal the an important abstraction, that of a Data Frame.
 In the very next tutorial we will introduce one of the first tasks we face when we have our data loaded, that of the Exploratory Data Analysis. This task can be performed using data frames and basic plots as we will show here for both, Python and R.    
