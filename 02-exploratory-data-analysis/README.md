@@ -2,6 +2,8 @@
 
 Here we are again, with a new episode in our series about doing data science with the two most popular open-source platforms you can use for the job nowadays. In this case we will have a look at a crucial step of the data analytics process, that of the [*Exploratory Data Analysis*](https://en.wikipedia.org/wiki/Exploratory_data_analysis). And with that idea in mind we will explain how to use descriptive statistics and basic plotting, together with data frames, in order to answer some questions and guide our further data analysis.  
 
+*Note: The notebooks for this tutorial are part of those for the data frames one.**  
+
 ### Getting data  
 
 We will continue using the same datasets we already loaded in the part introducing data frames. So you can either continue where you left in that tutorial, or re-run the [section that gets and prepares the data](https://www.codementor.io/python/tutorial/python-vs-r-for-data-science-data-frames-i).  
