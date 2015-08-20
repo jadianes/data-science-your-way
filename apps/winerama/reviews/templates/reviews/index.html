@@ -1,0 +1,9 @@
+{% if latest_review_list %}
+    <ul>
+    {% for review in latest_review_list %}
+        <li><a href="{% url 'reviews:detail' review.id %}">{{ review.review_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No reviews are available.</p>
+{% endif %}
