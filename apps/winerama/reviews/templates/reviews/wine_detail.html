@@ -1,0 +1,23 @@
+<h1>{{ wine.name }}</h1>
+
+<h3>Reviews</h3>
+
+{% for review in wine.review_set.all %}
+<div>
+    <h4><a href="{% url 'reviews:review_detail' review.id %}">{{ review.review_text }}</a></h4>
+</div>
+{% endfor %}
+
+<h3>Add Review</h3>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'reviews:add_review' wine.id %}" method="post">
+{% csrf_token %}
+<input type="text" name="user_name" id="user_name" value="{{ review.user_name }}" />
+<label for="user_name">Your name</label><br />
+<input type="text" name="review_rating" id="review_rating" value="{{ review.rating }}" />
+<label for="review_rating">Your rating</label><br />
+<input type="text" name="review_comment" id="review_commentue=" value="{{ review.review_text }}" />
+<label for="review_text">Comment</label><br />
+<input type="submit" value="Add" />
+</form>
