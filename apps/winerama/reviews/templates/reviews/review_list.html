@@ -1,0 +1,24 @@
+{% extends 'reviews/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+<h2>Latest reviews</h2>
+{% endblock %}
+
+{% block content %}
+    {% if latest_review_list %}
+    <div class="row">
+        {% for review in latest_review_list %}
+        <div class="col-xs-6 col-lg-4">
+            <h4><a href="{% url 'reviews:review_detail' review.id %}">
+            {{ review.wine.name }}
+            </a></h4>
+            <h6>rated {{ review.rating }} of 5 by {{ review.user_name }}</h6>
+            <p>{{ review.comment }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No reviews are available.</p>
+    {% endif %}
+{% endblock %}

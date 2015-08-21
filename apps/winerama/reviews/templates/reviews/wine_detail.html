@@ -1,23 +1,44 @@
-<h1>{{ wine.name }}</h1>
+{% extends 'reviews/base.html' %}
+{% load bootstrap3 %}
 
-<h3>Reviews</h3>
+{% block title %}
+<h2>{{ wine.name }}</h2>
+<h5>{{ wine.review_set.count }} reviews ({{ wine.average_rating | floatformat }} average rating)</h5>
+{% endblock %}
 
-{% for review in wine.review_set.all %}
-<div>
-    <h4><a href="{% url 'reviews:review_detail' review.id %}">{{ review.review_text }}</a></h4>
+
+{% block content %}
+<h3>Recent reviews</h3>
+
+{% if wine.review_set.all %}
+<div class="row">
+    {% for review in wine.review_set.all %}
+    <div class="col-xs-6 col-lg-4">
+        <em>{{ review.comment }}</em>
+        <h6>Rated {{ review.rating }} of 5 by {{ review.user_name }}</h6>
+        <h5><a href="{% url 'reviews:review_detail' review.id %}">
+        Read more
+        </a></h5>
+
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
+{% else %}
+<p>No reviews for this wine yet</p>
+{% endif %}
 
-<h3>Add Review</h3>
+<h3>Add review</h3>
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'reviews:add_review' wine.id %}" method="post">
-{% csrf_token %}
-<input type="text" name="user_name" id="user_name" value="{{ review.user_name }}" />
-<label for="user_name">Your name</label><br />
-<input type="text" name="review_rating" id="review_rating" value="{{ review.rating }}" />
-<label for="review_rating">Your rating</label><br />
-<input type="text" name="review_comment" id="review_commentue=" value="{{ review.review_text }}" />
-<label for="review_text">Comment</label><br />
-<input type="submit" value="Add" />
+{# Display a form #}
+<form action="{% url 'reviews:add_review' wine.id %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form layout='inline' %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary">
+      {% bootstrap_icon "star" %} Add
+    </button>
+    {% endbuttons %}
 </form>
+
+{% endblock %}
