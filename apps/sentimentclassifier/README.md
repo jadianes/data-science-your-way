@@ -1,15 +1,5 @@
 # A web-based Sentiment Classifier using R and Shiny  
 
----
-layout: post
-title: "A web-based Sentiment Classifier using R and Shiny  "
-author: "Jose A. Dianes"
-date: "2 September 2015"
-comments: true
-categories: data-analysis   
-tags: r shiny  
----
-
 The purpose of many data science projects is to end up with a model that can be used within an organisation to solve a particular problem. If this is our case, we need to determine the right representation of that model so it can be shared in the easiest, cheapest, and most effective way. Web data products are an ideal vehicle for delivering machine learning models. The Web can be accessed almost everywhere and by multiple users. Moreover, the typical web application deployment cycle allows us to do easy updates.  
 
 This tutorial will make use of some of the techniques we used to build a sentiment classifier in a [previous notebook](https://github.com/jadianes/data-science-your-way/tree/master/04-sentiment-analysis). We will repeat the code here, since we are using a different algorithm ([random forest](https://en.wikipedia.org/wiki/Random_forest), a type of tree-based classifier), together with some improvements on model selection. But if you are interested about the fundamentals of a linear classifier model, and how to build it using Python, have a look at [that tutorial](https://github.com/jadianes/data-science-your-way/tree/master/04-sentiment-analysis).
