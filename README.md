@@ -39,4 +39,8 @@ These are some of the applications we have built using the concepts explained in
 
 ### [A web-based Sentiment Classifier using R and Shiny](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/README.md)  
 
-How to build a web applications where we can upload text documents to be sentiment-analysed using the R-based framework [Shiny](http://shiny.rstudio.com/).
+How to build a web applications where we can upload text documents to be sentiment-analysed using the R-based framework [Shiny](http://shiny.rstudio.com/).  
+
+### [Building Data Products with Python](https://github.com/jadianes/data-science-your-way/blob/master/apps/winerama/README.md)  
+
+Using a [wine reviews and recommendations website](http://jadianes.koding.io:8000/reviews/) as a leitmotif, this series of tutorials, with [its own separate repository](https://github.com/jadianes/winerama-recommender-tutorial) tagged by lessons, digs into how to use Python technologies such as Django, Pandas, or Scikit-learn, in order to build data products.   
