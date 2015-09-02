@@ -2,11 +2,11 @@
 
 The purpose of many data science projects is to end up with a model that can be used within an organisation to solve a particular problem. If this is our case, we need to determine the right representation of that model so it can be shared in the easiest, cheapest, and most effective way. Web data products are an ideal vehicle for delivering machine learning models. The Web can be accessed almost everywhere and by multiple users. Moreover, the typical web application deployment cycle allows us to do easy updates.  
 
-In this tutorial we will introduce [Shiny](http://shiny.rstudio.com/) a web development framework and [application server](http://www.shinyapps.io/) for the R language. This might seem counterintuitive at first. The R language is not the best language for software design or enterprise systems. But if our web application requirements are simple enough, we can benefit of well known architectural patterns such as [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) being implemented in the framework and leave us just with the task of defining the necessary user interface elements and their interactions with our R models and data structures.  
+This tutorial will make use of some of the techniques we used to build a sentiment classifier in a [previous notebook](https://github.com/jadianes/data-science-your-way/tree/master/04-sentiment-analysis). We will repeat the code here, since we are using a different algorithm ([random forest](https://en.wikipedia.org/wiki/Random_forest), a type of tree-based classifier), together with some improvements on model selection. But if you are interested about the fundamentals of a linear classifier model, and how to build it using Python, have a look at [that tutorial](https://github.com/jadianes/data-science-your-way/tree/master/04-sentiment-analysis).
 
-This tutorial will make use of some of the techniques we used to build a sentiment classifier in a [previous tutorial](https://www.codementor.io/python/tutorial/data-science-python-r-sentiment-classification-machine-learning). We will repeat the code here, since we are using a different algorithm ([random forest](https://en.wikipedia.org/wiki/Random_forest), a type of tree-based classifier), together with some improvements on model selection. But if you are interested about the fundamentals of a linear classifier model, and how to build it using Python, have a look at [that tutorial](https://www.codementor.io/python/tutorial/data-science-python-r-sentiment-classification-machine-learning).
+In order to build a web-based product we will use [Shiny](http://shiny.rstudio.com/) a web development framework and [application server](http://www.shinyapps.io/) for the R language. This might seem counterintuitive at first. The R language is not the best language for software design or enterprise systems. But if our web application requirements are simple enough, we can benefit of well known architectural patterns such as [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) being implemented in the framework and leave us just with the task of defining the necessary user interface elements and their interactions with our R models and data structures.  
 
-In the end, we will end up building an [application like this one](https://jadianes.shinyapps.io/sentimentclassifier). Hopefully you will find it exciting!  
+In the end, we will end up building an [application like this one](https://jadianes.shinyapps.io/sentimentclassifier). All the code is available in our [data science with R and Python repo](https://github.com/jadianes/data-science-your-way/tree/master/apps/sentimentclassifier). Hopefully you will find it exciting!  
 
 *Note: the app hosted at [Shinyapps.io](https://www.shinyapps.io) is running on a free account. That means that is very restricted in computational resources and will show to be not responsible either when a lot of connections are made, or when large files / large number of trees are used. The best way to follow the tutorial is to try the app yourself locally using RStudio.*  
 
@@ -38,7 +38,7 @@ train_data_df <- read.csv(
 train_data_df$Sentiment <- as.factor(train_data_df$Sentiment)
 ```
 
-Once we have the training data in a data frame, we can build a training corpus, as we explained in our [sentiment classification tutorial](https://www.codementor.io/python/tutorial/data-science-python-r-sentiment-classification-machine-learning).
+Once we have the training data in a data frame, we can build a training corpus, as we explained in our [sentiment classification notebook](https://github.com/jadianes/data-science-your-way/tree/master/04-sentiment-analysis).
 
 ```r
 # Create training corpus for later re-use
@@ -117,7 +117,7 @@ There is an alternative deployment where we have a single `app.R` file including
 
 ### User Interface  
 
-![The GUI we want to create](https://www.filepicker.io/api/file/c2FSbrdpSuiNrlGVaFw7 "enter image title here")
+![The GUI we want to create](https://raw.githubusercontent.com/jadianes/data-science-your-way/master/apps/sentimentclassifier/GUI.png "enter image title here")
 
 Our User Interface will contain four different areas:  
 
@@ -242,7 +242,7 @@ So what is inside this `shinyServer` call? Basically we have made three assignme
 
 For example, the `renderPlot` function that is assigned to `output$distribution` is re-executed every time there is a change in the `input$threshold` value (i.e. when the user moves the slider).  
 
-![Server reactions flow](https://www.filepicker.io/api/file/XjA1brTRhy0ltIbO4gw6 "enter image title here")
+![Server reactions flow](https://raw.githubusercontent.com/jadianes/data-science-your-way/master/apps/sentimentclassifier/server_reactions.png "enter image title here")
 
 But we can also declare our own reactive code fragments, and this is what we do in the third assignment when declaring `results <- reactive({...})`. We are just indicating that we want to re-assign the returning value of the code within the curly brackets to `results` every time there is a change in any of the inputs (e.g. `input$sparsity`) used within that code.  
 
@@ -419,7 +419,7 @@ colnames(train_dtm_df) <- make.names(colnames(train_dtm_df))
 
 ## How to run it  
 
-Both, [`ui.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/ui.R) and [`server.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/server.R) code can be found in [this repo](https://github.com/jadianes/data-science-your-way/tree/master/apps/sentimentclassifier). The other file you need is the training data, that can be downloaded from [here](). These three files need to be placed in the same folder (e.g. `sentimentclassifier`).  
+Both, [`ui.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/ui.R) and [`server.R`](https://github.com/jadianes/data-science-your-way/blob/master/apps/sentimentclassifier/server.R) code can be found in [this repo](https://github.com/jadianes/data-science-your-way/tree/master/apps/sentimentclassifier). The other file you need is the training data, that can be downloaded from [the repo app folder](https://github.com/jadianes/data-science-your-way/tree/master/apps/sentimentclassifier). These three files need to be placed in the same folder (e.g. `sentimentclassifier`).  
 
 In order to use the web app you just created you can do two things. You can run it locally using RStudio or you can share it at [Shinyapps.io](http://www.shinyapps.io/) with all of us (with your own modifications, this is [ours](https://jadianes.shinyapps.io/sentimentclassifier)). This last option can be performed also from RStudio. The IDE (if you use a recent enough version) will detect that you are building a Shiny app when the files `ui.R` and `server.R` are present, and will show buttons to run and deploy your app. In order to deploy to Shinyapps.io you need to sign up there first. There is a free account that works perfectly for our purposes.  
 
@@ -429,6 +429,4 @@ Take it easy when starting the app. The init code might take up to a few minutes
 
 ## Conclusions  
 
-We have just show how to create a web app from a machine learning model using R. The web development process should take one or two days, and this is very convenient. True is that Shiny is not the definitive framework for complex web applications, but it is perfect for rapid delivery of data products where the UI is relatively straightforward and the power is in a R model. Personally I see a lot of possibilities for freelancing in it, and also to share results within a company!  
-
-So if you have followed our tutorial, tell us how it was and share your own apps in the comments section!  
+We have just show how to create a web app from a machine learning model using R. The web development process should take one or two days, and this is very convenient. True is that Shiny is not the definitive framework for complex web applications, but it is perfect for rapid delivery of data products where the UI is relatively straightforward and the power is in a R model. Personally I see a lot of possibilities for freelancing in it, and also to share results within a company!   
