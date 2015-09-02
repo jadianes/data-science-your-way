@@ -2,7 +2,7 @@
 
 ##Introduction
 
-With this one, we start a series of tutorials about how to build data products with Python. As a *leitmotif* we want to build a web-based wine reviews and recommendations website using Python technologies such as Django and Pandas. We have chosen to build a wine reviews and recommendations website, but the concepts and the technology stack can be applied to any user reviews and recommendation product.
+With this tutorial, we start a series of tutorials about how to build data products with Python. As a *leitmotif* we want to build a web-based wine reviews and recommendations website using Python technologies such as Django and Pandas. We have chosen to build a wine reviews and recommendations website, but the concepts and the technology stack can be applied to any user reviews and recommendation product.
 
 ![](https://www.filepicker.io/api/file/4tFlIFhJQJuspZ57LN74)
 
@@ -722,7 +722,6 @@ In this tutorial we have explained how to set up Koding as a Django/Pandas devel
 In the next part of the tutorial, we will add user management and, once we have users identified, proceed to generate user recommendations using machine learning.  
 
 The whole tutorial can be followed by checking out individual tags in our [GitHub repo](https://github.com/jadianes/winerama-recommender-tutorial). By doing so you can work in those individual tasks at a given stage that you find more interesting or difficult.  And usually will have deployed the latest stage of the app running [at Koding](http://jadianes.koding.io:8000/reviews/).     
-
 
 # Part II  
 
