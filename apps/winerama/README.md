@@ -20,3 +20,5 @@ The following tutorials will guide you through each of the previous Git tags whi
 concepts of data product development with Python.  
 
 #### [A Wine Review Website using Django and Bootstrap](https://github.com/jadianes/winerama-recommender-tutorial/blob/master/tutorials/tutorial_1.md)  
+
+#### [Adding User management](https://github.com/jadianes/winerama-recommender-tutorial/blob/master/tutorials/tutorial_2.md)  
