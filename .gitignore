@@ -5,4 +5,4 @@ ipython_notebook_spark.out
 .ipynb_checkpoints/
 **/metastore_db/
 **/derby.log
-
+**/rsconnect/
