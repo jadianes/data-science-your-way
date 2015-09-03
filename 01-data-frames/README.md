@@ -728,7 +728,7 @@ existing_df.loc['1992':'2005']
 And we can combine that with series indexing by column.
 
 ```python
-existing_df[['Spain','United Kingdom']].loc[['1992','1998','2005']]
+existing_df.loc[['1992','1998','2005'],['Spain','United Kingdom']]
 ```
 
 | country | Spain | United Kingdom |
@@ -737,6 +737,7 @@ existing_df[['Spain','United Kingdom']].loc[['1992','1998','2005']]
 | 1998    | 30    | 9              |
 | 2005    | 24    | 11             |
 
+This last approach is the recommended when using Pandas data frames, specially when doing assignments (something we are not doing here). Otherwise, we might have assignment problems as described [here](http://pandas-docs.github.io/pandas-docs-travis/indexing.html#why-does-the-assignment-when-using-chained-indexing-fail).
 
 ### R  
 
