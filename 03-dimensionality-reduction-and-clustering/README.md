@@ -407,7 +407,19 @@ However, we will use a more intuitive approach based on our understanding of the
 
 Obtaining clusters in R is as simple as calling to `kmeans`. The function has several parameters, but we will just use all the defaults and start trying with different values of k.  
 
-Let's start with `k=3` asuming that at least, the are countries in a really bad situation, countries in a good situation, and some of them in between.  
+Let's start with determining how many clusters we should be looking for in our dataset. A really simple method is to use the elbow criterion (https://en.wikipedia.org/wiki/Determining_the_number_of_clusters_in_a_data_set).
+
+```r
+wss <- (nrow(existing_df)-1)*sum(apply(existing_df,2,var))
+for (i in 2:15) wss[i] <- sum(kmeans(existing_df,
+                                     centers=i, iter.max=1000)$withinss)
+plot(1:15, wss, type="b", xlab="Number of Clusters",
+     ylab="Within groups sum of squares")
+```
+
+![enter image description here](https://www.filepicker.io/api/file/ILkP2zacTju7GR4AHDgL "enter image title here")
+
+We can see most variance is explained with 3 clusters (the "elbow" of the curve) so let's start with `k=3`, which can let us assume that at least, the are countries in a really bad situation, countries in a good situation, and some of them in between.  
 
 
 ```r
