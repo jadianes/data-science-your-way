@@ -407,7 +407,7 @@ However, we will use a more intuitive approach based on our understanding of the
 
 Obtaining clusters in R is as simple as calling to `kmeans`. The function has several parameters, but we will just use all the defaults and start trying with different values of k.  
 
-Let's start with dtermining how many clusters we should be looking for in our dataset. A really simple method is to use the elbow criterion (https://en.wikipedia.org/wiki/Determining_the_number_of_clusters_in_a_data_set).
+Let's start with determining how many clusters we should be looking for in our dataset. A really simple method is to use the elbow criterion (https://en.wikipedia.org/wiki/Determining_the_number_of_clusters_in_a_data_set).
 
 ```r
 wss <- (nrow(existing_df)-1)*sum(apply(existing_df,2,var))
