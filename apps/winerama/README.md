@@ -13,6 +13,13 @@ This repository contains the code for such a web application in different stages
 - [`stage-1.1`](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-1.1): `add_review` now requires login. Added login templates and menu sesion links.   
 - [`stage-1.2`](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-1.1): a user reviews page created.  
 - [**stage-2**](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-2): user management done.  
+- [`stage-2.1`](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-2.1): Scripts to load CSV available + data loaded.  
+- [`stage-2.2`](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-2.2): An empty wine suggestions view has been added.  
+- [`stage-2.3`](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-2.3): Suggestions view now shows wines not reviewed by the user.  
+- [`stage-2.4`](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-2.4): Added cluster model object and manually created three clusters.  
+- [`stage-2.5`](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-2.5): Suggestions view now makes use of cluster information.  
+- [**stage-3**](https://github.com/jadianes/winerama-recommender-tutorial/tree/stage-3): K-means clustering based recommendations provided.  
+
 
 ## Tutorials  
 
@@ -22,3 +29,5 @@ concepts of data product development with Python.
 #### [A Wine Review Website using Django and Bootstrap](https://github.com/jadianes/winerama-recommender-tutorial/blob/master/tutorials/tutorial_1.md)  
 
 #### [Adding User management](https://github.com/jadianes/winerama-recommender-tutorial/blob/master/tutorials/tutorial_2.md)  
+
+#### [Providing wine recommendations using K-Means](https://github.com/jadianes/winerama-recommender-tutorial/blob/master/tutorials/tutorial_3.md)  
