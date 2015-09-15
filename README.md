@@ -45,6 +45,6 @@ How to build a web applications where we can upload text documents to be sentime
 
 Using a [wine reviews and recommendations website](http://jadianes.koding.io:8000/reviews/) as a leitmotif, this series of tutorials, with [its own separate repository](https://github.com/jadianes/winerama-recommender-tutorial) tagged by lessons, digs into how to use Python technologies such as Django, Pandas, or Scikit-learn, in order to build data products.   
 
-### [Wine Quality Data analysis with R](https://github.com/jadianes/data-science-your-way/blob/master/apps/wine-quality-data-analysis/README.md)  
+### [Red Wine Quality Data analysis with R](https://github.com/jadianes/data-science-your-way/blob/master/apps/wine-quality-data-analysis/README.md)  
 
-Using R and ggplot2, we perform Exploratory Data Analysis of this reference dataset about wine quality.  
+Using R and ggplot2, we perform Exploratory Data Analysis of this reference dataset about wine quality.    
