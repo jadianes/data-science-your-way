@@ -48,3 +48,7 @@ Using a [wine reviews and recommendations website](http://jadianes.koding.io:800
 ### [Red Wine Quality Data analysis with R](https://github.com/jadianes/data-science-your-way/blob/master/apps/wine-quality-data-analysis/README.md)  
 
 Using R and ggplot2, we perform Exploratory Data Analysis of this reference dataset about wine quality.    
+
+### [Information Retrieval algorithms with Python](https://github.com/jadianes/data-science-your-way/blob/master/apps/information-retrieval/README.md)  
+
+Where we show our own implementation of a couple of Information Retrieval algorithms: vector space model, and tf-idf.  
