@@ -12,7 +12,7 @@ Far from being a repetition from the previous, our series of tutorials will go h
 
 We will use real-world datasets, and we will build some real data products. This will help us to quickly transfer what we learn here to actual data analysis situations.  
 
-If your are interested in Big Data products, then you might find interesting our series of [tutorials on using Apache Spark and Python](https://github.com/jadianes/spark-py-notebooks).  
+If your are interested in Big Data products, then you might find interesting our series of [tutorials on using Apache Spark and Python](https://github.com/jadianes/spark-py-notebooks) or [using R on Apache Spark (SparkR)](https://github.com/jadianes/spark-r-notebooks).  
 
 ## Tutorials
 
