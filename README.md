@@ -53,6 +53,6 @@ Using R and ggplot2, we perform Exploratory Data Analysis of this reference data
 
 Where we show our own implementation of a couple of Information Retrieval algorithms: vector space model, and tf-idf.  
 
-### [Kaggle - The Analytics Edge (Spring 2015)](https://github.com/jadianes/data-science-your-way/blob/master/apps/kaggle-analytics-edge-2015/README.md)  
+### [Kaggle - The Analytics Edge (Spring 2015)](https://github.com/jadianes/data-science-your-way/blob/master/apps/kaggle-analytics-edge-15/README.md)  
 
 My solution to this Kaggle competition. It was part of the edX MOOC [The Analitics Edge](https://www.edx.org/course/analytics-edge-mitx-15-071x-0). I highly recommend this on-line course. It is one of the most applied I have ever taken about using R for data anlysis and machine learning.  
