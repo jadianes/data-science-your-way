@@ -1,0 +1,7 @@
+October 1996
+------------
+
+Conversion from UCI format to Delve format
+
+1) Concatenate adult.data to adult.test
+2) Remove the , delimeters
