@@ -56,3 +56,7 @@ Where we show our own implementation of a couple of Information Retrieval algori
 ### [Kaggle - The Analytics Edge (Spring 2015)](https://github.com/jadianes/data-science-your-way/blob/master/apps/kaggle-analytics-edge-15/)  
 
 My solution to this Kaggle competition. It was part of the edX MOOC [The Analitics Edge](https://www.edx.org/course/analytics-edge-mitx-15-071x-0). I highly recommend this on-line course. It is one of the most applied I have ever taken about using R for data anlysis and machine learning.  
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jadianes/data-science-your-way/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
