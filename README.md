@@ -1,5 +1,3 @@
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jadianes/data-science-your-way/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
 # Data Science Engineering, your way
 
 ##### An introduction to different Data Science engineering concepts and Applications using Python and R  
