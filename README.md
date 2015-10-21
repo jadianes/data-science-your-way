@@ -1,5 +1,7 @@
 # Data Science Engineering, your way
 
+[![Join the chat at https://gitter.im/jadianes/data-science-your-way](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jadianes/data-science-your-way?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ##### An introduction to different Data Science engineering concepts and Applications using Python and R  
 
 These series of tutorials on Data Science engineering will try to compare how different concepts in the discipline can be implemented in the two dominant ecosystems nowadays: R and Python.  
