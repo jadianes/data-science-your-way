@@ -355,7 +355,7 @@ new_by_country_mean_summary = new_by_country_mean.describe()
 We can plot these distributions to have an idea of how the countries are distributed in an average year.
 
 ```python
-deaths_by_country_mean.order().plot(kind='bar', figsize=(24,6))
+deaths_by_country_mean.sort_values().plot(kind='bar', figsize=(24,6))
 ```
 ![enter image description here](https://www.filepicker.io/api/file/r8PqqNwESKmWupnf1pLQ "enter image title here")
 

@@ -34,6 +34,7 @@ We will use these datasets to better understand the TB incidence in different re
 
 Download Google Spreadsheet data as CSV.
 
+
 ```python
 import urllib
 
@@ -45,12 +46,13 @@ local_tb_deaths_file = 'tb_deaths_100.csv'
 local_tb_existing_file = 'tb_existing_100.csv'
 local_tb_new_file = 'tb_new_100.csv'
 
-deaths_f = urllib.urlretrieve(tb_deaths_url_csv, local_tb_deaths_file)
-existing_f = urllib.urlretrieve(tb_existing_url_csv, local_tb_existing_file)
-new_f = urllib.urlretrieve(tb_new_url_csv, local_tb_new_file)
+deaths_f = urllib.request.urlretrieve(tb_deaths_url_csv, local_tb_deaths_file)
+existing_f = urllib.request.urlretrieve(tb_existing_url_csv, local_tb_existing_file)
+new_f = urllib.request.urlretrieve(tb_new_url_csv, local_tb_new_file)
 ```
 
 Read CSV into `DataFrame` by using `read_csv()`. 
+
 
 ```python
 import pandas as pd
@@ -60,13 +62,15 @@ existing_df = pd.read_csv(local_tb_existing_file, index_col = 0, thousands  = ',
 new_df = pd.read_csv(local_tb_new_file, index_col = 0, thousands  = ',').T
 ```
 
-We have specified `index_col` to be 0 since we want the country names to be the row labels. We also specified the `thousands` separator to be ',' so Pandas automatically parses cells as numbers. Then, we transpose the table to make the time series for each country correspond to each column.
+We have specified `index_col` to be 0 since we want the country names to be the row labels. We also specified the `thousands` separator to be ',' so Pandas automatially parses cells as numbers. Then, we `traspose()` the table to make the time series for each country correspond to each column.
 
 We will concentrate on the existing cases for a while. We can use `head()` to check the first few lines.  
+
 
 ```python
 existing_df.head()
 ```
+
 
 | TB prevalence, all forms (per 100 000 population per year) | Afghanistan | Albania | Algeria | American Samoa | Andorra | Angola | Anguilla | Antigua and Barbuda | Argentina | Armenia | ... | Uruguay | Uzbekistan | Vanuatu | Venezuela | Viet Nam | Wallis et Futuna | West Bank and Gaza | Yemen | Zambia | Zimbabwe |
 |------------------------------------------------------------|-------------|---------|---------|----------------|---------|--------|----------|---------------------|-----------|---------|-----|---------|------------|---------|-----------|----------|------------------|--------------------|-------|--------|----------|
