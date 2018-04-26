@@ -70,7 +70,7 @@ Feel free to contact me to discuss any issues, questions, or comments.
 * Twitter: [@ja_dianes](https://twitter.com/ja_dianes)
 * GitHub: [jadianes](https://github.com/jadianes)
 * LinkedIn: [jadianes](https://www.linkedin.com/in/jadianes)
-* Website: [jadianes.me](http://jadianes.me)
+* Website: [jadianes.me](http://data.jadianes.com)
 
 ## License
 
